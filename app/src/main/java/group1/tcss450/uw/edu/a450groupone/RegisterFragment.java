@@ -34,6 +34,12 @@ public class RegisterFragment extends Fragment {
         return v;
     }
 
+    /**
+     * It checks that the fields are not empty and checks for constraints.
+     * TODO: Interaction listener is not implemented yet.
+     *
+     * @param v the view
+     */
     public void verifyFieldsInfoAndSend(View v) {
         //args.putSerializable(getString(R.string.action_key), getString(R.string.login_from_register));
         //args.putSerializable(getString(R.string.user_key), userEt.getText().toString());
