@@ -1,3 +1,27 @@
 <resources>
     <string name="app_name">450GroupOne</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="nickname">Nickname</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="registration">Registration</string>
+    <string name="register">Register</string>
+
+
+    <string name="se_first_name">Please enter first name</string>
+    <string name="se_last_name">Please enter last name</string>
+    <string name="se_email">Please enter email</string>
+    <string name="se_nickname">Please enter nickname</string>
+    <string name="se_pass">Please enter password</string>
+    <string name="se_confirm_pass">Please confirm your password</string>
+    <string name="se_pass_tooshort">Password should be at least 6 characters</string>
+    <string name="se_pass_notmatch">Passwords don\'t match</string>
+
 </resources>
