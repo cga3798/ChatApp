@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="weather_title">Weather</string>
+    <string name="city_title">Seattle</string>
+    <string name="weather_descrp">Sunny</string>
+    <string name="weather_temp">60</string>
+
+    <string name="weather_now">Now</string>
+    <string name="weather_day">Today</string>
+    <string name="weather_day_widget">Friday</string>
+    <!--<string name="weather_temp">60</string>-->
+    <!--<string name="weather_temp">60</string>-->
+
+
+
+</resources>
