@@ -7,7 +7,7 @@ import android.util.Log;
 import android.support.v7.widget.RecyclerView;
 
 
-public class MainActivity extends AppCompatActivity implements ChatFragment.OnChatFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements WeatherFragment.OnWeatherFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity implements ChatFragment.OnCh
             if (findViewById(R.id.fragmentContainer) != null) {
                 getSupportFragmentManager().beginTransaction()
                         // Uncommment other line to run other fragment
-                        .add(R.id.fragmentContainer, new ChatFragment())
+                        .add(R.id.fragmentContainer, new WeatherFragment())
                         //.add(R.id.fragmentContainer, new SuccessRegistrationFragment())
                         .commit();
             }
@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements ChatFragment.OnCh
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void onFragmentInteraction() {
 
     }
 }

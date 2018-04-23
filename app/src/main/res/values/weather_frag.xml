@@ -9,7 +9,8 @@
     <string name="weather_now">Now</string>
     <string name="weather_day">Today</string>
     <string name="weather_day_widget">Friday</string>
-    <!--<string name="weather_temp">60</string>-->
+    <string name="weather_choose_city">Select city</string>
+
     <!--<string name="weather_temp">60</string>-->
 
 
