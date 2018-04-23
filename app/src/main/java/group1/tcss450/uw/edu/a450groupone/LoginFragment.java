@@ -31,7 +31,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         View v = inflater.inflate(R.layout.fragment_login, container, false);
         Button b = (Button) v.findViewById(R.id.LoginButtonLogin);
         b.setOnClickListener(this);
-        b = (Button) v.findViewById(R.id.registerButtonLoginFrag);
+        b = (Button) v.findViewById(R.id.LoginButtonRegister);
         b.setOnClickListener(this);
         return v;
     }
@@ -85,7 +85,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
                         mListener.onLogin(creds);
                     }
                     break;
-                case R.id.registerButtonLoginFrag:
+                case R.id.LoginButtonRegister:
                     mListener.onRegister();
 
                 default:
