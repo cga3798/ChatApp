@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
         if(savedInstanceState == null) {
             if (findViewById(R.id.fragmentContainer) != null) {
                 getSupportFragmentManager().beginTransaction()
-                        .add(R.id.fragmentContainer, new HomeFragment())
+                        .add(R.id.fragmentContainer, new LoginFragment())
                         .commit();
             }
         }
