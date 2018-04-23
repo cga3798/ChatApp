@@ -1,10 +1,11 @@
 package group1.tcss450.uw.edu.a450groupone;
 
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-public class MainActivity extends AppCompatActivity implements WeatherFragment.OnWeatherFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements ChatFragment.OnChatFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -14,7 +15,7 @@ public class MainActivity extends AppCompatActivity implements WeatherFragment.O
         if(savedInstanceState == null) {
             if (findViewById(R.id.fragmentContainer) != null) {
                 getSupportFragmentManager().beginTransaction()
-                        .add(R.id.fragmentContainer, new WeatherFragment())
+                        .add(R.id.fragmentContainer, new ChatFragment())
                         .commit();
             }
         }
@@ -22,8 +23,9 @@ public class MainActivity extends AppCompatActivity implements WeatherFragment.O
         Log.d("MARS", "inside oncreate.");
     }
 
+
     @Override
-    public void onFragmentInteraction() {
+    public void onFragmentInteraction(Uri uri) {
 
     }
 }
