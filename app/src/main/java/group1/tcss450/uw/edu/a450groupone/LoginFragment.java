@@ -1,7 +1,6 @@
 package group1.tcss450.uw.edu.a450groupone;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -30,7 +29,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_login, container, false);
-        Button b = (Button) v.findViewById(R.id.loginButtonLoginFrag);
+        Button b = (Button) v.findViewById(R.id.LoginButtonLogin);
         b.setOnClickListener(this);
         b = (Button) v.findViewById(R.id.registerButtonLoginFrag);
         b.setOnClickListener(this);
@@ -44,7 +43,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     public void setError(String err) {
         //Log in unsuccessful for reason: err. Try again.
         //you may want to add error stuffs for the user here.
-        ((TextView) getView().findViewById(R.id.userNameLog))
+        ((TextView) getView().findViewById(R.id.LoginEditTextUserName))
                 .setError("Login Unsuccessful");
     }
 
@@ -69,14 +68,14 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         if (mListener != null) {
             switch (view.getId()) {
-                case R.id.loginButtonLoginFrag:
-                    EditText editText = (EditText) getActivity().findViewById(R.id.userNameLog);
+                case R.id.LoginButtonLogin:
+                    EditText editText = (EditText) getActivity().findViewById(R.id.LoginEditTextUserName);
                     if (editText.getText().toString().trim().length() == 0) {
                         editText.setError("Username may not be empty");
                     }
 
                     String userName = editText.getText().toString();
-                    editText = (EditText) getActivity().findViewById(R.id.passLog);
+                    editText = (EditText) getActivity().findViewById(R.id.LoginEditTextPassword);
                     if (editText.getText().toString().trim().length() == 0) {
                         editText.setError("password may not be empty");
                     }

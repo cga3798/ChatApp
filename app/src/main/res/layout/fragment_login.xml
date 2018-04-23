@@ -12,7 +12,7 @@
 
 
     <EditText
-        android:id="@+id/userNameLog"
+        android:id="@+id/LoginEditTextUserName"
         android:layout_width="252dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -24,7 +24,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <EditText
-        android:id="@+id/passLog"
+        android:id="@+id/LoginEditTextPassword"
         android:layout_width="252dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -33,10 +33,10 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userNameLog" />
+        app:layout_constraintTop_toBottomOf="@+id/LoginEditTextUserName" />
 
     <Button
-        android:id="@+id/loginButtonLoginFrag"
+        android:id="@+id/LoginButtonLogin"
         style="@android:style/Widget.Material.Button.Colored"
         android:layout_width="88dp"
         android:layout_height="wrap_content"
@@ -48,10 +48,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logCheckBox" />
+        app:layout_constraintTop_toBottomOf="@+id/LoginCheckBoxStayLoggedIn" />
 
     <Button
-        android:id="@+id/registerButtonLoginFrag"
+        android:id="@+id/LoginButtonRegister"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginButtonLoginFrag" />
+        app:layout_constraintTop_toBottomOf="@+id/LoginButtonLogin" />
 
     <TextView
         android:id="@+id/textView2"
@@ -89,7 +89,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <CheckBox
-        android:id="@+id/logCheckBox"
+        android:id="@+id/LoginCheckBoxStayLoggedIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="199dp"
@@ -98,5 +98,5 @@
         android:text="Stay logged in"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passLog" />
+        app:layout_constraintTop_toBottomOf="@+id/LoginEditTextPassword" />
 </android.support.constraint.ConstraintLayout>

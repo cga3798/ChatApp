@@ -15,5 +15,12 @@
     <string name="login_success_fragment">Login Successful</string>
     <string name="logout_fragment">Logout</string>
     <string name="App_name_fragment">ChatApp</string>
+    <string name="New_chat_fragment">New Chat</string>
+    <string name="temp_chat1_fragment">Temp Chat 1</string>
+    <string name="temp_chat2_fragment">Temp Chat 2</string>
+    <string name="temp_chat3_fragment">Temp Chat 3</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
