@@ -4,8 +4,10 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.support.v7.widget.RecyclerView;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity implements ChatFragment.OnChatFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,10 +18,15 @@ public class MainActivity extends AppCompatActivity {
             if (findViewById(R.id.fragmentContainer) != null) {
                 getSupportFragmentManager().beginTransaction()
                         // Uncommment other line to run other fragment
-                        .add(R.id.fragmentContainer, new RegisterFragment())
+                        .add(R.id.fragmentContainer, new ChatFragment())
                         //.add(R.id.fragmentContainer, new SuccessRegistrationFragment())
                         .commit();
             }
         }
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }
