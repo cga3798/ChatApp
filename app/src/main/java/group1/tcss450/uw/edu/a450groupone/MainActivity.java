@@ -13,7 +13,8 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
                                                     RegisterFragment.OnRegistrationCompleteListener,
                                                     SuccessRegistrationFragment.OnOkVerifyEmailListener,
                                                     WeatherFragment.OnWeatherFragmentInteractionListener,
-                                                    HomeFragment.OnHomeFragmentInteractionListener{
+                                                    HomeFragment.OnHomeFragmentInteractionListener,
+                                                    ChatFragment.OnChatFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,14 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
     public void onLogin(Credentials creds) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainer, new HomeFragment())
+                // TODO: replace by string value
+                .addToBackStack(null)
+                .commit();
+    }
+    @Override
+    public void onNewChat() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainer, new ChatFragment())
                 // TODO: replace by string value
                 .addToBackStack(null)
                 .commit();
