@@ -8,7 +8,9 @@ import android.support.v7.widget.RecyclerView;
 
 import group1.tcss450.uw.edu.a450groupone.model.Credentials;
 
-public class MainActivity extends AppCompatActivity implements LoginFragment.OnLoginFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements LoginFragment.OnLoginFragmentInteractionListener,
+                                                    RegisterFragment.OnRegistrationCompleteListener,
+                                                    SuccessRegistrationFragment.OnOkVerifyEmailListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,12 +26,32 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
     }
 
     @Override
-    public void onLogin(Credentials creds) {
+    public void onRegistrationSubmitted() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainer, new SuccessRegistrationFragment())
+                .commit();
+    }
 
+    @Override
+    public void clickOkVerifyRegistration() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainer, new LoginFragment())
+                .commit();
+    }
+
+    @Override
+    public void onLogin(Credentials creds) {
+        // maybe make intent to new activity (App Activity)
     }
 
     @Override
     public void onRegister() {
-
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainer, new RegisterFragment())
+                // TODO: replace by string value
+                .addToBackStack("Register Fragment")
+                .commit();
     }
+
+
 }

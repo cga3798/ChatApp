@@ -30,10 +30,10 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="@string/password_fragment"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/LoginEditTextUserName" />
+        app:layout_constraintTop_toBottomOf="@+id/LoginEditTextUserName"/>
 
     <Button
         android:id="@+id/LoginButtonLogin"

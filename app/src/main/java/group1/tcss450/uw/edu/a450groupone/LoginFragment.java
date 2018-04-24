@@ -69,6 +69,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         if (mListener != null) {
             switch (view.getId()) {
                 case R.id.LoginButtonLogin:
+                    // TODO: add this in method
                     EditText editText = (EditText) getActivity().findViewById(R.id.LoginEditTextUserName);
                     if (editText.getText().toString().trim().length() == 0) {
                         editText.setError("Username may not be empty");
@@ -80,6 +81,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
                         editText.setError("password may not be empty");
                     }
                     Editable password = editText.getText();
+                    // TODO: redundant...
                     if(!(userName.length() == 0 || password.length() == 0)) {
                         Credentials creds = new Credentials.Builder(userName, password).build();
                         mListener.onLogin(creds);
