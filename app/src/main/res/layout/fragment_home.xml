@@ -55,7 +55,7 @@
         app:layout_constraintTop_toBottomOf="@+id/HomeTextViewCurrentDate" />
 
     <Button
-        android:id="@+id/successRegisterButtonOK"
+        android:id="@+id/tempChat1"
         style="@android:style/Widget.Material.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -65,23 +65,23 @@
         app:layout_constraintTop_toTopOf="@+id/HomeScrollViewChatList" />
 
     <Button
-        android:id="@+id/selectCityButton"
+        android:id="@+id/tempChat2"
         style="@android:style/Widget.Material.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/temp_chat2_fragment"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/successRegisterButtonOK" />
+        app:layout_constraintTop_toBottomOf="@+id/tempChat1" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/tempChat3"
         style="@android:style/Widget.Material.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/temp_chat3_fragment"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectCityButton" />
+        app:layout_constraintTop_toBottomOf="@+id/tempChat2" />
 
 </android.support.constraint.ConstraintLayout>

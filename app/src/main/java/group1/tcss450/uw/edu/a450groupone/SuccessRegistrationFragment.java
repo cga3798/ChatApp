@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 
 /**
@@ -28,7 +27,7 @@ public class SuccessRegistrationFragment extends Fragment {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_success_registration, container, false);
 
-        v.findViewById(R.id.successRegisterButtonOK).setOnClickListener(view ->
+        v.findViewById(R.id.tempChat1).setOnClickListener(view ->
                                                 mListener.clickOkVerifyRegistration());
         return v;
 

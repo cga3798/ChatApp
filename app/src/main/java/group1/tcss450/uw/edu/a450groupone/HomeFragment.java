@@ -29,6 +29,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         Button b = (Button) v.findViewById(R.id.HomeButtonNewChat);
         b.setOnClickListener(this);
+        b = (Button) v.findViewById(R.id.tempChat3);
+        b.setOnClickListener(this);
+        b = (Button) v.findViewById(R.id.tempChat1);
+        b.setOnClickListener(this);
+        b = (Button) v.findViewById(R.id.tempChat2);
+        b.setOnClickListener(this);
         TextView tv = (TextView) v.findViewById(R.id.HomeTextViewCurrentDate);
         long date = System.currentTimeMillis();
 
@@ -61,9 +67,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.HomeButtonNewChat:
-
                 mListener.onNewChat();
 
+            case R.id.tempChat1:
+                mListener.onNewChat();
+            case R.id.tempChat2:
+                mListener.onNewChat();
+            case R.id.tempChat3:
+                mListener.onNewChat();
             default:
                 Log.wtf("", "Didn't expect to see me...");
         }
