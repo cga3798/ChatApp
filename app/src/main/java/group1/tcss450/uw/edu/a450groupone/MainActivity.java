@@ -11,7 +11,9 @@ import group1.tcss450.uw.edu.a450groupone.model.Credentials;
 
 public class MainActivity extends AppCompatActivity implements LoginFragment.OnLoginFragmentInteractionListener,
                                                     RegisterFragment.OnRegistrationCompleteListener,
-                                                    SuccessRegistrationFragment.OnOkVerifyEmailListener, WeatherFragment.OnWeatherFragmentInteractionListener{
+                                                    SuccessRegistrationFragment.OnOkVerifyEmailListener,
+                                                    WeatherFragment.OnWeatherFragmentInteractionListener,
+                                                    HomeFragment.OnHomeFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +43,11 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
 
     @Override
     public void onLogin(Credentials creds) {
-        // maybe make intent to new activity (App Activity)
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainer, new HomeFragment())
+                // TODO: replace by string value
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
