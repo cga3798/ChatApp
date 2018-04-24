@@ -1,17 +1,17 @@
 package group1.tcss450.uw.edu.a450groupone;
 
-import android.net.Uri;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.support.v7.widget.RecyclerView;
 
 import group1.tcss450.uw.edu.a450groupone.model.Credentials;
 
 
 public class MainActivity extends AppCompatActivity implements LoginFragment.OnLoginFragmentInteractionListener,
                                                     RegisterFragment.OnRegistrationCompleteListener,
-                                                    SuccessRegistrationFragment.OnOkVerifyEmailListener {
+                                                    SuccessRegistrationFragment.OnOkVerifyEmailListener, WeatherFragment.OnWeatherFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
         if(savedInstanceState == null) {
             if (findViewById(R.id.fragmentContainer) != null) {
                 getSupportFragmentManager().beginTransaction()
-                        .add(R.id.fragmentContainer, new LoginFragment())
+                        .add(R.id.fragmentContainer, new WeatherFragment())
                         .commit();
             }
         }
@@ -53,4 +53,16 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
                 .commit();
     }
 
+    @Override
+    public void onSelectCityButtonClicked() {
+        Log.d("MainActivity", "clicked me");
+        SelectWeatherCityFragment rf;
+        rf = new SelectWeatherCityFragment();
+        android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, rf)
+                .addToBackStack(null); // uncomment this if you want to go back
+        // Commit the transaction
+        transaction.commit();
+    }
 }

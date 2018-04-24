@@ -4,9 +4,11 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 
 /**
@@ -15,7 +17,7 @@ import android.view.ViewGroup;
  * {@link WeatherFragment.OnWeatherFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class WeatherFragment extends Fragment {
+public class WeatherFragment extends Fragment implements View.OnClickListener {
 
     private OnWeatherFragmentInteractionListener mListener;
 
@@ -29,16 +31,15 @@ public class WeatherFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_weather, container, false);
-
+//Bundle args = new Bundle();
+        Button b = v.findViewById(R.id.selectCityButton);
+        b.setOnClickListener(this::onSelectCClicked);
 
         return v;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction();
-        }
+    public void onSelectCClicked(View v) {
+        mListener.onSelectCityButtonClicked();
     }
 
     @Override
@@ -58,6 +59,11 @@ public class WeatherFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onClick(View v) {
+        mListener.onSelectCityButtonClicked();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -69,6 +75,6 @@ public class WeatherFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnWeatherFragmentInteractionListener {
-        void onFragmentInteraction();
+        void onSelectCityButtonClicked();
     }
 }

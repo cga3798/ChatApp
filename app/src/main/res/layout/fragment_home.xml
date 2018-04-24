@@ -63,7 +63,7 @@
         app:layout_constraintTop_toTopOf="@+id/HomeScrollViewChatList" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/selectCityButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -78,6 +78,6 @@
         android:layout_marginTop="8dp"
         android:text="@string/temp_chat3_fragment"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintTop_toBottomOf="@+id/selectCityButton" />
 
 </android.support.constraint.ConstraintLayout>
