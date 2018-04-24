@@ -6,27 +6,30 @@ import android.os.Bundle;
 import android.util.Log;
 import android.support.v7.widget.RecyclerView;
 
+import group1.tcss450.uw.edu.a450groupone.model.Credentials;
 
-public class MainActivity extends AppCompatActivity implements ChatFragment.OnChatFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements LoginFragment.OnLoginFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         if(savedInstanceState == null) {
             if (findViewById(R.id.fragmentContainer) != null) {
                 getSupportFragmentManager().beginTransaction()
-                        // Uncommment other line to run other fragment
-                        .add(R.id.fragmentContainer, new ChatFragment())
-                        //.add(R.id.fragmentContainer, new SuccessRegistrationFragment())
+                        .add(R.id.fragmentContainer, new LoginFragment())
                         .commit();
             }
         }
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void onLogin(Credentials creds) {
+
+    }
+
+    @Override
+    public void onRegister() {
 
     }
 }
