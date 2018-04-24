@@ -58,6 +58,14 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
                 .addToBackStack(null)
                 .commit();
     }
+    @Override
+    public void NewWeather() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainer, new WeatherFragment())
+                // TODO: replace by string value
+                .addToBackStack(null)
+                .commit();
+    }
 
     @Override
     public void onRegister() {

@@ -35,6 +35,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         b.setOnClickListener(this);
         b = (Button) v.findViewById(R.id.tempChat2);
         b.setOnClickListener(this);
+        b = (Button) v.findViewById(R.id.weatherButton1);
+        b.setOnClickListener(this);
         TextView tv = (TextView) v.findViewById(R.id.HomeTextViewCurrentDate);
         long date = System.currentTimeMillis();
 
@@ -65,22 +67,32 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.HomeButtonNewChat:
-                mListener.onNewChat();
-
-            case R.id.tempChat1:
-                mListener.onNewChat();
-            case R.id.tempChat2:
-                mListener.onNewChat();
-            case R.id.tempChat3:
-                mListener.onNewChat();
-            default:
-                Log.wtf("", "Didn't expect to see me...");
+        if (mListener != null) {
+            switch (view.getId()) {
+                case R.id.HomeButtonNewChat:
+                    mListener.onNewChat();
+                    break;
+                case R.id.weatherButton1:
+                    Log.v("hello", "hello");
+                    mListener.NewWeather();
+                    break;
+                case R.id.tempChat1:
+                    mListener.onNewChat();
+                    break;
+                case R.id.tempChat2:
+                    mListener.onNewChat();
+                    break;
+                case R.id.tempChat3:
+                    mListener.onNewChat();
+                    break;
+                default:
+                    Log.wtf("", "Didn't expect to see me...");
+            }
         }
     }
 
     public interface OnHomeFragmentInteractionListener {
         void onNewChat();
+        void NewWeather();
     }
 }
