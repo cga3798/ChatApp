@@ -1,6 +1,7 @@
 package group1.tcss450.uw.edu.a450groupone;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,10 +18,11 @@ public class RegisterFragment extends Fragment {
 
     private static final int MIN_PASS_LENGTH = 6;
 
+    private OnRegistrationCompleteListener mListener;
+
     public RegisterFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,8 +78,28 @@ public class RegisterFragment extends Fragment {
             passEt.setError(getString(R.string.se_pass_notmatch));
         }
         else { // all good
-            //mListener.onFragmentInteraction(args);
+            mListener.onRegistrationSubmitted();
         }
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnRegistrationCompleteListener) {
+            mListener = (OnRegistrationCompleteListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnRegistrationCompleteListener {
+        void onRegistrationSubmitted();
+    }
 }

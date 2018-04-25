@@ -26,4 +26,33 @@
     <string name="se_pass_tooshort">Password should be at least 6 characters</string>
     <string name="se_pass_notmatch">Passwords don\'t match</string>
 
+    <string name="application_name">Chat App</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">First Last</string>
+    <string name="nav_header_subtitle">name@fakemail.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="flist_button_add_friend">Add friend</string>
+    <string name="flist_button_new_group">New group</string>
+
+    <string name="login_fragment_button">Login</string>
+    <string name="register_fragment_button">Register</string>
+    <string name="welcome_fragment">Welcome!</string>
+    <string name="please_log_in_fragment">Please log in</string>
+    <string name="please_register_for_an_account_fragment">Please register for an account</string>
+    <string name="login_successfull_fragment">Login Successfull!</string>
+    <string name="username_fragment">Username</string>
+    <string name="password_fragment">Password</string>
+    <string name="email_fragment">email</string>
+    <string name="first_name_fragment">Firstname</string>
+    <string name="last_name_fragment">Lastname</string>
+    <string name="login_success_fragment">Login Successful</string>
+    <string name="logout_fragment">Logout</string>
+    <string name="App_name_fragment">ChatApp</string>
+    <string name="New_chat_fragment">New Chat</string>
+    <string name="temp_chat1_fragment">Temp Chat 1</string>
+    <string name="temp_chat2_fragment">Temp Chat 2</string>
+    <string name="temp_chat3_fragment">Temp Chat 3</string>
+
 </resources>

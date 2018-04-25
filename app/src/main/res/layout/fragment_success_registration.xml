@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:gravity="center"
-             tools:context=".SuccessRegistrationFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".SuccessRegistrationFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -38,7 +38,7 @@
         android:textSize="20sp"/>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/tempChat1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@android:string/ok"/>
