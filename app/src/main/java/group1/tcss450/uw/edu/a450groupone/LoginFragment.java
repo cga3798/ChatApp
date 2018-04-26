@@ -44,7 +44,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         //Log in unsuccessful for reason: err. Try again.
         //you may want to add error stuffs for the user here.
         ((TextView) getView().findViewById(R.id.LoginEditTextUserName))
-                .setError("Login Unsuccessful");
+                .setError(err);
     }
 
     @Override

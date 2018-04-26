@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import group1.tcss450.uw.edu.a450groupone.model.Credentials;
 
 
 /**
@@ -29,7 +32,6 @@ public class RegisterFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v =  inflater.inflate(R.layout.fragment_register, container, false);
 
-        //Bundle args = new Bundle();
         Button b = v.findViewById(R.id.registerButtonRegister);
         b.setOnClickListener(view -> {verifyFieldsInfoAndSend(v);});
 
@@ -43,15 +45,11 @@ public class RegisterFragment extends Fragment {
      * @param v the view
      */
     public void verifyFieldsInfoAndSend(View v) {
-        //args.putSerializable(getString(R.string.action_key), getString(R.string.login_from_register));
-        //args.putSerializable(getString(R.string.user_key), userEt.getText().toString());
-        //args.putSerializable(getString(R.string.pass_key), passEt.getText().toString());
-        //args.putSerializable(getString(R.string.confirm_pass_key), cPassEt.getText().toString());
 
         EditText firstEt = v.findViewById(R.id.registerEditTextFirst);
         EditText lastEt = v.findViewById(R.id.registerEditTextLast);
         EditText emailEt = v.findViewById(R.id.registerEditTextEmail);
-        EditText nicknameEt = v.findViewById(R.id.registerEditTextNickname);
+        EditText usernameET = v.findViewById(R.id.registerEditTextNickname);
         EditText passEt = v.findViewById(R.id.registerEditTextPassword);
         EditText confirmPassEt = v.findViewById(R.id.registerEditTextConfirmPass);
 
@@ -63,8 +61,8 @@ public class RegisterFragment extends Fragment {
             lastEt.setError(getString(R.string.se_last_name));
         } else if( emailEt.getText().toString().isEmpty()) {
             emailEt.setError(getString(R.string.se_email));
-        } else if( nicknameEt.getText().toString().isEmpty()) {
-            nicknameEt.setError(getString(R.string.se_nickname));
+        } else if( usernameET.getText().toString().isEmpty()) {
+            usernameET.setError(getString(R.string.se_nickname));
         } else if(passEt.getText().toString().isEmpty()) {
             passEt.setError(getString(R.string.se_pass));
         } else if (confirmPassEt.getText().toString().isEmpty()) {
@@ -78,8 +76,19 @@ public class RegisterFragment extends Fragment {
             passEt.setError(getString(R.string.se_pass_notmatch));
         }
         else { // all good
-            mListener.onRegistrationSubmitted();
+            Credentials credentials = new Credentials.Builder(usernameET.getText().toString(),
+                                            passEt.getText())
+                                    .addEmail(emailEt.getText().toString())
+                                    .addFirstName(firstEt.getText().toString())
+                                    .addLastName(lastEt.getText().toString())
+                                    .build();
+            mListener.onRegistrationSubmitted(credentials);
         }
+    }
+
+    public void setError(String err) {
+        ((TextView) getView().findViewById(R.id.registerEditTextFirst))
+                .setError(err);
     }
 
     @Override
@@ -100,6 +109,6 @@ public class RegisterFragment extends Fragment {
     }
 
     public interface OnRegistrationCompleteListener {
-        void onRegistrationSubmitted();
+        void onRegistrationSubmitted(Credentials creds);
     }
 }
