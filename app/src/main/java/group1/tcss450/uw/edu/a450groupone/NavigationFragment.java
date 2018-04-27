@@ -23,7 +23,7 @@ public class NavigationFragment extends AppCompatActivity
         if(savedInstanceState == null) {
             if (findViewById(R.id.navigationFragmentContainer) != null) {
                 getSupportFragmentManager().beginTransaction().add(R.id.navigationFragmentContainer,
-                        new WeatherFragment()//replace with weather fragment
+                        new HomeFragment()//replace with weather fragment
                     ).commit();
             }
         }
