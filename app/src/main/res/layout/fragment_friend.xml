@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".FriendFragment" >
 
-    <!-- TODO: Update blank fragment layout -->
-
     <SearchView
         android:id="@+id/friendSearchView"
         android:layout_width="match_parent"
