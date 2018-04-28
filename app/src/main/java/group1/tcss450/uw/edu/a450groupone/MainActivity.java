@@ -138,8 +138,8 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
      */
     @Override
     public void onLogin(Credentials creds) {
-
-        loadHomeFragment();
+        //TODO: WARNING - uncommnet line below if you want to see the other screens after clicking "Log in"
+        //loadHomeFragment();
 
         Uri uri = new Uri.Builder()
                 .scheme("https")
