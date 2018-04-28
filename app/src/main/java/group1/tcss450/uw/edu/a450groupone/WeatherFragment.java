@@ -1,8 +1,10 @@
 package group1.tcss450.uw.edu.a450groupone;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +32,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_weather, container, false);
 //Bundle args = new Bundle();
-        Button b = v.findViewById(R.id.tempChat2);
+        Button b = v.findViewById(R.id.selectCityButton);
         b.setOnClickListener(this::onSelectCClicked);
 
         return v;

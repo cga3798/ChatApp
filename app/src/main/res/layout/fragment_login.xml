@@ -17,11 +17,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
+<<<<<<< HEAD
         android:hint="@string/username"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3"/>
+=======
+        android:hint="@string/username_fragment"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+>>>>>>> Aaron
 
     <EditText
         android:id="@+id/LoginEditTextPassword"
@@ -29,7 +37,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
+<<<<<<< HEAD
         android:hint="@string/password"
+=======
+        android:hint="@string/password_fragment"
+>>>>>>> Aaron
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -3,7 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/tcss450GroupOne.iml" filepath="$PROJECT_DIR$/tcss450GroupOne.iml" />
+=======
+      <module fileurl="file://$PROJECT_DIR$/.idea/tcss450GroupOne.iml" filepath="$PROJECT_DIR$/.idea/tcss450GroupOne.iml" />
+>>>>>>> Aaron
     </modules>
   </component>
 </project>
