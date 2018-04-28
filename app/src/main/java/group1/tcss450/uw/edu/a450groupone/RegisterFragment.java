@@ -62,7 +62,7 @@ public class RegisterFragment extends Fragment {
         } else if( emailEt.getText().toString().isEmpty()) {
             emailEt.setError(getString(R.string.se_email));
         } else if( usernameET.getText().toString().isEmpty()) {
-            usernameET.setError(getString(R.string.se_nickname));
+            usernameET.setError(getString(R.string.se_username));
         } else if(passEt.getText().toString().isEmpty()) {
             passEt.setError(getString(R.string.se_pass));
         } else if (confirmPassEt.getText().toString().isEmpty()) {

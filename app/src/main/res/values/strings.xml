@@ -25,8 +25,6 @@
     <string name="se_pass_tooshort">Password should be at least 6 characters</string>
     <string name="se_pass_notmatch">Passwords don\'t match</string>
 
-<<<<<<< HEAD
-=======
     <string name="application_name">Chat App</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -37,18 +35,12 @@
     <string name="flist_button_add_friend">Add friend</string>
     <string name="flist_button_new_group">New group</string>
 
->>>>>>> Aaron
     <string name="login_fragment_button">Login</string>
     <string name="register_fragment_button">Register</string>
     <string name="welcome_fragment">Welcome!</string>
     <string name="please_log_in_fragment">Please log in</string>
     <string name="please_register_for_an_account_fragment">Please register for an account</string>
     <string name="login_successfull_fragment">Login Successfull!</string>
-<<<<<<< HEAD
-=======
-    <string name="username_fragment">Username</string>
-    <string name="password_fragment">Password</string>
->>>>>>> Aaron
     <string name="email_fragment">email</string>
     <string name="first_name_fragment">Firstname</string>
     <string name="last_name_fragment">Lastname</string>
@@ -60,10 +52,4 @@
     <string name="temp_chat2_fragment">Temp Chat 2</string>
     <string name="temp_chat3_fragment">Temp Chat 3</string>
 
-<<<<<<< HEAD
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
-=======
->>>>>>> Aaron
 </resources>

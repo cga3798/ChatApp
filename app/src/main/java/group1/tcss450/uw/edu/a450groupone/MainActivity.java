@@ -139,6 +139,8 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
     @Override
     public void onLogin(Credentials creds) {
 
+        loadHomeFragment();
+
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
@@ -185,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
         try {
             JSONObject resultsJSON = new JSONObject(result);
             boolean success = resultsJSON.getBoolean("success");
+
             if (success) {
                 //Login was successful. Switch to the loadSuccessFragment.
                 checkStayLoggedIn();
