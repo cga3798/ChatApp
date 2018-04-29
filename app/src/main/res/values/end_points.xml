@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="ep_base_url">TOCOMPLETE</string>
+    <string name="ep_base_url">group1-tcss450-backend.herokuapp.com</string>
     <string name="ep_login">login</string>
     <string name="ep_register">register</string>
 </resources>
