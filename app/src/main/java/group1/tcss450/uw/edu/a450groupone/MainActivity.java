@@ -1,29 +1,30 @@
 package group1.tcss450.uw.edu.a450groupone;
 
-import android.app.Fragment;
+import android.content.DialogInterface;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.CheckBox;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import group1.tcss450.uw.edu.a450groupone.model.Credentials;
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
 
-public class MainActivity extends AppCompatActivity implements LoginFragment.OnLoginFragmentInteractionListener,
-                                                    RegisterFragment.OnRegistrationCompleteListener,
-                                                    SuccessRegistrationFragment.OnOkVerifyEmailListener,
-                                                    WeatherFragment.OnWeatherFragmentInteractionListener,
-                                                    HomeFragment.OnHomeFragmentInteractionListener,
-                                                    ChatFragment.OnChatFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements
+        LoginFragment.OnLoginFragmentInteractionListener,
+        RegisterFragment.OnRegistrationCompleteListener,
+        SuccessRegistrationFragment.OnOkVerifyEmailListener,
+        WeatherFragment.OnWeatherFragmentInteractionListener,
+        HomeFragment.OnHomeFragmentInteractionListener,
+        ChatFragment.OnChatFragmentInteractionListener {
 
     private Credentials mCredentials;
 
@@ -33,10 +34,8 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
         setContentView(R.layout.activity_main);
         if(savedInstanceState == null) {
             if (findViewById(R.id.fragmentContainer) != null) {
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.fragmentContainer, new LoginFragment(),
-                                getString(R.string.keys_fragment_login))
-                        .commit();
+                loadFragment(new LoginFragment(),
+                        getString(R.string.keys_fragment_login));
             }
         }
     }
@@ -84,12 +83,23 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
                         .replace(R.id.fragmentContainer, new SuccessRegistrationFragment())
                         .commit();
             } else {
-                //Register was unsuccessful. Don’t switch fragments and inform the user
-                RegisterFragment frag =
-                        (RegisterFragment) getSupportFragmentManager()
-                                .findFragmentByTag(
-                                        getString(R.string.keys_fragment_register));
-                frag.setError("Registration unsuccessful");
+                Log.d("result: ", result);
+                String err = resultsJSON.getJSONObject("error").getString("detail");
+                if (err.contains("email")) {
+                    RegisterFragment frag =
+                            (RegisterFragment) getSupportFragmentManager()
+                                    .findFragmentByTag(getString(R.string.keys_fragment_register));
+                    frag.setError("Email already exists.", "email");
+
+                } else if (err.contains("username")) {
+                    RegisterFragment frag =
+                            (RegisterFragment) getSupportFragmentManager()
+                                    .findFragmentByTag(getString(R.string.keys_fragment_register));
+                    frag.setError("Username already exists.", "username");
+
+                } else {
+                    showDialog("Please try again.", "Registration Unsuccessful!");
+                }
             }
         } catch (JSONException e) {
             //It appears that the web service didn’t return a JSON formatted String
@@ -106,9 +116,8 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
      */
     @Override
     public void clickOkVerifyRegistration() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, new LoginFragment())
-                .commit();
+        loadFragment(new LoginFragment(),
+                getString(R.string.keys_fragment_login));
     }
 
     /**
@@ -147,10 +156,8 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
      */
     @Override
     public void onRegister() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, new RegisterFragment())
-                .addToBackStack(getString(R.string.keys_fragment_register))
-                .commit();
+        loadFragment(new RegisterFragment(),
+                getString(R.string.keys_fragment_register));
     }
 
     /**
@@ -167,12 +174,8 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
                 checkStayLoggedIn();
                 loadHomeFragment();
             } else {
-                //Login was unsuccessful. Don’t switch fragments and inform the user
-                LoginFragment frag =
-                        (LoginFragment) getSupportFragmentManager()
-                                .findFragmentByTag(
-                                        getString(R.string.keys_fragment_login));
-                frag.setError("Log in unsuccessful");
+                showDialog("Please check your username and password",
+                        "Login Unsuccessful!");
             }
         } catch (JSONException e) {
             //It appears that the web service didn’t return a JSON formatted String
@@ -182,7 +185,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
                     + e.getMessage());
         }
     }
-
 
     
     private void checkStayLoggedIn() {
@@ -205,15 +207,9 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
     }
 
     private void loadHomeFragment() {
-//        HomeFragment homeFragment = new HomeFragment();
-//        FragmentTransaction transaction = getSupportFragmentManager()
-//                .beginTransaction()
-//                .replace(R.id.fragmentContainer, homeFragment);
-//        // Commit the transaction
-//        transaction.commit();
-        Intent i = new Intent(getBaseContext(), NavigationFragment.class);
-        i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
-        startActivity(i);
+        Intent intent = new Intent(getBaseContext(), NavigationFragment.class);
+        intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
     }
 
     /**
@@ -227,31 +223,41 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
     // TODO: probably methods below will be in activity with navigation bar (after logging in)
     @Override
     public void onNewChat() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, new ChatFragment())
-                // TODO: replace by string value
-                .addToBackStack(null)
-                .commit();
+        loadFragment(new ChatFragment(),
+                getString(R.string.keys_fragment_chat));
     }
     @Override
     public void NewWeather() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, new WeatherFragment())
-                // TODO: replace by string value
-                .addToBackStack(null)
-                .commit();
+        loadFragment(new WeatherFragment(),
+                getString(R.string.keys_fragment_weather));
     }
 
     @Override
     public void onSelectCityButtonClicked() {
-        Log.d("MainActivity", "clicked me");
-        SelectWeatherCityFragment rf;
-        rf = new SelectWeatherCityFragment();
-        android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager()
+        Log.d("ADD CITY: ", "CLICKED");
+        loadFragment(new SelectWeatherCityFragment(),
+                getString(R.string.keys_fragment_select_weather));
+    }
+
+    private void loadFragment(Fragment frag, String tag) {
+        FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragmentContainer, rf)
+                .replace(R.id.fragmentContainer, frag, tag)
                 .addToBackStack(null); // uncomment this if you want to go back
         // Commit the transaction
         transaction.commit();
+    }
+
+    private void showDialog(String err, String title) {
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(err);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
     }
 }

@@ -69,6 +69,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
     }
 
     public void onSelectCClicked(View v) {
+        Log.d("In weather: ", "select city clicked");
         mListener.onSelectCityButtonClicked();
     }
 

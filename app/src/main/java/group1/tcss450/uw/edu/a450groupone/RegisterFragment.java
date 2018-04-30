@@ -86,9 +86,13 @@ public class RegisterFragment extends Fragment {
         }
     }
 
-    public void setError(String err) {
-        ((TextView) getView().findViewById(R.id.registerEditTextFirst))
+    public void setError(String err, String errField) {
+        if (errField.equals("email"))
+            ((TextView) getView().findViewById(R.id.registerEditTextEmail))
                 .setError(err);
+        else if (errField.equals("username"))
+            ((TextView) getView().findViewById(R.id.registerEditTextNickname))
+                    .setError(err);
     }
 
     @Override
