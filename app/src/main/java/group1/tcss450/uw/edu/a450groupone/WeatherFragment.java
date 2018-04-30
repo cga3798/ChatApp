@@ -4,11 +4,15 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+
+import group1.tcss450.uw.edu.a450groupone.model.Weather;
 
 
 /**
@@ -21,9 +25,12 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
 
     private OnWeatherFragmentInteractionListener mListener;
 
+    private TextView city, weather, currentTemp;
+
     public WeatherFragment() {
         // Required empty public constructor
     }
+
 
 
     @Override
@@ -31,11 +38,34 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_weather, container, false);
-//Bundle args = new Bundle();
+        //Bundle args = new Bundle();
         Button b = v.findViewById(R.id.selectCityButton);
         b.setOnClickListener(this::onSelectCClicked);
 
+        city = v.findViewById(R.id.weatherCityTextview);
+        weather = v.findViewById(R.id.weatherDesc);
+        currentTemp = v.findViewById(R.id.weatherTemp);
+
+        setWeatherData();
+
         return v;
+    }
+
+    private void setWeatherData() {
+        Weather.RetrieveData asyncTask = new Weather.RetrieveData(R.id.fragmentWeather ,new Weather.AsyncResponse() {
+            public void processFinish(Bundle args) {
+                Log.d("WEATHER_FRAG", "setting data");
+                city.setText(args.getString(Weather.K_CITY));
+                //updatedField.setText(weather_updatedOn);
+                weather.setText(args.getString(Weather.K_WEATHER_DESC));
+                currentTemp.setText(args.getString(Weather.K_CURRENT_TEMP));
+                //humidity_field.setText("Humidity: "+weather_humidity);
+                //pressure_field.setText("Pressure: "+weather_pressure);
+                //weatherIcon.setText(Html.fromHtml(weather_iconText));
+
+            }
+        });
+        asyncTask.execute("47.25288","-122.44429");
     }
 
     public void onSelectCClicked(View v) {

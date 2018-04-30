@@ -12,10 +12,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import group1.tcss450.uw.edu.a450groupone.model.Weather;
+
 public class HomeFragment extends Fragment implements View.OnClickListener{
 
 
     private OnHomeFragmentInteractionListener mListener;
+
+    private TextView cityTv, tempTv, weatherDescTv;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -39,14 +43,35 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         b.setOnClickListener(this);
         TextView tv = (TextView) v.findViewById(R.id.HomeTextViewCurrentDate);
         long date = System.currentTimeMillis();
-
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy h:mm a");
         String dateString = sdf.format(date);
         tv.setText(dateString);
+
+        cityTv = v.findViewById(R.id.HomeTextViewCity);
+        tempTv = v.findViewById(R.id.HomeTextViewTemperature);
+        weatherDescTv = v.findViewById(R.id.HomeTextViewWeatherDesc);
+
+        setWeatherData();
+
         return v;
     }
 
+    private void setWeatherData() {
+        Weather.RetrieveData asyncTask = new Weather.RetrieveData(R.id.fragmentWeather ,new Weather.AsyncResponse() {
+            public void processFinish(Bundle args) {
+                Log.d("WEATHER_FRAG", "setting data");
+                cityTv.setText(args.getString(Weather.K_CITY));
+                //updatedField.setText(weather_updatedOn);
+                weatherDescTv.setText(args.getString(Weather.K_WEATHER_DESC));
+                tempTv.setText(args.getString(Weather.K_CURRENT_TEMP));
+                //humidity_field.setText("Humidity: "+weather_humidity);
+                //pressure_field.setText("Pressure: "+weather_pressure);
+                //weatherIcon.setText(Html.fromHtml(weather_iconText));
 
+            }
+        });
+        asyncTask.execute("47.25288","-122.44429");
+    }
 
     @Override
     public void onAttach(Context context) {

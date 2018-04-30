@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".WeatherFragment">
+<android.support.constraint.ConstraintLayout android:id="@+id/fragmentWeather"
+                                             xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             tools:context=".WeatherFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -18,7 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/weatherCityTextview"
@@ -29,7 +30,7 @@
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weatherTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/weatherTitle"/>
 
     <TextView
         android:id="@+id/weatherDesc"
@@ -41,7 +42,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weatherCityTextview" />
+        app:layout_constraintTop_toBottomOf="@+id/weatherCityTextview"/>
 
     <TextView
         android:id="@+id/weatherTemp"
@@ -53,7 +54,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weatherDesc" />
+        app:layout_constraintTop_toBottomOf="@+id/weatherDesc"/>
 
     <HorizontalScrollView
         android:id="@+id/todayWidget"
@@ -78,35 +79,35 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_day" />
+                    android:text="@string/weather_day"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_day" />
+                    android:text="@string/weather_day"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_day" />
+                    android:text="@string/weather_day"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_day" />
+                    android:text="@string/weather_day"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_day" />
+                    android:text="@string/weather_day"/>
 
 
                 <TextView
@@ -114,14 +115,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_day" />
+                    android:text="@string/weather_day"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_day" />
+                    android:text="@string/weather_day"/>
 
             </TableRow>
 
@@ -133,35 +134,35 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_day" />
+                    android:text="@string/weather_day"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_day" />
+                    android:text="@string/weather_day"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_day" />
+                    android:text="@string/weather_day"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_day" />
+                    android:text="@string/weather_day"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_day" />
+                    android:text="@string/weather_day"/>
 
 
                 <TextView
@@ -169,14 +170,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_day" />
+                    android:text="@string/weather_day"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_day" />
+                    android:text="@string/weather_day"/>
 
             </TableRow>
         </TableLayout>
@@ -206,21 +207,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_day_widget" />
+                    android:text="@string/weather_day_widget"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_descrp" />
+                    android:text="@string/weather_descrp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_temp" />
+                    android:text="@string/weather_temp"/>
             </TableRow>
 
             <TableRow
@@ -232,21 +233,21 @@
                     android:layout_height="wrap_content"
                     android:text="@string/weather_day_widget"
                     tools:layout_editor_absoluteX="239dp"
-                    tools:layout_editor_absoluteY="376dp" />
+                    tools:layout_editor_absoluteY="376dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_descrp" />
+                    android:text="@string/weather_descrp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_temp" />
+                    android:text="@string/weather_temp"/>
             </TableRow>
 
 
@@ -259,21 +260,21 @@
                     android:layout_height="wrap_content"
                     android:text="@string/weather_day_widget"
                     tools:layout_editor_absoluteX="239dp"
-                    tools:layout_editor_absoluteY="376dp" />
+                    tools:layout_editor_absoluteY="376dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_descrp" />
+                    android:text="@string/weather_descrp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_temp" />
+                    android:text="@string/weather_temp"/>
             </TableRow>
 
             <TableRow
@@ -285,21 +286,21 @@
                     android:layout_height="wrap_content"
                     android:text="@string/weather_day_widget"
                     tools:layout_editor_absoluteX="239dp"
-                    tools:layout_editor_absoluteY="376dp" />
+                    tools:layout_editor_absoluteY="376dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_descrp" />
+                    android:text="@string/weather_descrp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:text="@string/weather_temp" />
+                    android:text="@string/weather_temp"/>
             </TableRow>
 
 
@@ -318,7 +319,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.11"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weatherTemp" />
+        app:layout_constraintTop_toBottomOf="@+id/weatherTemp"/>
 
     <Button
         android:id="@+id/selectCityButton"
@@ -331,7 +332,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.96"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dayByDayWeather" />
+        app:layout_constraintTop_toBottomOf="@+id/dayByDayWeather"/>
 
 
 </android.support.constraint.ConstraintLayout>

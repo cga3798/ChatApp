@@ -5,4 +5,9 @@
     <string name="keys_prefs_stay_logged_in">loggedIn</string>
     <string name="keys_fragment_login">loginFragmentTag</string>
     <string name="keys_fragment_register">registerFragmentTag</string>
+
+    <string name="keys_city">city</string>
+    <string name="keys_weather_desc">weatherDesc</string>
+    <string name="keys_current_temp">currentTemp</string>
+
 </resources>

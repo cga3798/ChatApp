@@ -9,11 +9,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class NavigationFragment extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ChatFragment.OnChatFragmentInteractionListener, WeatherFragment.OnWeatherFragmentInteractionListener, HomeFragment.OnHomeFragmentInteractionListener {
+import group1.tcss450.uw.edu.a450groupone.model.Weather;
+
+public class NavigationFragment extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+                                                                ChatFragment.OnChatFragmentInteractionListener,
+                                                                WeatherFragment.OnWeatherFragmentInteractionListener,
+                                                                HomeFragment.OnHomeFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +54,8 @@ public class NavigationFragment extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -130,8 +137,9 @@ public class NavigationFragment extends AppCompatActivity
     }
     @Override
     public void NewWeather() {
+        WeatherFragment weatherFrag = new WeatherFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.navigationFragmentContainer, new WeatherFragment())
+                .replace(R.id.navigationFragmentContainer, weatherFrag)
                 // TODO: replace by string value
                 .addToBackStack(null)
                 .commit();

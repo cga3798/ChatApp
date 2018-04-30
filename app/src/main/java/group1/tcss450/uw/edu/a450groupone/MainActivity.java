@@ -41,27 +41,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
         }
     }
 
-    /*
-    //build the web service URL
-            Uri uri = new Uri.Builder()
-                    .scheme("https")
-                    .appendPath(getString(R.string.ep_base_url))
-                    .appendPath(getString(R.string.ep_login))
-                    .build();
-            //build the JSONObject
-            JSONObject msg = credentials.asJSONObject();
-            mCredentials = credentials;
-
-            //instantiate and execute the AsyncTask.
-            //Feel free to add a handler for onPreExecution so that a progress bar
-            //is displayed or maybe disable buttons. You would need a method in
-            //LoginFragment to perform this.
-            new SendPostAsyncTask.Builder(uri.toString(), msg)
-                    .onPostExecute(this::handleLoginOnPost)
-                    .onCancelled(this::handleErrorsInTask)
-                    .build().execute();
-     */
-
     /**
      * Sends post request to web service to register user.
      * TODO: waiting on endpoint link
@@ -160,12 +139,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
                 .onPostExecute(this::handleLoginOnPost)
                 .onCancelled(this::handleErrorsInTask)
                 .build().execute();
-
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.fragmentContainer, new HomeFragment())
-//                // TODO: replace by string value
-//                .addToBackStack(null)
-//                .commit();
     }
 
     /**
