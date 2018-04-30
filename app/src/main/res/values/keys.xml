@@ -5,4 +5,14 @@
     <string name="keys_prefs_stay_logged_in">loggedIn</string>
     <string name="keys_fragment_login">loginFragmentTag</string>
     <string name="keys_fragment_register">registerFragmentTag</string>
+    <string name= "keys_fragment_chat">chatFragmentTag</string>
+    <string name= "keys_fragment_friends">friendsFragmentTag</string>
+    <string name= "keys_fragment_home">homeFragmentTag</string>
+    <string name= "keys_fragment_navigation">navigationFragmentTag</string>
+    <string name= "recycler_fragment_chat">recyclerFragmentTag</string>
+    <string name= "keys_fragment_select_weather">selectWeatherFragmentTag</string>
+    <string name= "keys_fragment_settings">settingsFragmentTag</string>
+    <string name= "keys_fragment_success">sucessFragmentTag</string>
+    <string name= "keys_fragment_weather">weatherFragmentTag</string>
+
 </resources>

@@ -94,7 +94,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
                     Log.wtf("", "Didn't expect to see me...");
             }
         }
-
     }
 
     public interface OnLoginFragmentInteractionListener {
@@ -102,4 +101,5 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         void onLogin(Credentials creds);
         void onRegister();
     }
+
 }
