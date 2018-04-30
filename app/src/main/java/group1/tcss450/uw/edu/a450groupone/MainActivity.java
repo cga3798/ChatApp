@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
     }
 
 
-    
+
     private void checkStayLoggedIn() {
         if (((CheckBox) findViewById(R.id.LoginCheckBoxStayLoggedIn)).isChecked()) {
             SharedPreferences prefs =
