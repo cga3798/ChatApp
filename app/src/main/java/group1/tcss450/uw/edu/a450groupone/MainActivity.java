@@ -2,6 +2,7 @@ package group1.tcss450.uw.edu.a450groupone;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v4.app.FragmentTransaction;
@@ -229,12 +230,15 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
     }
 
     private void loadHomeFragment() {
-        HomeFragment homeFragment = new HomeFragment();
-        FragmentTransaction transaction = getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragmentContainer, homeFragment);
-        // Commit the transaction
-        transaction.commit();
+//        HomeFragment homeFragment = new HomeFragment();
+//        FragmentTransaction transaction = getSupportFragmentManager()
+//                .beginTransaction()
+//                .replace(R.id.fragmentContainer, homeFragment);
+//        // Commit the transaction
+//        transaction.commit();
+        Intent i = new Intent(getBaseContext(), NavigationFragment.class);
+        i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(i);
     }
 
     /**
