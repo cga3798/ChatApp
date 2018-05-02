@@ -9,11 +9,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import group1.tcss450.uw.edu.a450groupone.model.Weather;
 
 public class NavigationFragment extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
                                                                 ChatFragment.OnChatFragmentInteractionListener,

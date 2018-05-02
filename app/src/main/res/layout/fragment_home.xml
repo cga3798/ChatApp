@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_home"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".HomeFragment">
+<android.support.constraint.ConstraintLayout android:id="@+id/fragmentHome"
+                                             xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             tools:context=".HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -32,7 +32,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/New_chat_fragment"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/HomeScrollViewChatList" />
+        app:layout_constraintTop_toBottomOf="@+id/HomeScrollViewChatList"/>
 
     <TextView
         android:id="@+id/HomeTextViewCurrentDate"
@@ -49,7 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Temperature 42.9 F Sky is clear"
+        android:text="Loading weather data..."
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,7 +63,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/temp_chat1_fragment"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/HomeScrollViewChatList" />
+        app:layout_constraintTop_toTopOf="@+id/HomeScrollViewChatList"/>
 
     <Button
         android:id="@+id/tempChat2"
@@ -73,7 +73,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/temp_chat2_fragment"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tempChat1" />
+        app:layout_constraintTop_toBottomOf="@+id/tempChat1"/>
 
     <Button
         android:id="@+id/tempChat3"
@@ -83,7 +83,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/temp_chat3_fragment"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tempChat2" />
+        app:layout_constraintTop_toBottomOf="@+id/tempChat2"/>
 
     <Button
         android:id="@+id/weatherButton1"
@@ -103,7 +103,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/HomeTextViewCity"/>
@@ -113,7 +112,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/HomeTextViewTemperature"/>

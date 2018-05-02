@@ -2,7 +2,6 @@ package group1.tcss450.uw.edu.a450groupone;
 
 import android.content.Context;
 import android.icu.text.SimpleDateFormat;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -12,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import group1.tcss450.uw.edu.a450groupone.model.Weather;
+import group1.tcss450.uw.edu.a450groupone.utils.Weather;
 
 public class HomeFragment extends Fragment implements View.OnClickListener{
 
@@ -61,13 +60,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
             public void processFinish(Bundle args) {
                 Log.d("WEATHER_FRAG", "setting data");
                 cityTv.setText(args.getString(Weather.K_CITY));
-                //updatedField.setText(weather_updatedOn);
                 weatherDescTv.setText(args.getString(Weather.K_WEATHER_DESC));
                 tempTv.setText(args.getString(Weather.K_CURRENT_TEMP));
-                //humidity_field.setText("Humidity: "+weather_humidity);
-                //pressure_field.setText("Pressure: "+weather_pressure);
-                //weatherIcon.setText(Html.fromHtml(weather_iconText));
-
             }
         });
         asyncTask.execute("47.25288","-122.44429");

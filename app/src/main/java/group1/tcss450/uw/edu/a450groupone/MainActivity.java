@@ -220,25 +220,6 @@ public class MainActivity extends AppCompatActivity implements
         Log.e("ASYNCT_TASK_ERROR", result);
     }
 
-    // TODO: probably methods below will be in activity with navigation bar (after logging in)
-    @Override
-    public void onNewChat() {
-        loadFragment(new ChatFragment(),
-                getString(R.string.keys_fragment_chat));
-    }
-    @Override
-    public void NewWeather() {
-        loadFragment(new WeatherFragment(),
-                getString(R.string.keys_fragment_weather));
-    }
-
-    @Override
-    public void onSelectCityButtonClicked() {
-        Log.d("ADD CITY: ", "CLICKED");
-        loadFragment(new SelectWeatherCityFragment(),
-                getString(R.string.keys_fragment_select_weather));
-    }
-
     private void loadFragment(Fragment frag, String tag) {
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
@@ -260,4 +241,24 @@ public class MainActivity extends AppCompatActivity implements
                 });
         alertDialog.show();
     }
+
+    // TODO: probably methods below will be in activity with navigation bar (after logging in)
+    @Override
+    public void onNewChat() {
+        loadFragment(new ChatFragment(),
+                getString(R.string.keys_fragment_chat));
+    }
+    @Override
+    public void NewWeather() {
+        loadFragment(new WeatherFragment(),
+                getString(R.string.keys_fragment_weather));
+    }
+
+    @Override
+    public void onSelectCityButtonClicked() {
+        Log.d("ADD CITY: ", "CLICKED");
+        loadFragment(new SelectWeatherCityFragment(),
+                getString(R.string.keys_fragment_select_weather));
+    }
+
 }
