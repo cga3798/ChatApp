@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import group1.tcss450.uw.edu.a450groupone.model.Credentials;
 
@@ -93,6 +94,9 @@ public class RegisterFragment extends Fragment {
         else if (errField.equals("username"))
             ((TextView) getView().findViewById(R.id.registerEditTextNickname))
                     .setError(err);
+        else if (errField.equals(null))
+            Toast.makeText(getActivity(),
+                    err, Toast.LENGTH_LONG).show();
     }
 
     @Override

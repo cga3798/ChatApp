@@ -142,7 +142,6 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
     private void setWeatherData(View v) {
         Log.d("WEATHER_FRAG", "setting data");
 
-
         makeTopWeatherData(v);
         makeHourlyScrollView(v);
         makeDailyScrollView(v);

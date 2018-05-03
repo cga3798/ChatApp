@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import group1.tcss450.uw.edu.a450groupone.model.Credentials;
 
@@ -41,10 +42,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
      * @param err the error message to display.
      */
     public void setError(String err) {
-        //Log in unsuccessful for reason: err. Try again.
-        //you may want to add error stuffs for the user here.
-        ((TextView) getView().findViewById(R.id.LoginEditTextUserName))
-                .setError(err);
+        Toast.makeText(getActivity(),
+                err, Toast.LENGTH_LONG).show();
     }
 
     @Override
