@@ -13,6 +13,13 @@ import android.widget.TextView;
 
 import group1.tcss450.uw.edu.a450groupone.utils.Weather;
 
+/**
+ * Fragment to be landing view after user logs in.
+ *
+ *
+ * @author Casey Anderson
+ * @version 1 April 2018
+ */
 public class HomeFragment extends Fragment implements View.OnClickListener{
 
 
@@ -24,12 +31,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         // Required empty public constructor
     }
 
+    /**
+     * setting up fragment
+     *
+     * author: Casey Anderson
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
         View v = inflater.inflate(R.layout.fragment_home, container, false);
+
+        // these are temporary buttons
 //        Button b = (Button) v.findViewById(R.id.HomeButtonNewChat);
 //        b.setOnClickListener(this);
         Button b = (Button) v.findViewById(R.id.tempChat3);
@@ -40,6 +54,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         b.setOnClickListener(this);
         b = (Button) v.findViewById(R.id.weatherButton1);
         b.setOnClickListener(this);
+
+
+
         TextView tv = (TextView) v.findViewById(R.id.HomeTextViewCurrentDate);
         long date = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy h:mm a");
@@ -67,6 +84,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         asyncTask.execute("47.25288","-122.44429");
     }
 
+    /**
+     * onAtttach method for home fragment listener
+     *
+     * author: Casey Anderson
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -78,31 +100,40 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         }
     }
 
+    /**
+     * default onDetach method
+     *
+     * author: Casey Anderson
+     */
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
+    /**
+     * temperary onClick method for temp buttons
+     *
+     * author: Casey Anderson
+     */
     @Override
     public void onClick(View view) {
         if (mListener != null) {
             switch (view.getId()) {
-//                case R.id.HomeButtonNewChat:
+//              case R.id.HomeButtonNewChat:
 //                    mListener.onNewChat();
 //                    break;
                 case R.id.weatherButton1:
-                    Log.v("hello", "hello");
-                    mListener.NewWeather();
+                    mListener.NewWeather(); // temp weather button for navigation
                     break;
                 case R.id.tempChat1:
-                    mListener.onNewChat();
+                    mListener.onNewChat(); // temp chat for place holder
                     break;
                 case R.id.tempChat2:
-                    mListener.onNewChat();
+                    mListener.onNewChat(); // temp chat for place holder
                     break;
                 case R.id.tempChat3:
-                    mListener.onNewChat();
+                    mListener.onNewChat(); // temp chat for place holder
                     break;
                 default:
                     Log.wtf("", "Didn't expect to see me...");
@@ -110,6 +141,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         }
     }
 
+    /**
+     * listener interfaces for temp buttons
+     *
+     * author: Casey Anderson
+      */
     public interface OnHomeFragmentInteractionListener {
         void onNewChat();
         void NewWeather();
