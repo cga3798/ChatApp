@@ -1,5 +1,6 @@
 package group1.tcss450.uw.edu.a450groupone;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,9 +21,8 @@ import android.view.View;
  */
 
 public class NavigationFragment extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-                                                                ChatFragment.OnChatFragmentInteractionListener,
                                                                 WeatherFragment.OnWeatherFragmentInteractionListener,
-                                                                HomeFragment.OnHomeFragmentInteractionListener {
+                                                                HomeFragment.OnHomeFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,31 +147,42 @@ public class NavigationFragment extends AppCompatActivity implements NavigationV
 
     }
 
+    @Override
+    public void onNewChat() {
+        Intent intent = new Intent(this, ChatActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void NewWeather() {
+
+    }
+
     /*
      * onNewChat is a handle for calling new chat calls. Calls the loadFrament method passing a new ChatFragment
      */
 
-    @Override
-    public void onNewChat() {
-        loadFragment(new ChatFragment());
+   // @Override
+ //   public void onNewChat() {
+  //      loadFragment(new ChatFragment());
 //        getSupportFragmentManager().beginTransaction()
 //                .replace(R.id.navigationFragmentContainer, new ChatFragment())
 //                // TODO: replace by string value
 //                .addToBackStack(null)
 //                .commit();
-    }
+  //  }
 
     /*
      * NewWeather creates a new weather fragment then replaces the currently displayed fragment with
      * the newly created weather fragment.
      */
-    @Override
-    public void NewWeather() {
-        WeatherFragment weatherFrag = new WeatherFragment();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.navigationFragmentContainer, weatherFrag)
-                // TODO: replace by string value
-                .addToBackStack(null)
-                .commit();
-    }
+//    @Override
+//    public void NewWeather() {
+//        WeatherFragment weatherFrag = new WeatherFragment();
+//        getSupportFragmentManager().beginTransaction()
+//                .replace(R.id.navigationFragmentContainer, weatherFrag)
+//                // TODO: replace by string value
+//                .addToBackStack(null)
+//                .commit();
+//    }
 }

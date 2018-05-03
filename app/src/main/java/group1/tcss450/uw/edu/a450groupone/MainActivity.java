@@ -19,7 +19,8 @@ import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 public class MainActivity extends AppCompatActivity implements
         LoginFragment.OnLoginFragmentInteractionListener,
         RegisterFragment.OnRegistrationCompleteListener,
-        SuccessRegistrationFragment.OnOkVerifyEmailListener {
+        SuccessRegistrationFragment.OnOkVerifyEmailListener,
+        HomeFragment.OnHomeFragmentInteractionListener{
 
     private Credentials mCredentials;
 
@@ -221,16 +222,16 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     // TODO: probably methods below will be in activity with navigation bar (after logging in)
-//    @Override
-//    public void onNewChat() {
-//        loadFragment(new ChatFragment(),
-//                getString(R.string.keys_fragment_chat));
-//    }
-//    @Override
-//    public void NewWeather() {
-//        loadFragment(new WeatherFragment(),
-//                getString(R.string.keys_fragment_weather));
-//    }
+    @Override
+    public void onNewChat() {
+
+    }
+
+
+    @Override
+    public void NewWeather() {
+
+    }
 //
 //    @Override
 //    public void onSelectCityButtonClicked() {
