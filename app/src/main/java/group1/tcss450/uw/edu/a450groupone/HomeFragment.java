@@ -30,9 +30,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
 
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-        Button b = (Button) v.findViewById(R.id.HomeButtonNewChat);
-        b.setOnClickListener(this);
-        b = (Button) v.findViewById(R.id.tempChat3);
+//        Button b = (Button) v.findViewById(R.id.HomeButtonNewChat);
+//        b.setOnClickListener(this);
+        Button b = (Button) v.findViewById(R.id.tempChat3);
         b.setOnClickListener(this);
         b = (Button) v.findViewById(R.id.tempChat1);
         b.setOnClickListener(this);
@@ -88,9 +88,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         if (mListener != null) {
             switch (view.getId()) {
-                case R.id.HomeButtonNewChat:
-                    mListener.onNewChat();
-                    break;
+//                case R.id.HomeButtonNewChat:
+//                    mListener.onNewChat();
+//                    break;
                 case R.id.weatherButton1:
                     Log.v("hello", "hello");
                     mListener.NewWeather();
