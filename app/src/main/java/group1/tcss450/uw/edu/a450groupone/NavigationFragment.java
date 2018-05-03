@@ -1,5 +1,6 @@
 package group1.tcss450.uw.edu.a450groupone;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -153,6 +154,8 @@ public class NavigationFragment extends AppCompatActivity implements NavigationV
 
     @Override
     public void onNewChat() {
+       // Intent intent = new Intent(this, ChatActivity.class);
+      //  startActivity(intent);
         loadFragment(new ChatFragment());
 //        getSupportFragmentManager().beginTransaction()
 //                .replace(R.id.navigationFragmentContainer, new ChatFragment())
