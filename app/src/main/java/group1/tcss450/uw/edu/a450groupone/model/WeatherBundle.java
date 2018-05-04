@@ -4,27 +4,19 @@ import org.json.JSONObject;
 
 public class WeatherBundle {
     private JSONObject currentWeather;
-    private JSONObject dailyWeather;
-    private JSONObject hourlyWeather;
+    private JSONObject hourlyDailyWeather;
 
-    public JSONObject getDailyWeather() {
-        return dailyWeather;
-    }
 
-    public JSONObject getHourlyWeather() {
-        return hourlyWeather;
+    public JSONObject getHourlyDailyWeather() {
+        return hourlyDailyWeather;
     }
 
     public JSONObject getCurrentWeather() {
         return currentWeather;
     }
 
-    public void setDailyWeather(JSONObject dailyWeather) {
-        this.dailyWeather = dailyWeather;
-    }
-
-    public void setHourlyWeather(JSONObject hourlyWeather) {
-        this.hourlyWeather = hourlyWeather;
+    public void setHourlyDailyWeather(JSONObject hourlyDailyWeather) {
+        this.hourlyDailyWeather = hourlyDailyWeather;
     }
 
     public void setCurrentWeather(JSONObject currentWeather) {

@@ -2,6 +2,7 @@ package group1.tcss450.uw.edu.a450groupone;
 
 import android.content.Context;
 import android.icu.text.SimpleDateFormat;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -51,6 +52,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         weatherDescTv = v.findViewById(R.id.HomeTextViewWeatherDesc);
 
         setWeatherData();
+
 
         return v;
     }

@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,22 +32,33 @@ public class Weather {
     public static final String K_MIN_TEMP = "minTemp";
     public static final String K_SUNRISE = "sunrise";
     public static final String K_SUNSET = "sunset";
+    public static final String K_SUNRISE_LONG = "sunriseLong";
+    public static final String K_SUNSET_LONG = "sunsetLong";
+    public static final String K_WIND_SPEED = "windSpeed";
+    public static final String K_WIND_DIR = "windDirection";
+    public static final String K_HOURLY_DAILY_LIST = "hourlyDailyList";
+    public static final String K_DAY_OF_WEEK = "dayOfWeek";
 
 
-    private static final int DAY_COUNT = 10;
 
     private static final String OPEN_WEATHER_CURRENT_URL =
             "http://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&units=metric"; // by lat lon
     //"api.openweathermap.org/data/2.5/weather?q=%s";  // by city (to use city id-> "...?id=%d" )
     private static final String OPEN_WEATHER_HOURLY_URL =
             "http://api.openweathermap.org/data/2.5/forecast?lat=%s&lon=%s&units=metric"; // forecast ( 5 days every 3 hrs)
-    private static final String OPEN_WEATHER_DAILY_URL =
-            "http://api.openweathermap.org/data/2.5/forecast/daily?lat=%s&lon=%s&units=metric&cnt=%d"; // daily (up to 16 days)
+
+    private static final String OPEN_WEATHER_DAILY_URL =           // not included in free API version
+            "http://api.openweathermap.org/data/2.5/forecast/daily?lat=%s&lon=%s&cnt=%s"; // daily (up to 16 days)
 
     // units can be (metric, imperial) -> (Celsius, Fahrenheit)
 
-
     private static final String OPEN_WEATHER_MAP_API = "ffd45d2019792da36a10c13555d5c15c";
+
+    private static final String[] COMPASS = {"N","NNE","NE",
+                                            "ENE","E","ESE",
+                                            "SE", "SSE","S","SSW","SW",
+                                            "WSW","W","WNW","NW","NNW"};
+
 
 
     public static class RetrieveData extends AsyncTask<String, Void, WeatherBundle> {
@@ -65,10 +77,18 @@ public class Weather {
         protected WeatherBundle doInBackground(String... params) {
 
             WeatherBundle weatherBundle = new WeatherBundle();
-//            JSONObject jsonWeather = null;
-//            JSONObject jsonDaily = null;
+
+            // TODO : request based on src
             try {
-                weatherBundle.setCurrentWeather(getCurrentWeatherJSON(params[0], params[1]));
+                if (source == R.id.fragmentHome) {
+                    weatherBundle.setCurrentWeather(getCurrentWeatherJSON(params[0], params[1]));
+                } else if (source == R.id.fragmentWeather) {
+                    weatherBundle.setCurrentWeather(getCurrentWeatherJSON(params[0], params[1]));
+                    weatherBundle.setHourlyDailyWeather(getHourlyDailyWeatherJSON(params[0], params[1]));
+                } else {
+                    Log.e("WEATHE_ASYNC", "THis shouldnt happen! Dont call Weather service from innapropiate fragment!!!");
+                }
+                //weatherBundle.setDailyWeather(getDailyWeatherJSON(params[0], params[1]));
                 //jsonDaily = getWeatherJSON(params[0], params[1]);
             } catch (Exception e) {
                 Log.d("Error", "Cannot process JSON results", e);
@@ -98,12 +118,10 @@ public class Weather {
 
         private static void loadWeatherFragmentData(WeatherBundle weatherBundle, Bundle b) {
             JSONObject simpleWeatherJSON = weatherBundle.getCurrentWeather();
-            JSONObject dailyWeatherJSON = weatherBundle.getDailyWeather();
-            JSONObject hourlyWeatherJSON = weatherBundle.getHourlyWeather();
-
-
+            JSONObject hourlyDailyWeatherJSON = weatherBundle.getHourlyDailyWeather();
 
             parseCurrentWeatherJSON(simpleWeatherJSON, b);
+            parseHourlyDailyWeatherJSON(hourlyDailyWeatherJSON, b);
 
         }
     }
@@ -115,6 +133,7 @@ public class Weather {
                 JSONObject details = simpleWeatherJSON.getJSONArray("weather").getJSONObject(0);
                 JSONObject main = simpleWeatherJSON.getJSONObject("main");
                 JSONObject sys = simpleWeatherJSON.getJSONObject("sys");
+                JSONObject wind = simpleWeatherJSON.getJSONObject("wind");
                 DateFormat df = DateFormat.getDateTimeInstance();
 
 
@@ -124,13 +143,17 @@ public class Weather {
                 String humidity = main.getString("humidity") + "%";
                 String pressure = main.getString("pressure") + " hPa";
                 String updatedOn = df.format(new Date(simpleWeatherJSON.getLong("dt") * 1000));
+
+                long sunriseLong = sys.getLong("sunrise") * 1000;
+                long sunsetLong = sys.getLong("sunset") * 1000;
                 String iconText = setWeatherIcon(details.getInt("id"),
-                        sys.getLong("sunrise") * 1000,
-                        sys.getLong("sunset") * 1000);
+                                            sunriseLong,sunsetLong);
                 String maxTemp = String.valueOf(main.getInt("temp_max"));
                 String minTemp = String.valueOf(main.getInt("temp_min"));
                 String sunrise = df.format(new Date(sys.getLong("sunrise") * 1000));
                 String sunset = df.format(new Date(sys.getLong("sunset") * 1000));
+                String windSpeed = wind.getString("speed") + " m/s";
+                String windDirection = getWindDirection(wind.getInt("deg"));
 
                 b.putString(K_CITY, city);
                 b.putString(K_WEATHER_DESC, description);
@@ -143,14 +166,28 @@ public class Weather {
                 b.putString(K_MIN_TEMP, minTemp);
                 b.putString(K_SUNRISE, sunrise);
                 b.putString(K_SUNSET, sunset);
+                b.putString(K_WIND_DIR, windDirection);
+                b.putString(K_WIND_SPEED, windSpeed);
+                b.putLong(K_SUNRISE_LONG, sunriseLong);
+                b.putLong(K_SUNSET_LONG, sunsetLong);
+            }
+        } catch (JSONException e) {
+            Log.e("WEATHER_ASYNC", "Cannot process JSON results", e);
+        }
+    }
+
+
+    private static void parseHourlyDailyWeatherJSON(JSONObject json, Bundle b) {
+        try {
+            if (json != null) {
+                JSONArray hourlyList = json.getJSONArray("list");
+                b.putString(K_HOURLY_DAILY_LIST, hourlyList.toString());
+                Log.d("SHOWhourJSON", hourlyList.toString());
             }
         } catch (JSONException e) {
             Log.e("WEATHER_FRAG", "Cannot process JSON results", e);
         }
     }
-
-
-
 
     private static void loadHomeFragmentData(JSONObject json, Bundle b) {
         try {
@@ -207,39 +244,7 @@ public class Weather {
         }
     }
 
-
-    public static JSONObject getDailyWeatherJSON(String lat, String lon) {
-        try {
-            URL url = new URL(String.format(OPEN_WEATHER_DAILY_URL, lat, lon, DAY_COUNT));
-            HttpURLConnection connection =
-                    (HttpURLConnection) url.openConnection();
-
-            connection.addRequestProperty("x-api-key", OPEN_WEATHER_MAP_API);
-
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(connection.getInputStream()));
-
-            StringBuffer json = new StringBuffer(1024);
-            String tmp = "";
-            while ((tmp = reader.readLine()) != null)
-                json.append(tmp).append("\n");
-            reader.close();
-
-            JSONObject data = new JSONObject(json.toString());
-
-            // This value will be 404 if the request was not
-            // successful
-            if (data.getInt("cod") != 200) {
-                return null;
-            }
-
-            return data;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public static JSONObject getHourlyWeatherJSON(String lat, String lon) {
+    public static JSONObject getHourlyDailyWeatherJSON(String lat, String lon) {
         try {
             URL url = new URL(String.format(OPEN_WEATHER_HOURLY_URL, lat, lon));
             HttpURLConnection connection =
@@ -270,14 +275,21 @@ public class Weather {
         }
     }
 
-    public int celsiusToFarenheit(int celsius) {
+    public static String getWindDirection(int degrees) {
+        int val = (int) ((degrees/22.5)+.5);
+        return COMPASS[(val % 16)];
+    }
+
+    public static int celsiusToFarenheit(int celsius) {
         return (int) Math.floor(celsius * 1.8 + 32);
     }
 
+
     public static String setWeatherIcon(int actualId, long sunrise, long sunset) {
+
         int id = actualId / 100;
         String icon = "";
-        if (actualId == 800) {
+        if (actualId == 800 && sunrise > 0 && sunset > 0) {
             long currentTime = new Date().getTime();
             if (currentTime >= sunrise && currentTime < sunset) {
                 icon = "&#xf00d;";
