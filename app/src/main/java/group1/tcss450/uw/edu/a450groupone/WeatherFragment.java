@@ -1,11 +1,14 @@
 package group1.tcss450.uw.edu.a450groupone;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.text.Layout;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +42,8 @@ import group1.tcss450.uw.edu.a450groupone.utils.Weather;
  */
 public class WeatherFragment extends Fragment implements View.OnClickListener {
 
+    private static final float TEXT_VIEW_WEIGHT = .5f;
+
     private OnWeatherFragmentInteractionListener mListener;
 
     //private TextView city, weather, currentTemp, weatherIcon;
@@ -51,8 +56,6 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
     public WeatherFragment() {
         // Required empty public constructor
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,6 +82,35 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
         asyncTask.execute("47.25288","-122.44429");
     }
 
+    private void setWeatherData(View v) {
+        Log.d("WEATHER_FRAG", "setting data");
+        makeTopWeatherData(v);
+        makeHourlyScrollView(v);
+        makeDailyScrollView(v);
+        makeBottomWeatherData(v);
+    }
+
+    private void makeTopWeatherData(View v) {
+        Typeface weatherFont = Typeface.createFromAsset(getContext().getAssets(), "fonts/weathericons-regular-webfont.ttf");
+
+        TextView city = v.findViewById(R.id.weatherCityTextview);
+        TextView weather = v.findViewById(R.id.weatherDesc);
+        TextView currentTemp = v.findViewById(R.id.weatherTemp);
+        TextView weatherIcon = v.findViewById(R.id.weatherIcon);
+        weatherIcon.setTypeface(weatherFont);
+        TextView today = v.findViewById(R.id.weatherToday);
+        TextView maxmin = v.findViewById(R.id.weatherTodayMaxMinTemp);
+
+        city.setText(data.getString(Weather.K_CITY));
+        weather.setText(data.getString(Weather.K_WEATHER_DESC));
+        currentTemp.setText(data.getString(Weather.K_CURRENT_TEMP));
+        weatherIcon.setText(Html.fromHtml(data.getString(Weather.K_ICON)));
+        today.setText(data.getString(Weather.K_UPDATEDON) + " Today");
+        maxmin.setText(data.getString(Weather.K_MAX_TEMP) + "  "
+                    + data.getString(Weather.K_MIN_TEMP));
+
+    }
+
     private void makeHourlyScrollView(View v) {
         LinearLayout hourlyBar = v.findViewById(R.id.weatherHourlyBar);
         JSONArray hourlyList = null;
@@ -89,7 +121,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
         }
 
         SimpleDateFormat sdf = new SimpleDateFormat("ha");
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        sdf.setTimeZone(TimeZone.getTimeZone(Weather.GMT_PACIFIC));
 
         for (int i = 0; i < hourlyList.length(); i++) {
             try {
@@ -118,11 +150,11 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
         tv = v.findViewById(R.id.weatherTextViewIcon);
         tv.setTypeface(weatherFont);
         tv.setText(Html.fromHtml(
-                        Weather.setWeatherIcon(
-                                weather.getInt("id"),
-                                data.getLong(Weather.K_SUNRISE_LONG),
-                                data.getLong(Weather.K_SUNSET_LONG))
-                    ));
+                Weather.setWeatherIcon(
+                        weather.getInt("id"),
+                        data.getLong(Weather.K_SUNRISE_LONG),
+                        data.getLong(Weather.K_SUNSET_LONG))
+        ));
         tv = v.findViewById(R.id.weatherTextViewTemp);
         tv.setText(String.valueOf(main.getInt("temp")));
 
@@ -136,8 +168,9 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
         try {
             //final ArrayList<Bundle> days = new ArrayList<>();
             SimpleDateFormat sdf = new SimpleDateFormat("dd");
-            sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+            sdf.setTimeZone(TimeZone.getTimeZone(Weather.GMT_PACIFIC));
             DateFormat df = new SimpleDateFormat("EEEE");
+            df.setTimeZone(TimeZone.getTimeZone(Weather.GMT_PACIFIC));
             JSONArray dailyList = new JSONArray(data.getString(Weather.K_HOURLY_DAILY_LIST));
             processHoursJSON(dailyList, days, sdf, df);
         } catch (JSONException e) {
@@ -171,14 +204,26 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
             if (Integer.valueOf(currDay) != Integer.valueOf(prevDay) ) {
                 // store vals
                 String dayOfWeek = df.format(new Date(prevHourJson.getLong("dt") * 1000));
-                int icon = sumIcon/count;
 
-                Bundle b = new Bundle();
-                b.putString(Weather.K_DAY_OF_WEEK, dayOfWeek);
-                b.putInt(Weather.K_ICON, icon);
-                b.putString(Weather.K_MAX_TEMP, String.valueOf(max));
-                b.putString(Weather.K_MIN_TEMP, String.valueOf(min));
-                days.add(b);
+                int icon = 8;
+                if (count > 0) { // data for day not available
+                    icon = sumIcon/count;
+                    Bundle b = new Bundle();
+                    b.putString(Weather.K_DAY_OF_WEEK, dayOfWeek);
+                    b.putInt(Weather.K_ICON, icon);
+                    b.putString(Weather.K_MAX_TEMP, String.valueOf(max));
+                    b.putString(Weather.K_MIN_TEMP, String.valueOf(min));
+                    days.add(b);
+                } else { // say data not available
+                    Bundle b = new Bundle();
+                    b.putString(Weather.K_DAY_OF_WEEK, dayOfWeek);
+                    b.putInt(Weather.K_ICON, icon);
+                    b.putString(Weather.K_MAX_TEMP, getString(R.string.data_not_available) );
+                    b.putString(Weather.K_MIN_TEMP, "");
+                    days.add(b);
+                }
+
+
                 // reset for new day
                 max = Integer.MIN_VALUE;
                 min = Integer.MAX_VALUE;
@@ -207,9 +252,9 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
         cell.setTypeface(weatherFont);
         cell.setText(Html.fromHtml(
                 Weather.setWeatherIcon(
-                               b.getInt(Weather.K_ICON),0,0)
+                        b.getInt(Weather.K_ICON),0,0)
 
-            ));
+        ));
         cell = v.findViewById(R.id.weatherTextViewRowMaxTemp);
         cell.setText(b.getString(Weather.K_MAX_TEMP));
         cell = v.findViewById(R.id.weatherTextViewRowMinTemp);
@@ -217,37 +262,66 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
         return v;
     }
 
-    private void makeTopWeatherData(View v) {
-        Typeface weatherFont = Typeface.createFromAsset(getContext().getAssets(), "fonts/weathericons-regular-webfont.ttf");
-
-        TextView city = v.findViewById(R.id.weatherCityTextview);
-        TextView weather = v.findViewById(R.id.weatherDesc);
-        TextView currentTemp = v.findViewById(R.id.weatherTemp);
-        TextView weatherIcon = v.findViewById(R.id.weatherIcon);
-        weatherIcon.setTypeface(weatherFont);
-
-        city.setText(data.getString(Weather.K_CITY));
-
-        weather.setText(data.getString(Weather.K_WEATHER_DESC));
-        currentTemp.setText(data.getString(Weather.K_CURRENT_TEMP));
-        weatherIcon.setText(Html.fromHtml(data.getString(Weather.K_ICON)));
-    }
 
     private void makeBottomWeatherData(View v) {
-        //updatedField.setText(weather_updatedOn);
-        //humidity_field.setText("Humidity: "+weather_humidity);
-        //pressure_field.setText("Pressure: "+weather_pressure);
+        TableLayout table = v.findViewById(R.id.weatherDailyTable);
+        // header
+        TableRow aRow = getRowWithStyle();
+        aRow.addView(makeTextView(getString(R.string.sunrise), true));
+        aRow.addView(makeTextView(getString(R.string.sunset), true));
+        table.addView(aRow);
+        //data
+        aRow = getRowWithStyle();
+        aRow.addView(makeTextView(data.getString(Weather.K_SUNRISE), false));
+        aRow.addView(makeTextView(data.getString(Weather.K_SUNSET), false));
+        table.addView(aRow);
+
+        // header
+        aRow = getRowWithStyle();
+        aRow.addView(makeTextView(getString(R.string.wind), true));
+        aRow.addView(makeTextView(getString(R.string.humidity), true));
+        table.addView(aRow);
+        //data
+        aRow = getRowWithStyle();
+        String windInfo = data.getString(Weather.K_WIND_DIR)
+                        + "  " + data.getString(Weather.K_WIND_SPEED);
+        aRow.addView(makeTextView(windInfo,false));
+        aRow.addView(makeTextView(data.getString(Weather.K_HUMIDITY), false));
+        table.addView(aRow);
 
     }
 
-    private void setWeatherData(View v) {
-        Log.d("WEATHER_FRAG", "setting data");
-        makeTopWeatherData(v);
-        makeHourlyScrollView(v);
-        makeDailyScrollView(v);
-        makeBottomWeatherData(v);
+    private TextView makeTextView(String text, boolean header) {
+        TextView tv = new TextView(this.getContext());
+        tv.setText(text);
+        tv.setLayoutParams(new TableRow.LayoutParams(
+                TableRow.LayoutParams.WRAP_CONTENT,
+                TableRow.LayoutParams.WRAP_CONTENT,
+                TEXT_VIEW_WEIGHT
+        ));
 
+        if (header) {
+            tv.setTextSize(getResources().getDimensionPixelSize(R.dimen.weather_header_text_size));
+        } else {
+            tv.setTextSize(getResources().getDimensionPixelSize(R.dimen.weather_data_text_size));
+        }
+
+        return tv;
     }
+
+    private TableRow getRowWithStyle() {
+        TableRow row = new TableRow(this.getContext());
+        row.setLayoutParams(new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.WRAP_CONTENT
+        ));
+
+        int dp = getResources().getDimensionPixelSize(R.dimen.row_padding);
+        row.setPadding(dp, dp, dp, dp);
+
+        return row;
+    }
+
 
     public void onSelectCClicked(View v) {
         Log.d("In weather: ", "select city clicked");

@@ -13,8 +13,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import group1.tcss450.uw.edu.a450groupone.R;
 import group1.tcss450.uw.edu.a450groupone.model.WeatherBundle;
@@ -39,7 +41,7 @@ public class Weather {
     public static final String K_HOURLY_DAILY_LIST = "hourlyDailyList";
     public static final String K_DAY_OF_WEEK = "dayOfWeek";
 
-
+    public static final String GMT_PACIFIC = "GMT-7";
 
     private static final String OPEN_WEATHER_CURRENT_URL =
             "http://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&units=metric"; // by lat lon
@@ -58,8 +60,6 @@ public class Weather {
                                             "ENE","E","ESE",
                                             "SE", "SSE","S","SSW","SW",
                                             "WSW","W","WNW","NW","NNW"};
-
-
 
     public static class RetrieveData extends AsyncTask<String, Void, WeatherBundle> {
 
@@ -134,8 +134,10 @@ public class Weather {
                 JSONObject main = simpleWeatherJSON.getJSONObject("main");
                 JSONObject sys = simpleWeatherJSON.getJSONObject("sys");
                 JSONObject wind = simpleWeatherJSON.getJSONObject("wind");
-                DateFormat df = DateFormat.getDateTimeInstance();
-
+                DateFormat df = new SimpleDateFormat("EEEE");
+                df.setTimeZone(TimeZone.getTimeZone(GMT_PACIFIC));
+                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+                sdf.setTimeZone(TimeZone.getTimeZone(GMT_PACIFIC));
 
                 String city = simpleWeatherJSON.getString("name").toUpperCase(Locale.US) + ", " + simpleWeatherJSON.getJSONObject("sys").getString("country");
                 String description = details.getString("description").toUpperCase(Locale.US);
@@ -150,8 +152,8 @@ public class Weather {
                                             sunriseLong,sunsetLong);
                 String maxTemp = String.valueOf(main.getInt("temp_max"));
                 String minTemp = String.valueOf(main.getInt("temp_min"));
-                String sunrise = df.format(new Date(sys.getLong("sunrise") * 1000));
-                String sunset = df.format(new Date(sys.getLong("sunset") * 1000));
+                String sunrise = sdf.format(new Date(sys.getLong("sunrise") * 1000));
+                String sunset = sdf.format(new Date(sys.getLong("sunset") * 1000));
                 String windSpeed = wind.getString("speed") + " m/s";
                 String windDirection = getWindDirection(wind.getInt("deg"));
 

@@ -52,4 +52,13 @@
     <string name="temp_chat2_fragment">Temp Chat 2</string>
     <string name="temp_chat3_fragment">Temp Chat 3</string>
 
+    <string name="data_not_available">Data not available</string>
+    <string name="sunrise">Sunrise</string>
+    <string name="sunset">Sunset</string>
+    <string name="wind">Wind</string>
+    <string name="humidity">Humidity</string>
+
+
+
+
 </resources>
