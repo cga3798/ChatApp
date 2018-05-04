@@ -1,6 +1,9 @@
 package group1.tcss450.uw.edu.a450groupone;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
@@ -11,6 +14,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+/*
+ * Navigation fragment holds the currently displayed screen overlaying it with a toolbar and clickable nav menu.
+ */
 
 public class NavigationFragment extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
                                                                 ChatFragment.OnChatFragmentInteractionListener,
@@ -33,14 +41,18 @@ public class NavigationFragment extends AppCompatActivity implements NavigationV
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+        /**
+         * Floating action button
+         * Button floats bottom right and triggers an action.
+         * Current Action: load new chatFragment
+         */
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadFragment(new ChatFragment());
+            }
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -87,7 +99,12 @@ public class NavigationFragment extends AppCompatActivity implements NavigationV
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    /*
+     * onNavigationItemSelected
+     * Handles the clicking of item buttons in the nav menu drawer.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -110,6 +127,10 @@ public class NavigationFragment extends AppCompatActivity implements NavigationV
         return true;
     }
 
+    /*
+     * loadFragment loads the passed fragment into the nav menu screen replacing the current fragment.
+     * @param frag
+     */
     private void loadFragment(Fragment frag) {
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
@@ -119,19 +140,34 @@ public class NavigationFragment extends AppCompatActivity implements NavigationV
         transaction.commit();
     }
 
+    /*
+     * onSelectCity should load a city selection menu.
+     */
     @Override
     public void onSelectCityButtonClicked() {
 
     }
 
+    /*
+     * onNewChat is a handle for calling new chat calls. Calls the loadFrament method passing a new ChatFragment
+     */
+
     @Override
     public void onNewChat() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.navigationFragmentContainer, new ChatFragment())
-                // TODO: replace by string value
-                .addToBackStack(null)
-                .commit();
+       // Intent intent = new Intent(this, ChatActivity.class);
+      //  startActivity(intent);
+        loadFragment(new ChatFragment());
+//        getSupportFragmentManager().beginTransaction()
+//                .replace(R.id.navigationFragmentContainer, new ChatFragment())
+//                // TODO: replace by string value
+//                .addToBackStack(null)
+//                .commit();
     }
+
+    /*
+     * NewWeather creates a new weather fragment then replaces the currently displayed fragment with
+     * the newly created weather fragment.
+     */
     @Override
     public void NewWeather() {
         WeatherFragment weatherFrag = new WeatherFragment();

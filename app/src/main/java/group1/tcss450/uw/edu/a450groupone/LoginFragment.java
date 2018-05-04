@@ -11,10 +11,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import group1.tcss450.uw.edu.a450groupone.model.Credentials;
 
-
+/**
+ * Fragment for user loggin view.
+ *
+ *
+ * @author Casey Anderson
+ * @version 1 April 2018
+ */
 public class LoginFragment extends Fragment implements View.OnClickListener{
     private OnLoginFragmentInteractionListener mListener;
 
@@ -22,7 +29,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         // Required empty public constructor
     }
 
-
+    /**
+     * setting up fragment
+     *
+     * author: Casey Anderson
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -35,18 +46,22 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         b.setOnClickListener(this);
         return v;
     }
+
     /**
      * Allows an external source to set an error message on this fragment. This may
      * be needed if an Activity includes processing that could cause login to fail.
      * @param err the error message to display.
      */
     public void setError(String err) {
-        //Log in unsuccessful for reason: err. Try again.
-        //you may want to add error stuffs for the user here.
-        ((TextView) getView().findViewById(R.id.LoginEditTextUserName))
-                .setError(err);
+        Toast.makeText(getActivity(),
+                err, Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * onAttach method to attach login fragment listener.
+     *
+     * author: Casey Anderson
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -58,12 +73,22 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         }
     }
 
+    /**
+     * default onDetach method
+     *
+     * author: Casey Anderson
+     */
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
+    /**
+     * onClick method to handle user login or register attempts.
+     *
+     * author: Casey Anderson
+     */
     @Override
     public void onClick(View view) {
         if (mListener != null) {
@@ -71,17 +96,23 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
                 case R.id.LoginButtonLogin:
                     // TODO: add this in method
                     EditText editText = (EditText) getActivity().findViewById(R.id.LoginEditTextUserName);
+
+                    // testing for username to be > 0 length
                     if (editText.getText().toString().trim().length() == 0) {
                         editText.setError("Username may not be empty");
                     }
 
                     String userName = editText.getText().toString();
                     editText = (EditText) getActivity().findViewById(R.id.LoginEditTextPassword);
+
+                    // testing for password to be > 0 length
                     if (editText.getText().toString().trim().length() == 0) {
                         editText.setError("password may not be empty");
                     }
                     Editable password = editText.getText();
                     // TODO: redundant...
+
+                    // testing for username and password to be > 0 length
                     if(!(userName.length() == 0 || password.length() == 0)) {
                         Credentials creds = new Credentials.Builder(userName, password).build();
                         mListener.onLogin(creds);
@@ -96,6 +127,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         }
     }
 
+    /**
+     * listener interfaces for buttons
+     *
+     * author: Casey Anderson
+     */
     public interface OnLoginFragmentInteractionListener {
         // TODO: Update argument type and name
         void onLogin(Credentials creds);
