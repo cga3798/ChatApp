@@ -23,8 +23,8 @@ tools:context=".ChatFragment">
 
     <EditText
         android:id="@+id/chatInputEditText"
-        android:layout_width="253dp"
-        android:layout_height="42dp"
+        android:layout_width="332dp"
+        android:layout_height="41dp"
         android:layout_marginBottom="8dp"
         android:hint="Write a message"
         android:inputType="text"
@@ -37,7 +37,7 @@ tools:context=".ChatFragment">
         android:layout_width="48dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
-        android:layout_marginEnd="72dp"
+        android:layout_marginEnd="8dp"
         android:src="@drawable/ic_send_button_image"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

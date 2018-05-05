@@ -1,5 +1,8 @@
 package group1.tcss450.uw.edu.a450groupone;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -22,13 +25,22 @@ public class MainActivity extends AppCompatActivity implements
         SuccessRegistrationFragment.OnOkVerifyEmailListener {
 
     private Credentials mCredentials;
+    public static Activity mainActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mainActivity = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if(savedInstanceState == null) {
-            if (findViewById(R.id.fragmentContainer) != null) {
+            SharedPreferences prefs =
+                    getSharedPreferences(
+                            getString(R.string.keys_shared_prefs),
+                            Context.MODE_PRIVATE);
+
+            if (prefs.getBoolean(getString(R.string.keys_prefs_stay_logged_in), false)) {
+                loadHomeFragment();
+            } else {
                 loadFragment(new LoginFragment(),
                         getString(R.string.keys_fragment_login));
             }
@@ -159,7 +171,6 @@ public class MainActivity extends AppCompatActivity implements
             boolean success = resultsJSON.getBoolean("success");
 
             if (success) {
-                //Login was successful. Switch to the loadSuccessFragment.
                 checkStayLoggedIn();
                 loadHomeFragment();
             } else {
@@ -180,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements
     
     private void checkStayLoggedIn() {
         if (((CheckBox) findViewById(R.id.LoginCheckBoxStayLoggedIn)).isChecked()) {
+            Log.d("checkStayLoggedIn: ", "------ Box checked -------");
             SharedPreferences prefs =
                     getSharedPreferences(
                             getString(R.string.keys_shared_prefs),
@@ -193,6 +205,18 @@ public class MainActivity extends AppCompatActivity implements
             prefs.edit().putBoolean(
                     getString(R.string.keys_prefs_stay_logged_in),
                     true)
+                    .apply();
+        } else {
+            SharedPreferences tempprefs =
+                    getSharedPreferences(
+                            getString(R.string.keys_shared_prefs),
+                            Context.MODE_PRIVATE);
+
+            tempprefs.edit().remove(getString(R.string.keys_prefs_username));
+
+            tempprefs.edit().putBoolean(
+                    getString(R.string.keys_prefs_stay_logged_in),
+                    false)
                     .apply();
         }
     }
@@ -220,6 +244,7 @@ public class MainActivity extends AppCompatActivity implements
         transaction.commit();
     }
 
+
     // TODO: probably methods below will be in activity with navigation bar (after logging in)
 //    @Override
 //    public void onNewChat() {
@@ -238,5 +263,7 @@ public class MainActivity extends AppCompatActivity implements
 //        loadFragment(new SelectWeatherCityFragment(),
 //                getString(R.string.keys_fragment_select_weather));
 //    }
+
+
 
 }

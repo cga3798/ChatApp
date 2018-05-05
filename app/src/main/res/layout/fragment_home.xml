@@ -23,16 +23,16 @@
             android:orientation="vertical"/>
     </ScrollView>
 
-    <!--<Button-->
-        <!--android:id="@+id/HomeButtonNewChat"-->
-        <!--style="@android:style/Widget.Material.Button.Colored"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginTop="16dp"-->
-        <!--android:text="@string/New_chat_fragment"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/HomeScrollViewChatList"/>-->
+    <Button
+        android:id="@+id/HomeButtonNewChat"
+        style="@android:style/Widget.Material.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/New_chat_fragment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/HomeScrollViewChatList"/>
 
     <TextView
         android:id="@+id/HomeTextViewCurrentDate"

@@ -1,9 +1,10 @@
 package group1.tcss450.uw.edu.a450groupone;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
@@ -12,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +31,7 @@ public class NavigationFragment extends AppCompatActivity implements NavigationV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
+        MainActivity.mainActivity.finish();
 
         if(savedInstanceState == null) {
             if (findViewById(R.id.navigationFragmentContainer) != null) {
@@ -41,18 +44,18 @@ public class NavigationFragment extends AppCompatActivity implements NavigationV
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /**
-         * Floating action button
-         * Button floats bottom right and triggers an action.
-         * Current Action: load new chatFragment
-         */
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadFragment(new ChatFragment());
-            }
-        });
+//        /**
+//         * Floating action button
+//         * Button floats bottom right and triggers an action.
+//         * Current Action: load new chatFragment
+//         */
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                loadFragment(new ChatFragment());
+//            }
+//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -63,8 +66,6 @@ public class NavigationFragment extends AppCompatActivity implements NavigationV
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
-
-
 
     @Override
     public void onBackPressed() {
@@ -119,7 +120,19 @@ public class NavigationFragment extends AppCompatActivity implements NavigationV
         } else if (id == R.id.nav_settings) {
             loadFragment(new SettingsFragment());
         } else if (id == R.id.nav_logout) {
+            SharedPreferences prefs =
+                    getSharedPreferences(
+                            getString(R.string.keys_shared_prefs),
+                            Context.MODE_PRIVATE);
 
+            prefs.edit().remove(getString(R.string.keys_prefs_username));
+
+            prefs.edit().putBoolean(
+                    getString(R.string.keys_prefs_stay_logged_in),
+                    false)
+                    .apply();
+            //the way to close an app programmaticaly
+            finishAndRemoveTask();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -145,7 +158,7 @@ public class NavigationFragment extends AppCompatActivity implements NavigationV
      */
     @Override
     public void onSelectCityButtonClicked() {
-
+        loadFragment(new SelectWeatherCityFragment());
     }
 
     /*
@@ -154,14 +167,7 @@ public class NavigationFragment extends AppCompatActivity implements NavigationV
 
     @Override
     public void onNewChat() {
-       // Intent intent = new Intent(this, ChatActivity.class);
-      //  startActivity(intent);
         loadFragment(new ChatFragment());
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.navigationFragmentContainer, new ChatFragment())
-//                // TODO: replace by string value
-//                .addToBackStack(null)
-//                .commit();
     }
 
     /*
@@ -170,11 +176,6 @@ public class NavigationFragment extends AppCompatActivity implements NavigationV
      */
     @Override
     public void NewWeather() {
-        WeatherFragment weatherFrag = new WeatherFragment();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.navigationFragmentContainer, weatherFrag)
-                // TODO: replace by string value
-                .addToBackStack(null)
-                .commit();
+        loadFragment(new WeatherFragment());
     }
 }

@@ -45,9 +45,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
         // these are temporary buttons
-//        Button b = (Button) v.findViewById(R.id.HomeButtonNewChat);
-//        b.setOnClickListener(this);
-        Button b = (Button) v.findViewById(R.id.tempChat3);
+        Button b = (Button) v.findViewById(R.id.HomeButtonNewChat);
+        b.setOnClickListener(this);
+        b = (Button) v.findViewById(R.id.tempChat3);
         b.setOnClickListener(this);
         b = (Button) v.findViewById(R.id.tempChat1);
         b.setOnClickListener(this);
@@ -122,9 +122,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         if (mListener != null) {
             switch (view.getId()) {
-//              case R.id.HomeButtonNewChat:
-//                    mListener.onNewChat();
-//                    break;
+              case R.id.HomeButtonNewChat:
+                    mListener.onNewChat();
+                    break;
                 case R.id.weatherButton1:
                     mListener.NewWeather(); // temp weather button for navigation
                     break;
