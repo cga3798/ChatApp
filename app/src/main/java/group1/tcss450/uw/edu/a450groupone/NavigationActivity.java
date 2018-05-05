@@ -167,7 +167,9 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
     @Override
     public void onNewChat() {
-        loadFragment(new ChatFragment());
+
+        Intent intent = new Intent(this, ChatActivity.class);
+        startActivity(intent);
     }
 
     /*

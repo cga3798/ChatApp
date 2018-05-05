@@ -23,7 +23,6 @@ import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link OnChatFragmentInteractionListener} interface
  * to handle interaction events.
  * create an instance of this fragment.
  */
@@ -55,7 +54,7 @@ public class ChatFragment extends Fragment {
         JSONObject messageJson = new JSONObject();
         String msg = ((EditText) getView().findViewById(R.id.chatInputEditText))
                 .getText().toString();
-        Log.d("tag", msg);
+
         try {
             messageJson.put(getString(R.string.keys_json_username), mUsername);
             messageJson.put(getString(R.string.keys_json_message), msg);
@@ -132,7 +131,7 @@ public class ChatFragment extends Fragment {
             throw new IllegalStateException("No username in prefs!");
         }
         mUsername = prefs.getString(getString(R.string.keys_prefs_username), "");
-        Log.d("hell", getString(R.string.ep_lab_url));
+
         mSendUrl = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_lab_url))
@@ -186,19 +185,9 @@ public class ChatFragment extends Fragment {
                 .apply();
     }
 
-
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnChatFragmentInteractionListener {
-
+        void onNewChat();
     }
+
+
 }
