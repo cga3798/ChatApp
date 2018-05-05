@@ -22,7 +22,7 @@ import android.view.View;
  * Navigation fragment holds the currently displayed screen overlaying it with a toolbar and clickable nav menu.
  */
 
-public class NavigationFragment extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+public class NavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
                                                                 ChatFragment.OnChatFragmentInteractionListener,
                                                                 WeatherFragment.OnWeatherFragmentInteractionListener,
                                                                 HomeFragment.OnHomeFragmentInteractionListener {

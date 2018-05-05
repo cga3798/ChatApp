@@ -1,8 +1,6 @@
 package group1.tcss450.uw.edu.a450groupone;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -222,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void loadHomeFragment() {
-        Intent intent = new Intent(getBaseContext(), NavigationFragment.class);
+        Intent intent = new Intent(getBaseContext(), NavigationActivity.class);
         intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
     }
