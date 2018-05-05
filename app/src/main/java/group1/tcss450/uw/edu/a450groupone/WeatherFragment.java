@@ -43,15 +43,12 @@ import group1.tcss450.uw.edu.a450groupone.utils.Weather;
 public class WeatherFragment extends Fragment implements View.OnClickListener {
 
     private static final float TEXT_VIEW_WEIGHT = .5f;
+    //private static final int TOTAL_HOURS_TO_DISPLAY = 24;
+
 
     private OnWeatherFragmentInteractionListener mListener;
 
-    //private TextView city, weather, currentTemp, weatherIcon;
-
-
-
     private Bundle data;
-
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -106,7 +103,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
         currentTemp.setText(data.getString(Weather.K_CURRENT_TEMP));
         weatherIcon.setText(Html.fromHtml(data.getString(Weather.K_ICON)));
         today.setText(data.getString(Weather.K_UPDATEDON) + " Today");
-        maxmin.setText(data.getString(Weather.K_MAX_TEMP) + "  "
+        maxmin.setText(data.getString(Weather.K_MAX_TEMP) + "             "
                     + data.getString(Weather.K_MIN_TEMP));
 
     }
@@ -205,33 +202,36 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
                 // store vals
                 String dayOfWeek = df.format(new Date(prevHourJson.getLong("dt") * 1000));
 
-                int icon = 8;
-                if (count > 0) { // data for day not available
-                    icon = sumIcon/count;
-                    Bundle b = new Bundle();
-                    b.putString(Weather.K_DAY_OF_WEEK, dayOfWeek);
-                    b.putInt(Weather.K_ICON, icon);
-                    b.putString(Weather.K_MAX_TEMP, String.valueOf(max));
-                    b.putString(Weather.K_MIN_TEMP, String.valueOf(min));
-                    days.add(b);
-                } else { // say data not available
-                    Bundle b = new Bundle();
-                    b.putString(Weather.K_DAY_OF_WEEK, dayOfWeek);
-                    b.putInt(Weather.K_ICON, icon);
-                    b.putString(Weather.K_MAX_TEMP, getString(R.string.data_not_available) );
-                    b.putString(Weather.K_MIN_TEMP, "");
-                    days.add(b);
+                // if day is not the same as today dont make row
+                // there might not be enough data to calculate min-max temp
+                if( ! dayOfWeek.equals(data.getString(Weather.K_UPDATEDON))) {
+
+                    int icon = 8;
+                    if (count > 0) { // data for day not available
+                        icon = sumIcon / count;
+                        Bundle b = new Bundle();
+                        b.putString(Weather.K_DAY_OF_WEEK, dayOfWeek);
+                        b.putInt(Weather.K_ICON, icon);
+                        b.putString(Weather.K_MAX_TEMP, String.valueOf(max));
+                        b.putString(Weather.K_MIN_TEMP, String.valueOf(min));
+                        days.add(b);
+                    } else { // say data not available
+                        Bundle b = new Bundle();
+                        b.putString(Weather.K_DAY_OF_WEEK, dayOfWeek);
+                        b.putInt(Weather.K_ICON, icon);
+                        b.putString(Weather.K_MAX_TEMP, getString(R.string.data_not_available));
+                        b.putString(Weather.K_MIN_TEMP, "");
+                        days.add(b);
+                    }
                 }
-
-
                 // reset for new day
                 max = Integer.MIN_VALUE;
                 min = Integer.MAX_VALUE;
                 sumIcon = 0;
                 count = 0;
             }
-            max = (main.getInt("temp") > max) ? main.getInt("temp") : max;
-            min = (main.getInt("temp") < min) ? main.getInt("temp") : min;
+            max = (main.getInt("temp_max") > max) ? main.getInt("temp_max") : max;
+            min = (main.getInt("temp_min") < min) ? main.getInt("temp_min") : min;
 
             sumIcon += weather.getInt("id");
             count++;

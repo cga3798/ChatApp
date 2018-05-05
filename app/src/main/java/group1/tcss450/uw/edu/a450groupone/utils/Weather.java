@@ -127,6 +127,7 @@ public class Weather {
     }
 
     private static void parseCurrentWeatherJSON(JSONObject simpleWeatherJSON, Bundle b) {
+        Log.d("SHOWcurrentJSON", simpleWeatherJSON.toString());
         try {
             if (simpleWeatherJSON != null) {
 
@@ -155,7 +156,11 @@ public class Weather {
                 String sunrise = sdf.format(new Date(sys.getLong("sunrise") * 1000));
                 String sunset = sdf.format(new Date(sys.getLong("sunset") * 1000));
                 String windSpeed = wind.getString("speed") + " m/s";
-                String windDirection = getWindDirection(wind.getInt("deg"));
+
+                String windDirection = "";
+                if (wind.has("deg")) {
+                    windDirection = getWindDirection(wind.getInt("deg"));
+                }
 
                 b.putString(K_CITY, city);
                 b.putString(K_WEATHER_DESC, description);
