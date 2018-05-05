@@ -8,15 +8,28 @@
     <string name="keys_city">city</string>
     <string name="keys_weather_desc">weatherDesc</string>
     <string name="keys_current_temp">currentTemp</string>
-    <string name= "keys_fragment_chat">chatFragmentTag</string>
-    <string name= "keys_fragment_friends">friendsFragmentTag</string>
-    <string name= "keys_fragment_home">homeFragmentTag</string>
-    <string name= "keys_fragment_navigation">navigationFragmentTag</string>
-    <string name= "recycler_fragment_chat">recyclerFragmentTag</string>
-    <string name= "keys_fragment_select_weather">selectWeatherFragmentTag</string>
-    <string name= "keys_fragment_settings">settingsFragmentTag</string>
-    <string name= "keys_fragment_success">sucessFragmentTag</string>
-    <string name= "keys_fragment_weather">weatherFragmentTag</string>
+    <string name="keys_fragment_chat">chatFragmentTag</string>
+    <string name="keys_fragment_friends">friendsFragmentTag</string>
+    <string name="keys_fragment_home">homeFragmentTag</string>
+    <string name="keys_fragment_navigation">navigationFragmentTag</string>
+    <string name="recycler_fragment_chat">recyclerFragmentTag</string>
+    <string name="keys_fragment_select_weather">selectWeatherFragmentTag</string>
+    <string name="keys_fragment_settings">settingsFragmentTag</string>
+    <string name="keys_fragment_success">successFragmentTag</string>
+    <string name="keys_fragment_weather">weatherFragmentTag</string>
+    <string name="keys_json_message">message</string>
+    <string name="keys_json_messages">messages</string>
+    <string name="keys_json_chat_id">chatId</string>
+    <string name="keys_prefs_time_stamp">ts key</string>
+    <string name="keys_json_success_value_true">true</string>
+    <string name="keys_json_success_value_false">false</string>
+    <string name="keys_json_username">username</string>
+    <string name="keys_json_password">password</string>
+    <string name="keys_json_email">email</string>
+    <string name="keys_json_firstname">first</string>
+    <string name="keys_json_lastname">last</string>
+    <string name="keys_json_success">success</string>
+
 
     <string name="keys_prefs_time_stamp">ts key</string>
 
