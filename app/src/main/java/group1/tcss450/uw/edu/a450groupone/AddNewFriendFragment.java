@@ -4,12 +4,31 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.SearchView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import group1.tcss450.uw.edu.a450groupone.utils.ListViewAdapter;
+import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
 
-public class AddNewFriendFragment extends Fragment {
+public class AddNewFriendFragment extends Fragment implements SearchView.OnQueryTextListener{
+    private OnAddFriendFragmentInteractionListener mListener;
+
+    private ListView list;
+    private ListViewAdapter adapter;
+    private SearchView searchView;
+    private String[] moviewList;
+    public static ArrayList<String> connectionResultList = new ArrayList<String>();
 
 
     public AddNewFriendFragment() {
@@ -19,9 +38,154 @@ public class AddNewFriendFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //friend frag
+
         View v = inflater.inflate(R.layout.fragment_add_new_friend, container, false);
+
+        searchView = v.findViewById(R.id.addFriendSearchView);
+        searchView.setActivated(true);
+        searchView.setOnQueryTextListener(this);
+
+
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                Log.d("Search View: ", "onQueryTextSubmit");
+//                adapter.filter(query);
+//                onSearch(query);
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                return false;
+//            }
+//        });
+
         return v;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        onSearch(query);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
+
+    /**
+     * Establish connection to web services to search users.
+     *
+     * @param query
+     */
+    private void onSearch(String query) {
+
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_search_app_users))
+                .build();
+
+        JSONObject searchJSON = asJSONObject(query);
+
+        new SendPostAsyncTask.Builder(uri.toString(), searchJSON)
+                .onPostExecute(this::handleSearchOnPost)
+                //TODO: add onCancelled handler.
+//                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
+
+    }
+
+    private void handleSearchOnPost(String result) {
+
+        try {
+            JSONObject resultsJSON = new JSONObject(result);
+            boolean success = resultsJSON.getBoolean("success");
+
+            if (success) {
+                list = (ListView) getActivity().findViewById(R.id.addFriendListView);
+                connectionResultList = new ArrayList<>();
+
+                Log.d("list size: ", "" + resultsJSON
+                        .getJSONArray("names").getJSONObject(0).length());
+
+                String first = resultsJSON.getJSONArray("names")
+                        .getJSONObject(0).getString("firstname");
+                String last = resultsJSON.getJSONArray("names")
+                        .getJSONObject(0).getString("lastname");
+
+                connectionResultList.add(first + " " + last);
+
+                adapter = new ListViewAdapter(getActivity());
+                list.setAdapter(adapter);
+
+            } else {
+
+            }
+        } catch (JSONException e) {
+            Log.e("JSON_PARSE_ERROR", result
+                    + System.lineSeparator()
+                    + e.getMessage());
+        }
+
+    }
+
+    /**
+     * Get all of the fields in a single JSON object. Note, if no values were provided for the
+     * optional fields via the Builder, the JSON object will include the empty string for those
+     * fields.
+     *
+     * Keys: search query
+     *
+     * @return all of the fields in a single JSON object
+     */
+    public JSONObject asJSONObject(String query) {
+
+        //build the JSONObject
+        JSONObject msg = new JSONObject();
+
+        query = query.trim();
+        try {
+            if (query.contains("@")) {
+                msg.put("email", query);
+            } else if (query.contains(" ")){
+                String[] fullname = query.split("\\s+");
+                msg.put("first", fullname[0]);
+                msg.put("last", fullname[1]);
+            }  else {
+                msg.put("username", query);
+            }
+
+        } catch (JSONException e) {
+            Log.wtf("QUERY ", "Error creating JSON: " + e.getMessage());
+        }
+        return msg;
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof AddNewFriendFragment.OnAddFriendFragmentInteractionListener) {
+            mListener = (AddNewFriendFragment.OnAddFriendFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFriendFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+
+    public interface OnAddFriendFragmentInteractionListener {
+        void onSearchNewFriend(String query);
     }
 
 }
