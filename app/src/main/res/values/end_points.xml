@@ -7,5 +7,7 @@
 
     <string name="ep_send_message">sendMessages</string>
     <string name="ep_get_message">getMessages</string>
-    <string name="ep_lab_url">cga3798-lab4-backend.herokuapp.com</string>
+    <string name="ep_lab_url">group1-tcss450-backend.herokuapp.com</string>
+
+
 </resources>

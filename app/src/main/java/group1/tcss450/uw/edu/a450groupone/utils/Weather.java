@@ -43,6 +43,8 @@ public class Weather {
 
     public static final String GMT_PACIFIC = "GMT-7";
 
+    public static final String FONT_PATH = "fonts/weathericons-regular-webfont.ttf";
+
     private static final String OPEN_WEATHER_CURRENT_URL =
             "http://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&units=metric"; // by lat lon
     //"api.openweathermap.org/data/2.5/weather?q=%s";  // by city (to use city id-> "...?id=%d" )
@@ -55,6 +57,8 @@ public class Weather {
     // units can be (metric, imperial) -> (Celsius, Fahrenheit)
 
     private static final String OPEN_WEATHER_MAP_API = "ffd45d2019792da36a10c13555d5c15c";
+
+
 
     private static final String[] COMPASS = {"N","NNE","NE",
                                             "ENE","E","ESE",
