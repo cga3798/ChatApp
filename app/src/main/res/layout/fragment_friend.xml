@@ -10,31 +10,31 @@
         android:id="@+id/friendSearchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:orientation="horizontal"
+        android:queryHint="@string/search_hint"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/friendButtonAddFriend"
+        android:id="@+id/friendButtonAddNewFriend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="Add Friend"
+        android:text="Add New Friend"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/friendSearchView" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="401dp"
+        android:layout_height="475dp"
         android:layout_marginBottom="8dp"
-        android:background="@android:color/background_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/friendButtonAddFriend" />
+        app:layout_constraintTop_toBottomOf="@+id/friendButtonAddNewFriend" />
 
     <Button
         android:id="@+id/friendButtonNewGroup"
@@ -42,6 +42,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:text="New Group"
-        app:layout_constraintStart_toEndOf="@+id/friendButtonAddFriend"
+        app:layout_constraintStart_toEndOf="@+id/friendButtonAddNewFriend"
         app:layout_constraintTop_toBottomOf="@+id/friendSearchView" />
 </android.support.constraint.ConstraintLayout>
