@@ -58,7 +58,11 @@
     <string name="wind">Wind</string>
     <string name="humidity">Humidity</string>
 
+    <string name="search_hint">Type friend name</string>
+    <string name="search_new_hint">Type new friend name, email or username</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="please_log_in_or_register_fragment">Please log in or register</string>
 
