@@ -43,7 +43,7 @@ import group1.tcss450.uw.edu.a450groupone.utils.Weather;
 public class WeatherFragment extends Fragment implements View.OnClickListener {
 
     private static final float TEXT_VIEW_WEIGHT = .5f;
-    //private static final int TOTAL_HOURS_TO_DISPLAY = 24;
+    private static final int TOTAL_HOURS_TO_DISPLAY = 24;
 
 
     private OnWeatherFragmentInteractionListener mListener;
@@ -88,7 +88,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
     }
 
     private void makeTopWeatherData(View v) {
-        Typeface weatherFont = Typeface.createFromAsset(getContext().getAssets(), "fonts/weathericons-regular-webfont.ttf");
+        Typeface weatherFont = Typeface.createFromAsset(getContext().getAssets(), Weather.FONT_PATH);
 
         TextView city = v.findViewById(R.id.weatherCityTextview);
         TextView weather = v.findViewById(R.id.weatherDesc);
@@ -120,7 +120,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
         SimpleDateFormat sdf = new SimpleDateFormat("ha");
         sdf.setTimeZone(TimeZone.getTimeZone(Weather.GMT_PACIFIC));
 
-        for (int i = 0; i < hourlyList.length(); i++) {
+        for (int i = 0; i < TOTAL_HOURS_TO_DISPLAY; i++) {
             try {
                 JSONObject hourJson = hourlyList.getJSONObject(i);
                 hourlyBar.addView(makeHourContainer(hourJson, sdf));
@@ -138,7 +138,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
         JSONObject weather = hourJson.getJSONArray("weather").getJSONObject(0);
         JSONObject main = hourJson.getJSONObject("main");
 
-        Typeface weatherFont = Typeface.createFromAsset(getContext().getAssets(), "fonts/weathericons-regular-webfont.ttf");
+        Typeface weatherFont = Typeface.createFromAsset(getContext().getAssets(), Weather.FONT_PATH);
 
         // fill data
         TextView tv = v.findViewById(R.id.weatherTextViewTime);
@@ -243,7 +243,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
         View v = LayoutInflater.from(getContext())
                 .inflate(R.layout.day_weather_row, null, false);
 
-        Typeface weatherFont = Typeface.createFromAsset(getContext().getAssets(), "fonts/weathericons-regular-webfont.ttf");
+        Typeface weatherFont = Typeface.createFromAsset(getContext().getAssets(), Weather.FONT_PATH);
 
         // fill values
         TextView cell = v.findViewById(R.id.weatherTextViewRowDay);
