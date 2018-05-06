@@ -102,6 +102,7 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
     private void handleSearchOnPost(String result) {
 
         try {
+            //results
             JSONObject resultsJSON = new JSONObject(result);
             boolean success = resultsJSON.getBoolean("success");
 
