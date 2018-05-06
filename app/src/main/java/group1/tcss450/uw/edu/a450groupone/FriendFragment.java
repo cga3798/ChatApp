@@ -1,8 +1,10 @@
 package group1.tcss450.uw.edu.a450groupone;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.SearchView;
 
 
 /**
@@ -17,11 +20,12 @@ import android.widget.TextView;
  */
 public class FriendFragment extends Fragment {
 
+    private OnFriendFragmentInteractionListener mListener;
+
 
     public FriendFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,6 +35,11 @@ public class FriendFragment extends Fragment {
 
         // TODO: maybe load contacts in an array and pass to this method
         populateContacts(v);
+
+//        SearchView searchView = v.findViewById(R.id.friendSearchView);
+//        searchView.setActivated(true);
+
+        v.findViewById(R.id.friendButtonAddNewFriend).setOnClickListener(view -> onAddNewFriend(v));
 
         return v;
     }
@@ -42,6 +51,36 @@ public class FriendFragment extends Fragment {
             contactsListContainer.addView(
                     getContactView("A nickname", " A full name"));
         }
+    }
+    private void onAddNewFriend(View v) {
+        mListener.onAddNewFriend();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof WeatherFragment.OnWeatherFragmentInteractionListener) {
+            mListener = (FriendFragment.OnFriendFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFriendFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+//
+//    @Override
+//    public void onClick(View v) {
+//        mListener.onSelectCityButtonClicked();
+//    }
+
+
+    public interface OnFriendFragmentInteractionListener {
+        void onAddNewFriend();
     }
 
     private View getContactView(String nickname, String fullName) {

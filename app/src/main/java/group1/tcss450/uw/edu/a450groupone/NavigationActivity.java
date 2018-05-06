@@ -22,10 +22,12 @@ import android.view.View;
  * Navigation fragment holds the currently displayed screen overlaying it with a toolbar and clickable nav menu.
  */
 
-public class NavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-                                                                ChatFragment.OnChatFragmentInteractionListener,
-                                                                WeatherFragment.OnWeatherFragmentInteractionListener,
-                                                                HomeFragment.OnHomeFragmentInteractionListener {
+public class NavigationActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        ChatFragment.OnChatFragmentInteractionListener,
+        WeatherFragment.OnWeatherFragmentInteractionListener,
+        HomeFragment.OnHomeFragmentInteractionListener,
+        FriendFragment.OnFriendFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,7 +169,9 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
     @Override
     public void onNewChat() {
-        loadFragment(new ChatFragment());
+
+        Intent intent = new Intent(this, ChatActivity.class);
+        startActivity(intent);
     }
 
     /*
@@ -178,4 +182,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     public void NewWeather() {
         loadFragment(new WeatherFragment());
     }
+
+    @Override
+    public void onAddNewFriend() { loadFragment(new AddNewFriendFragment());}
 }
