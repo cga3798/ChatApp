@@ -193,7 +193,7 @@ public class NavigationActivity extends AppCompatActivity implements
     public void onAddNewFriend() { loadFragment(new AddNewFriendFragment());}
 
     @Override
-    public void onSearchNewFriend(String query) {
-
+    public void onSearchNewFriend() {
+        Log.d("Navigation: ", "onSearchNewFriends");
     }
 }

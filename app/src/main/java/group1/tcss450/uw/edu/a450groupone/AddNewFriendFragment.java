@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -45,6 +44,7 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
         searchView = v.findViewById(R.id.addFriendSearchView);
         searchView.setActivated(true);
         searchView.setOnQueryTextListener(this);
+        v.findViewById(R.id.addFriendButtonInvite).setVisibility(View.GONE);
 
         return v;
     }
@@ -57,6 +57,8 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
 
     @Override
     public boolean onQueryTextChange(String newText) {
+        getView().findViewById(R.id.addFriendButtonInvite)
+                .setVisibility(View.GONE);
         return false;
     }
 
@@ -66,9 +68,6 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
      * @param query
      */
     private void onSearch(String query) {
-
-        Log.d("query:", query);
-
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
@@ -114,6 +113,9 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
                 adapter = new ListViewAdapter(getActivity());
                 list.setAdapter(adapter);
 
+                list.setOnItemClickListener((parent, view, position, id) -> onInviteFriend()
+                );
+
             } else {
                 Toast.makeText(getActivity(),
                         "Search unsuccessful. Please try again", Toast.LENGTH_SHORT).show();
@@ -130,6 +132,15 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
                     + e.getMessage());
         }
 
+    }
+
+    private void onInviteFriend() {
+
+        getView().findViewById(R.id.addFriendButtonInvite)
+                .setVisibility(View.VISIBLE);
+
+        getView().findViewById(R.id.addFriendButtonInvite)
+                .setOnClickListener(v -> mListener.onSearchNewFriend());
     }
 
     /**
@@ -184,7 +195,7 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
 
 
     public interface OnAddFriendFragmentInteractionListener {
-        void onSearchNewFriend(String query);
+        void onSearchNewFriend();
     }
 
 }

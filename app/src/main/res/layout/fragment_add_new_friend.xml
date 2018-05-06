@@ -1,63 +1,50 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout2"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
     <SearchView
         android:id="@+id/addFriendSearchView"
-        android:layout_width="389dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/border"
-        android:queryHint="@string/search_new_hint">
+        android:queryHint="@string/search_new_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <requestFocus />
     </SearchView>
 
     <ListView
         android:id="@+id/addFriendListView"
-        android:layout_width="383dp"
-        android:layout_height="524dp"
-        android:layout_alignEnd="@+id/addFriendSearchView"
-        android:layout_alignParentBottom="true" />
+        android:layout_width="0dp"
+        android:layout_height="415dp"
+        android:layout_marginBottom="112dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addFriendSearchView" />
 
-</RelativeLayout>
-<!--<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--xmlns:tools="http://schemas.android.com/tools"-->
-    <!--android:id="@+id/frameLayout"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--tools:context="group1.tcss450.uw.edu.a450groupone.AddNewFriendFragment">-->
+    <Button
+        android:id="@+id/addFriendButtonInvite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="47dp"
+        android:text="Invite Connection"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
-    <!--&lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;-->
-
-    <!--<SearchView-->
-        <!--android:id="@+id/addFriendSearchView"-->
-        <!--android:layout_width="389dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--android:layout_marginTop="16dp"-->
-        <!--android:background="@drawable/border"-->
-        <!--android:queryHint="@string/search_new_hint"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent" />-->
-
-    <!--<ListView-->
-        <!--android:id="@+id/addFriendListView"-->
-        <!--android:layout_width="383dp"-->
-        <!--android:layout_height="524dp"-->
-        <!--android:layout_below="@+id/addFriendSearchView"-->
-        <!--android:layout_marginBottom="16dp"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--android:layout_marginTop="16dp"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/addFriendSearchView" />-->
-
-<!--</android.support.constraint.ConstraintLayout>-->
+</android.support.constraint.ConstraintLayout>
