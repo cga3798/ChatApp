@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,8 +28,8 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
     private ListView list;
     private ListViewAdapter adapter;
     private SearchView searchView;
-    private String[] moviewList;
-    public static ArrayList<String> connectionResultList = new ArrayList<String>();
+    private String queryEntered;
+    public static ArrayList<String> connectionResultList;
 
 
     public AddNewFriendFragment() {
@@ -44,23 +45,6 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
         searchView = v.findViewById(R.id.addFriendSearchView);
         searchView.setActivated(true);
         searchView.setOnQueryTextListener(this);
-
-
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                Log.d("Search View: ", "onQueryTextSubmit");
-//                adapter.filter(query);
-//                onSearch(query);
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                return false;
-//            }
-//        });
 
         return v;
     }
@@ -83,6 +67,8 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
      */
     private void onSearch(String query) {
 
+        Log.d("query:", query);
+
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
@@ -91,16 +77,24 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
 
         JSONObject searchJSON = asJSONObject(query);
 
+        queryEntered = query;
         new SendPostAsyncTask.Builder(uri.toString(), searchJSON)
                 .onPostExecute(this::handleSearchOnPost)
                 //TODO: add onCancelled handler.
-//                .onCancelled(this::handleErrorsInTask)
+                .onCancelled(this::handleErrorsInTask)
                 .build().execute();
 
     }
 
-    private void handleSearchOnPost(String result) {
+    /**
+     * Handle errors that may occur during the AsyncTask.
+     * @param result the error message provide from the AsyncTask
+     */
+    private void handleErrorsInTask(String result) {
+        Log.e("ASYNCT_TASK_ERROR", result);
+    }
 
+    private void handleSearchOnPost(String result) {
         try {
             //results
             JSONObject resultsJSON = new JSONObject(result);
@@ -108,15 +102,12 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
 
             if (success) {
                 list = (ListView) getActivity().findViewById(R.id.addFriendListView);
+
                 connectionResultList = new ArrayList<>();
-
-                Log.d("list size: ", "" + resultsJSON
-                        .getJSONArray("names").getJSONObject(0).length());
-
                 String first = resultsJSON.getJSONArray("names")
-                        .getJSONObject(0).getString("firstname");
+                            .getJSONObject(0).getString("firstname");
                 String last = resultsJSON.getJSONArray("names")
-                        .getJSONObject(0).getString("lastname");
+                            .getJSONObject(0).getString("lastname");
 
                 connectionResultList.add(first + " " + last);
 
@@ -124,9 +115,16 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
                 list.setAdapter(adapter);
 
             } else {
-
+                Toast.makeText(getActivity(),
+                        "Search unsuccessful. Please try again", Toast.LENGTH_SHORT).show();
             }
+
         } catch (JSONException e) {
+            connectionResultList = new ArrayList<>();
+            connectionResultList.add("No results found for \'" + queryEntered + " \' ");
+            adapter = new ListViewAdapter(getActivity());
+            list.setAdapter(adapter);
+
             Log.e("JSON_PARSE_ERROR", result
                     + System.lineSeparator()
                     + e.getMessage());
