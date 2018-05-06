@@ -3,6 +3,7 @@ package group1.tcss450.uw.edu.a450groupone;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import org.json.JSONObject;
+
+import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
+
 /*
  * Navigation fragment holds the currently displayed screen overlaying it with a toolbar and clickable nav menu.
  */
@@ -27,7 +32,8 @@ public class NavigationActivity extends AppCompatActivity implements
         ChatFragment.OnChatFragmentInteractionListener,
         WeatherFragment.OnWeatherFragmentInteractionListener,
         HomeFragment.OnHomeFragmentInteractionListener,
-        FriendFragment.OnFriendFragmentInteractionListener {
+        FriendFragment.OnFriendFragmentInteractionListener,
+        AddNewFriendFragment.OnAddFriendFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,4 +189,9 @@ public class NavigationActivity extends AppCompatActivity implements
 
     @Override
     public void onAddNewFriend() { loadFragment(new AddNewFriendFragment());}
+
+    @Override
+    public void onSearchNewFriend(String query) {
+
+    }
 }

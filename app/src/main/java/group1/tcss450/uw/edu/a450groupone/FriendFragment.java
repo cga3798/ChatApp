@@ -44,7 +44,7 @@ public class FriendFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof WeatherFragment.OnWeatherFragmentInteractionListener) {
+        if (context instanceof FriendFragment.OnFriendFragmentInteractionListener) {
             mListener = (FriendFragment.OnFriendFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
@@ -57,12 +57,6 @@ public class FriendFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-//
-//    @Override
-//    public void onClick(View v) {
-//        mListener.onSelectCityButtonClicked();
-//    }
-
 
     public interface OnFriendFragmentInteractionListener {
         void onAddNewFriend();
