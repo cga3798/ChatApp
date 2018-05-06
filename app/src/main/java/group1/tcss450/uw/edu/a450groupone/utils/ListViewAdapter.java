@@ -14,6 +14,7 @@ import group1.tcss450.uw.edu.a450groupone.R;
 
 public class ListViewAdapter extends BaseAdapter {
 
+
     // Declare Variables
 
     Context mContext;

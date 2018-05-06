@@ -99,22 +99,32 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
             JSONObject resultsJSON = new JSONObject(result);
             boolean success = resultsJSON.getBoolean("success");
 
+            Log.d("Name: ", result);
+
             if (success) {
                 list = (ListView) getActivity().findViewById(R.id.addFriendListView);
 
+                int length = resultsJSON.getJSONArray("names").length();
                 connectionResultList = new ArrayList<>();
-                String first = resultsJSON.getJSONArray("names")
-                            .getJSONObject(0).getString("firstname");
-                String last = resultsJSON.getJSONArray("names")
-                            .getJSONObject(0).getString("lastname");
 
-                connectionResultList.add(first + " " + last);
+                if (length < 1) {
+                    connectionResultList.add("No results found for \'" + queryEntered + " \' ");
+                } else {
 
+                    for (int i = 0; i < length; i++) {
+                        String first = resultsJSON.getJSONArray("names")
+                                .getJSONObject(i).getString("firstname");
+                        String last = resultsJSON.getJSONArray("names")
+                                .getJSONObject(i).getString("lastname");
+                        String user = resultsJSON.getJSONArray("names")
+                                .getJSONObject(i).getString("username");
+
+                        connectionResultList.add(first + " " + last + "\n" + "Username: " + user);
+                    }
+                }
                 adapter = new ListViewAdapter(getActivity());
                 list.setAdapter(adapter);
-
-                list.setOnItemClickListener((parent, view, position, id) -> onInviteFriend()
-                );
+                list.setOnItemClickListener((parent, view, position, id) -> onInviteFriend());
 
             } else {
                 Toast.makeText(getActivity(),
@@ -122,11 +132,6 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
             }
 
         } catch (JSONException e) {
-            connectionResultList = new ArrayList<>();
-            connectionResultList.add("No results found for \'" + queryEntered + " \' ");
-            adapter = new ListViewAdapter(getActivity());
-            list.setAdapter(adapter);
-
             Log.e("JSON_PARSE_ERROR", result
                     + System.lineSeparator()
                     + e.getMessage());
