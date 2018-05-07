@@ -28,6 +28,7 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
     private ListViewAdapter adapter;
     private SearchView searchView;
     private String queryEntered;
+    private boolean showInvite = true;
     public static ArrayList<String> connectionResultList;
 
 
@@ -108,9 +109,11 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
                 connectionResultList = new ArrayList<>();
 
                 if (length < 1) {
+                    showInvite = false;
                     connectionResultList.add("No results found for \'" + queryEntered + " \' ");
-                } else {
 
+                } else {
+                    showInvite = true;
                     for (int i = 0; i < length; i++) {
                         String first = resultsJSON.getJSONArray("names")
                                 .getJSONObject(i).getString("firstname");
@@ -140,12 +143,13 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
     }
 
     private void onInviteFriend() {
+        if (showInvite) {
+            getView().findViewById(R.id.addFriendButtonInvite)
+                    .setVisibility(View.VISIBLE);
 
-        getView().findViewById(R.id.addFriendButtonInvite)
-                .setVisibility(View.VISIBLE);
-
-        getView().findViewById(R.id.addFriendButtonInvite)
-                .setOnClickListener(v -> mListener.onSearchNewFriend());
+            getView().findViewById(R.id.addFriendButtonInvite)
+                    .setOnClickListener(v -> mListener.onSearchNewFriend());
+        }
     }
 
     /**

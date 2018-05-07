@@ -175,7 +175,6 @@ public class NavigationActivity extends AppCompatActivity implements
 
     @Override
     public void onNewChat() {
-
         Intent intent = new Intent(this, ChatActivity.class);
         startActivity(intent);
     }

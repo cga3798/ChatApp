@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private Credentials mCredentials;
     public static Activity mainActivity;
+    public String first, last, user;
+    public int memberid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -255,14 +257,5 @@ public class MainActivity extends AppCompatActivity implements
     public void NewWeather() {
 
     }
-//
-//    @Override
-//    public void onSelectCityButtonClicked() {
-//        Log.d("ADD CITY: ", "CLICKED");
-//        loadFragment(new SelectWeatherCityFragment(),
-//                getString(R.string.keys_fragment_select_weather));
-//    }
-
-
 
 }
