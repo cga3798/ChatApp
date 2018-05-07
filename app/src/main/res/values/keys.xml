@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="keys_shared_prefs">tcss450.uw.edu.a450groupone.chatapp.PREFS</string>
+    <!-- keys to current user shared prefs info -->
     <string name="keys_prefs_username">username</string>
+    <string name="keys_prefs_first_name">first</string>
+    <string name="keys_prefs_last_name">last</string>
+    <string name="keys_prefs_email">email</string>
+    <string name="keys_prefs_id">id</string>
+
     <string name="keys_prefs_stay_logged_in">loggedIn</string>
     <string name="keys_fragment_login">loginFragmentTag</string>
     <string name="keys_fragment_register">registerFragmentTag</string>
@@ -24,6 +30,7 @@
     <string name="keys_json_success_value_true">true</string>
     <string name="keys_json_success_value_false">false</string>
     <string name="keys_json_username">username</string>
+    <string name="keys_json_id">id</string>
     <string name="keys_json_password">password</string>
     <string name="keys_json_email">email</string>
     <string name="keys_json_firstname">first</string>

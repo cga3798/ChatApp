@@ -22,6 +22,7 @@ import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
 
 public class AddNewFriendFragment extends Fragment implements SearchView.OnQueryTextListener{
+
     private OnAddFriendFragmentInteractionListener mListener;
 
     private ListView list;

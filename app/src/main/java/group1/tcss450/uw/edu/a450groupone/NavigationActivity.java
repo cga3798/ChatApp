@@ -18,6 +18,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.json.JSONObject;
 
@@ -66,6 +68,22 @@ public class NavigationActivity extends AppCompatActivity implements
 //        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        NavigationView nav = drawer.findViewById(R.id.nav_view);
+        View navHeader = nav.getHeaderView(0);
+
+        // set current user info in nav header
+        SharedPreferences prefs = getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        TextView tv = navHeader.findViewById(R.id.navHeaderFullName);
+        tv.setText(prefs.getString(getString(R.string.keys_prefs_first_name), "")
+                .concat(" ")
+                .concat(prefs.getString(getString(R.string.keys_prefs_last_name), "")));
+        tv = navHeader.findViewById(R.id.navHeaderEmail);
+        tv.setText(prefs.getString(getString(R.string.keys_prefs_email), ""));
+
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);

@@ -173,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements
 
             if (success) {
                 checkStayLoggedIn();
+                setCurrentUserInfo(resultsJSON);
                 loadHomeFragment();
             } else {
                 LoginFragment frag =
@@ -220,6 +221,43 @@ public class MainActivity extends AppCompatActivity implements
                     false)
                     .apply();
         }
+    }
+
+    private void setCurrentUserInfo(JSONObject response) throws JSONException {
+        SharedPreferences prefs =
+                getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+
+        /*
+            "success": true,
+            "first": "alberto",
+            "last": "garcia",
+            "email": "beto1994@uw.edu",
+            "id": 161,
+            "username": "beto"
+         */
+        //save current user info for later usage
+        prefs.edit().putString(
+                getString(R.string.keys_prefs_username),
+                response.getString(getString(R.string.keys_json_username)))
+                .apply();
+        prefs.edit().putString(
+                getString(R.string.keys_prefs_first_name),
+                response.getString(getString(R.string.keys_json_firstname)))
+                .apply();
+        prefs.edit().putString(
+                getString(R.string.keys_prefs_last_name),
+                response.getString(getString(R.string.keys_json_lastname)))
+                .apply();
+        prefs.edit().putString(
+                getString(R.string.keys_prefs_email),
+                response.getString(getString(R.string.keys_json_email)))
+                .apply();
+        prefs.edit().putString(
+                getString(R.string.keys_prefs_id),
+                response.getString(getString(R.string.keys_json_id)))
+                .apply();
     }
 
     private void loadHomeFragment() {
