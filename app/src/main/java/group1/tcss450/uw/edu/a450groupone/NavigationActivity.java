@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import org.json.JSONObject;
 
@@ -73,6 +74,14 @@ public class NavigationActivity extends AppCompatActivity implements
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View headerView = navigationView.getHeaderView(0);
+
+        TextView navTextView = (TextView) headerView.findViewById(R.id.navHeaderName);
+        navTextView.setText(MainActivity.myFirstname + " " + MainActivity.myLastName);
+        navTextView = (TextView) headerView.findViewById(R.id.navHeaderUsername);
+        navTextView.setText(MainActivity.myUsername);
+        navTextView = (TextView) headerView.findViewById(R.id.navHeaderEmail);
+        navTextView.setText(MainActivity.myEmail);
     }
 
     @Override
