@@ -25,8 +25,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private Credentials mCredentials;
     public static Activity mainActivity;
-    public String first, last, user;
-    public int memberid;
+
+    public static String myFirstname, myLastName, myUsername, myMemberid, myEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +139,6 @@ public class MainActivity extends AppCompatActivity implements
                 .build();
         //build the JSONObject
         JSONObject msg = creds.asJSONObject();
-
         mCredentials = creds;
 
         //instantiate and execute the AsyncTask.
@@ -172,6 +171,12 @@ public class MainActivity extends AppCompatActivity implements
             boolean success = resultsJSON.getBoolean("success");
 
             if (success) {
+                myMemberid = resultsJSON.getString("id");
+                myFirstname = resultsJSON.getString("first");
+                myLastName = resultsJSON.getString("last");
+                myUsername = resultsJSON.getString("username");
+                myEmail = resultsJSON.getString("email");
+
                 checkStayLoggedIn();
                 setCurrentUserInfo(resultsJSON);
                 loadHomeFragment();
@@ -193,7 +198,6 @@ public class MainActivity extends AppCompatActivity implements
     
     private void checkStayLoggedIn() {
         if (((CheckBox) findViewById(R.id.LoginCheckBoxStayLoggedIn)).isChecked()) {
-            Log.d("checkStayLoggedIn: ", "------ Box checked -------");
             SharedPreferences prefs =
                     getSharedPreferences(
                             getString(R.string.keys_shared_prefs),
@@ -282,7 +286,6 @@ public class MainActivity extends AppCompatActivity implements
         // Commit the transaction
         transaction.commit();
     }
-
 
     // TODO: probably methods below will be in activity with navigation bar (after logging in)
     @Override
