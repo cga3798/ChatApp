@@ -90,13 +90,6 @@ public class NavigationActivity extends AppCompatActivity implements
         tv = navHeader.findViewById(R.id.navHeaderEmail);
         tv.setText(prefs.getString(getString(R.string.keys_prefs_email), ""));
 
-//
-//        TextView navTextView = (TextView) headerView.findViewById(R.id.navHeaderName);
-//        navTextView.setText(MainActivity.myFirstname + " " + MainActivity.myLastName);
-//        navTextView = (TextView) headerView.findViewById(R.id.navHeaderUsername);
-//        navTextView.setText(MainActivity.myUsername);
-//        navTextView = (TextView) headerView.findViewById(R.id.navHeaderEmail);
-//        navTextView.setText(MainActivity.myEmail);
     }
 
     @Override
@@ -216,7 +209,10 @@ public class NavigationActivity extends AppCompatActivity implements
     public void onAddNewFriend() { loadFragment(new AddNewFriendFragment());}
 
     @Override
-    public void onSearchNewFriend() {
+    public void onInviteNewFriend(String memberid) {
         Log.d("Navigation: ", "onSearchNewFriends");
+        Log.d("Navigation: ", "memeberid: " + memberid);
+
+
     }
 }
