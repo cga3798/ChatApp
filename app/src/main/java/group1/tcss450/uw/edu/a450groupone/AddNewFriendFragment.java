@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -30,7 +31,7 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
     private SearchView searchView;
     private String queryEntered;
     private boolean showInvite = true;
-    public static ArrayList<String> connectionResultList;
+    public static ArrayList<String> connectionResultList, memberIds;
 
 
     public AddNewFriendFragment() {
@@ -107,6 +108,7 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
                 list = (ListView) getActivity().findViewById(R.id.addFriendListView);
 
                 int length = resultsJSON.getJSONArray("names").length();
+                memberIds = new ArrayList<>();
                 connectionResultList = new ArrayList<>();
 
                 if (length < 1) {
@@ -123,12 +125,22 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
                         String user = resultsJSON.getJSONArray("names")
                                 .getJSONObject(i).getString("username");
 
+                        memberIds.add(resultsJSON.getJSONArray("names")
+                                .getJSONObject(i).getString("memberid"));
+
+                        Log.e("current id: ", i + ".  " + resultsJSON.getJSONArray("names")
+                                .getJSONObject(i).getString("memberid"));
+
+                        //array that will be displayed in search result
                         connectionResultList.add(first + " " + last + "\n" + "Username: " + user);
                     }
                 }
+
                 adapter = new ListViewAdapter(getActivity());
                 list.setAdapter(adapter);
-                list.setOnItemClickListener((parent, view, position, id) -> onInviteFriend());
+                list.setOnItemClickListener((parent, view, position, id) -> {
+                    onClickOnSearchResult(position);
+                });
 
             } else {
                 Toast.makeText(getActivity(),
@@ -143,13 +155,13 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
 
     }
 
-    private void onInviteFriend() {
+    private void onClickOnSearchResult(int position) {
         if (showInvite) {
             getView().findViewById(R.id.addFriendButtonInvite)
                     .setVisibility(View.VISIBLE);
-
+            //invite button listener
             getView().findViewById(R.id.addFriendButtonInvite)
-                    .setOnClickListener(v -> mListener.onSearchNewFriend());
+                    .setOnClickListener(v -> mListener.onInviteNewFriend(memberIds.get(position)));
         }
     }
 
@@ -205,7 +217,7 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
 
 
     public interface OnAddFriendFragmentInteractionListener {
-        void onSearchNewFriend();
+        void onInviteNewFriend(String memberid);
     }
 
 }
