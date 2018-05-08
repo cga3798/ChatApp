@@ -258,9 +258,9 @@ public class MainActivity extends AppCompatActivity implements
                 getString(R.string.keys_prefs_email),
                 response.getString(getString(R.string.keys_json_email)))
                 .apply();
-        prefs.edit().putString(
+        prefs.edit().putInt(
                 getString(R.string.keys_prefs_id),
-                response.getString(getString(R.string.keys_json_id)))
+                response.getInt(getString(R.string.keys_json_id)))
                 .apply();
     }
 
