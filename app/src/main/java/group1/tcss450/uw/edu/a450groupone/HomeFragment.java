@@ -1,16 +1,22 @@
 package group1.tcss450.uw.edu.a450groupone;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import group1.tcss450.uw.edu.a450groupone.utils.Weather;
 
@@ -44,17 +50,30 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
-        // these are temporary buttons
         Button b = (Button) v.findViewById(R.id.HomeButtonNewChat);
-        b.setOnClickListener(this);
-        b = (Button) v.findViewById(R.id.tempChat3);
-        b.setOnClickListener(this);
-        b = (Button) v.findViewById(R.id.tempChat1);
-        b.setOnClickListener(this);
-        b = (Button) v.findViewById(R.id.tempChat2);
         b.setOnClickListener(this);
         b = (Button) v.findViewById(R.id.weatherButton1);
         b.setOnClickListener(this);
+
+        LinearLayout buttonContainer = v.findViewById(R.id.HomeLinearLayoutButtonContainer);
+        for (int i  = 1; i < 20; i++) {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            Button button = new Button(this.getActivity());
+
+            button.setId(i);
+            final int id_ = button.getId();
+            button.setText("button " + id_);
+            button.setBackgroundColor(this.getActivity().getColor(R.color.colorAccent));
+            buttonContainer.addView(button, params);
+            button = ((Button) v.findViewById(id_));
+            button.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    mListener.onNewChat();
+                }
+            });
+        }
 
 
 
@@ -127,15 +146,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                     break;
                 case R.id.weatherButton1:
                     mListener.NewWeather(); // temp weather button for navigation
-                    break;
-                case R.id.tempChat1:
-                    mListener.onNewChat(); // temp chat for place holder
-                    break;
-                case R.id.tempChat2:
-                    mListener.onNewChat(); // temp chat for place holder
-                    break;
-                case R.id.tempChat3:
-                    mListener.onNewChat(); // temp chat for place holder
                     break;
                 default:
                     Log.wtf("", "Didn't expect to see me...");

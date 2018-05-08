@@ -144,7 +144,7 @@ public class ChatFragment extends Fragment {
                 .appendPath(getString(R.string.ep_get_message))
                 .appendQueryParameter("chatId", "1")
                 .build();
-
+                Log.wtf("prefs", prefs.getString("chatid", ""));
         if (prefs.contains(getString(R.string.keys_prefs_time_stamp))) {
             //ignore all of the seen messages. You may want to store these messages locally
             mListenManager = new ListenManager.Builder(retrieve.toString(),
