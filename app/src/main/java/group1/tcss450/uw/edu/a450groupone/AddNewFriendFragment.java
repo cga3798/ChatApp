@@ -60,6 +60,7 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
 
     @Override
     public boolean onQueryTextChange(String newText) {
+        onSearch(newText);
         getView().findViewById(R.id.addFriendButtonInvite)
                 .setVisibility(View.GONE);
         return false;
@@ -128,9 +129,6 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
                         memberIds.add(resultsJSON.getJSONArray("names")
                                 .getJSONObject(i).getString("memberid"));
 
-                        Log.e("current id: ", i + ".  " + resultsJSON.getJSONArray("names")
-                                .getJSONObject(i).getString("memberid"));
-
                         //array that will be displayed in search result
                         connectionResultList.add(first + " " + last + "\n" + "Username: " + user);
                     }
@@ -143,8 +141,8 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
                 });
 
             } else {
-                Toast.makeText(getActivity(),
-                        "Search unsuccessful. Please try again", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(),
+//                        "Search unsuccessful. Please try again", Toast.LENGTH_SHORT).show();
             }
 
         } catch (JSONException e) {
@@ -152,7 +150,6 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
                     + System.lineSeparator()
                     + e.getMessage());
         }
-
     }
 
     private void onClickOnSearchResult(int position) {
@@ -196,7 +193,6 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
         }
         return msg;
     }
-
 
     @Override
     public void onAttach(Context context) {

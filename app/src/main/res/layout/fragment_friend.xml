@@ -15,22 +15,11 @@
         <!--android:orientation="horizontal"-->
         <!--android:queryHint="@string/search_hint"-->
         <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent"/>-->
+        <!--app:layout_constraintTop_toTopOf="parent"/>--><![CDATA[
 
-    <Button
-        android:id="@+id/friendButtonAddNewFriend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="27dp"
-        android:text="Add New Friend"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-        app:layout_constraintTop_toBottomOf="@+id/friendSearchView" />
+    app:layout_constraintTop_toBottomOf="@+id/friendSearchView" />
 
-<!--
+]]><!--
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="401dp"
@@ -45,17 +34,19 @@
         android:id="@+id/friendButtonNewGroup"
         android:layout_width="138dp"
         android:layout_height="0dp"
-        android:layout_marginEnd="64dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="27dp"
+        android:layout_marginBottom="14dp"
+        android:layout_marginEnd="257dp"
+        android:layout_marginLeft="16dp"
         android:text="New Group"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/friendButtonAddNewFriend"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="0dp"
-        android:layout_height="506dp"
+        android:layout_height="412dp"
+        android:layout_marginBottom="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
