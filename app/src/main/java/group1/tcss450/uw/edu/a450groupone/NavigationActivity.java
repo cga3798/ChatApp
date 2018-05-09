@@ -153,7 +153,7 @@ public class NavigationActivity extends AppCompatActivity implements
         if (id == R.id.nav_home) {
             loadFragment(new HomeFragment());
         } else if (id == R.id.nav_friends) {
-            loadFragment(new FriendFragment());
+            loadFragment(new ConnectionTabsFragment());
         } else if (id == R.id.nav_weather) {
             loadFragment(new WeatherFragment());
         } else if (id == R.id.nav_settings) {
@@ -210,6 +210,21 @@ public class NavigationActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
+    @Override
+    public void onInviteNewFriend(String memberidB) {
+        //current user -> sender:A receiver ->  B
+        Log.d("Navigation: ", "memeberidB: " + memberidB);
+        SharedPreferences prefs =
+                getSharedPreferences(getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        String memberidA = prefs.getString(getString(R.string.keys_json_id), "");
+
+        Log.e("memberid A: ", memberidA);
+        Log.e("memberid B: ", memberidB);
+
+    }
+
+
     /*
      * NewWeather creates a new weather fragment then replaces the currently displayed fragment with
      * the newly created weather fragment.
@@ -221,12 +236,4 @@ public class NavigationActivity extends AppCompatActivity implements
 
     @Override
     public void onAddNewFriend() { loadFragment(new AddNewFriendFragment());}
-
-    @Override
-    public void onInviteNewFriend(String memberid) {
-        Log.d("Navigation: ", "onSearchNewFriends");
-        Log.d("Navigation: ", "memeberid: " + memberid);
-
-
-    }
 }

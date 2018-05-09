@@ -29,8 +29,6 @@ public class MainActivity extends AppCompatActivity implements
     private Credentials mCredentials;
     public static Activity mainActivity;
 
-    public static String myFirstname, myLastName, myUsername, myMemberid, myEmail;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mainActivity = this;
@@ -186,11 +184,11 @@ public class MainActivity extends AppCompatActivity implements
             boolean success = resultsJSON.getBoolean("success");
 
             if (success) {
-                myMemberid = resultsJSON.getString("id");
-                myFirstname = resultsJSON.getString("first");
-                myLastName = resultsJSON.getString("last");
-                myUsername = resultsJSON.getString("username");
-                myEmail = resultsJSON.getString("email");
+//                myMemberid = resultsJSON.getString("id");
+//                myFirstname = resultsJSON.getString("first");
+//                myLastName = resultsJSON.getString("last");
+//                myUsername = resultsJSON.getString("username");
+//                myEmail = resultsJSON.getString("email");
 
                 checkStayLoggedIn();
                 setCurrentUserInfo(resultsJSON);
@@ -307,7 +305,6 @@ public class MainActivity extends AppCompatActivity implements
     public void onNewChat() {
 
     }
-
 
     @Override
     public void NewWeather() {
