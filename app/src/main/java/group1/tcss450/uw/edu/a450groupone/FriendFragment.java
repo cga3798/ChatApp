@@ -39,7 +39,7 @@ public class FriendFragment extends Fragment {
 //        SearchView searchView = v.findViewById(R.id.friendSearchView);
 //        searchView.setActivated(true);
 
-        v.findViewById(R.id.friendButtonAddNewFriend).setOnClickListener(view -> onAddNewFriend(v));
+//        v.findViewById(R.id.friendButtonAddNewFriend).setOnClickListener(view -> onAddNewFriend(v));
 
         return v;
     }
@@ -52,9 +52,9 @@ public class FriendFragment extends Fragment {
                     getContactView("A nickname", " A full name"));
         }
     }
-    private void onAddNewFriend(View v) {
-        mListener.onAddNewFriend();
-    }
+//    private void onAddNewFriend(View v) {
+//        mListener.onAddNewFriend();
+//    }
 
     @Override
     public void onAttach(Context context) {

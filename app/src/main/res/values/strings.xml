@@ -68,9 +68,7 @@
 
     <string name="username_fragment">Username</string>
     <string name="password_fragment">Password</string>
-
-
-
+    <string name="search_text_view">Please enter full name, email or username </string>
 
 
 </resources>
