@@ -1,12 +1,10 @@
 package group1.tcss450.uw.edu.a450groupone;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
+import android.content.SharedPreferences;
 import android.icu.text.SimpleDateFormat;
-import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,10 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 import group1.tcss450.uw.edu.a450groupone.utils.Weather;
 
 /**
@@ -29,6 +30,7 @@ import group1.tcss450.uw.edu.a450groupone.utils.Weather;
  */
 public class HomeFragment extends Fragment implements View.OnClickListener{
 
+    private int mMemberId;
 
     private OnHomeFragmentInteractionListener mListener;
 
@@ -55,25 +57,28 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         b = (Button) v.findViewById(R.id.weatherButton1);
         b.setOnClickListener(this);
 
-        LinearLayout buttonContainer = v.findViewById(R.id.HomeLinearLayoutButtonContainer);
-        for (int i  = 1; i < 20; i++) {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            Button button = new Button(this.getActivity());
 
-            button.setId(i);
-            final int id_ = button.getId();
-            button.setText("button " + id_);
-            button.setBackgroundColor(this.getActivity().getColor(R.color.colorAccent));
-            buttonContainer.addView(button, params);
-            button = ((Button) v.findViewById(id_));
-            button.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    mListener.onNewChat();
-                }
-            });
-        }
+
+
+       // LinearLayout buttonContainer = v.findViewById(R.id.HomeLinearLayoutButtonContainer);
+//        for (int i  = 1; i < 20; i++) {
+//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.WRAP_CONTENT,
+//                    LinearLayout.LayoutParams.WRAP_CONTENT);
+//            Button button = new Button(this.getActivity());
+//
+//            button.setId(i);
+//            final int id_ = button.getId();
+//            button.setText("button " + id_);
+//            button.setBackgroundColor(this.getActivity().getColor(R.color.colorAccent));
+//            buttonContainer.addView(button, params);
+//            button = ((Button) v.findViewById(id_));
+//            button.setOnClickListener(new View.OnClickListener() {
+//                public void onClick(View view) {
+//                    mListener.onNewChat();
+//                }
+//            });
+//        }
 
 
 
@@ -88,10 +93,90 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         weatherDescTv = v.findViewById(R.id.HomeTextViewWeatherDesc);
 
         setWeatherData();
-
+        try {
+            getChats(v);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         return v;
     }
+
+    private void getChats ( View v ) throws JSONException {
+        SharedPreferences prefs =
+                getActivity().getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        if (!prefs.contains(getString(R.string.keys_prefs_username))) {
+            throw new IllegalStateException("No username in prefs!");
+        }
+        mMemberId = prefs.getInt(getString(R.string.keys_prefs_id), 0);
+
+        Uri retrieve = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath("getChatMembers")
+                .build();
+
+
+        JSONObject body = new JSONObject();
+        // provide current user id
+        try {
+            body.put("memberId",
+                    getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),
+                            Context.MODE_PRIVATE)
+                            .getInt(getString(R.string.keys_prefs_id), 0) );
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        new SendPostAsyncTask.Builder(retrieve.toString(), body)
+                .onPostExecute(this::populateChats)
+                //TODO: add onCancelled handler.
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
+    }
+    private void populateChats(String res) {
+        LinearLayout chatListContainer = getActivity().findViewById(R.id.HomeLinearLayoutButtonContainer);
+        Log.wtf("GOTCHATS", res);
+
+        try {
+            JSONObject response = new JSONObject(res);
+            if (response.getBoolean("success")) {
+                JSONArray chatList = response.getJSONArray("name");
+
+                for (int i = 0; i < chatList.length(); i++) {
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+                    Button button = new Button(this.getActivity());
+
+                    button.setId(i);
+                    final int id_ = button.getId();
+                    button.setText("button " + id_);
+                    button.setBackgroundColor(this.getActivity().getColor(R.color.colorAccent));
+                    chatListContainer.addView(button, params);
+                    button = ((Button) this.getActivity().findViewById(id_));
+                    button.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    mListener.onNewChat();
+                }
+            });
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * Handle errors that may occur during the AsyncTask.
+     * @param result the error message provide from the AsyncTask
+     */
+    private void handleErrorsInTask(String result) {
+        Log.wtf("ASYNCT_TASK_ERROR", result);
+    }
+
 
     private void setWeatherData() {
         Weather.RetrieveData asyncTask = new Weather.RetrieveData(R.id.fragmentWeather ,new Weather.AsyncResponse() {
@@ -152,6 +237,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
             }
         }
     }
+
 
     /**
      * listener interfaces for temp buttons

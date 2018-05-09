@@ -9,47 +9,16 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <ScrollView
-        android:id="@+id/HomeScrollViewChatList"
-        android:layout_width="370dp"
-        android:layout_height="254dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="108dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.416">
-
-        <LinearLayout
-            android:id="@+id/HomeLinearLayoutButtonContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="24dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="@+id/HomeScrollViewChatList"
-            app:layout_constraintEnd_toStartOf="@+id/HomeScrollViewChatList"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/HomeScrollViewChatList"
-            app:layout_constraintTop_toBottomOf="@+id/weatherButton1"
-            app:layout_constraintVertical_bias="0.446"></LinearLayout>
-    </ScrollView>
-
     <Button
         android:id="@+id/HomeButtonNewChat"
         style="@android:style/Widget.Material.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="150dp"
+        android:layout_height="43dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
         android:text="@string/New_chat_fragment"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/HomeScrollViewChatList" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/HomeTextViewCurrentDate"
@@ -78,11 +47,12 @@
         style="@android:style/Widget.Material.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
+        android:layout_marginEnd="144dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Weather"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.486"
+        app:layout_constraintHorizontal_bias="0.978"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/HomeTextViewWeatherDesc" />
 
@@ -103,5 +73,37 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/HomeTextViewTemperature" />
+
+    <ScrollView
+        android:id="@+id/HomeScrollViewChatList"
+        android:layout_width="0dp"
+        android:layout_height="257dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/HomeButtonNewChat"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weatherButton1"
+        app:layout_constraintVertical_bias="0.0">
+
+        <LinearLayout
+            android:id="@+id/HomeLinearLayoutButtonContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/HomeScrollViewChatList"
+            app:layout_constraintEnd_toStartOf="@+id/HomeScrollViewChatList"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/HomeScrollViewChatList"
+            app:layout_constraintTop_toBottomOf="@+id/weatherButton1"
+            app:layout_constraintVertical_bias="0.731"></LinearLayout>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>
