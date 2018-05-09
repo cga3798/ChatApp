@@ -1,10 +1,13 @@
 package group1.tcss450.uw.edu.a450groupone;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.icu.text.SimpleDateFormat;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +15,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
+import group1.tcss450.uw.edu.a450groupone.utils.MyLocation;
 import group1.tcss450.uw.edu.a450groupone.utils.Weather;
 
 /**
@@ -27,6 +34,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     private OnHomeFragmentInteractionListener mListener;
 
     private TextView cityTv, tempTv, weatherDescTv;
+    //private MyLocation location;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -43,6 +51,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
 
         View v = inflater.inflate(R.layout.fragment_home, container, false);
+
+        //location = new MyLocation(getContext(), null);
 
         // these are temporary buttons
         Button b = (Button) v.findViewById(R.id.HomeButtonNewChat);
@@ -64,11 +74,25 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         String dateString = sdf.format(date);
         tv.setText(dateString);
 
+
+
         cityTv = v.findViewById(R.id.HomeTextViewCity);
         tempTv = v.findViewById(R.id.HomeTextViewTemperature);
         weatherDescTv = v.findViewById(R.id.HomeTextViewWeatherDesc);
 
-        setWeatherData();
+
+//        Timer myTimer = new Timer();
+//        myTimer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                Log.d("TIMER_GPS_CHECK", "checking gps ready");
+//                if (location.isReady() ) {
+//                    Log.d("TIOMERCHECKGPS", "setting data");
+                    setWeatherData();
+//                    myTimer.cancel();
+//                }
+//            }
+//        }, 0, 500);
 
 
         return v;
@@ -83,7 +107,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 tempTv.setText(args.getString(Weather.K_CURRENT_TEMP));
             }
         });
-        asyncTask.execute("47.25288","-122.44429");
+        // get current location
+        asyncTask.execute( //location.getLatitude(), location.getLongitude());
+                     "47.25288","-122.44429");
     }
 
     /**
