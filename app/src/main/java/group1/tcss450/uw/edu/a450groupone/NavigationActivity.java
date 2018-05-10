@@ -33,8 +33,7 @@ public class NavigationActivity extends AppCompatActivity implements
         ChatFragment.OnChatFragmentInteractionListener,
         WeatherFragment.OnWeatherFragmentInteractionListener,
         HomeFragment.OnHomeFragmentInteractionListener,
-        FriendFragment.OnFriendFragmentInteractionListener,
-        SearchNewFriendFragment.OnAddFriendFragmentInteractionListener {
+        FriendFragment.OnFriendFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -218,22 +217,4 @@ public class NavigationActivity extends AppCompatActivity implements
     @Override
     public void onAddNewFriend() { loadFragment(new SearchNewFriendFragment());}
 
-    @Override
-    public void onInviteNewFriend(String memberidB, String fullname) {
-
-        Bundle bundle = new Bundle();
-        bundle.putString("memberidB", memberidB);
-        bundle.putString("fullname", fullname);
-        bundle.putBoolean("invite", true);
-
-        ConnectionRequestsFragment requestFrag = new ConnectionRequestsFragment();
-        requestFrag.setArguments(bundle);
-
-        Fragment fragment = new ConnectionRequestsFragment();
-        fragment.setArguments(bundle);
-
-        loadFragment(fragment);
-
-
-    }
 }

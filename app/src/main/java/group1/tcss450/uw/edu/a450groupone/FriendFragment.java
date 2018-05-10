@@ -128,10 +128,6 @@ public class FriendFragment extends Fragment {
     }
 
 
-//    private void onAddNewFriend(View v) {
-//        mListener.onAddNewFriend();
-//    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

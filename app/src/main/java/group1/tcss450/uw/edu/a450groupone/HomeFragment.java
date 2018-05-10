@@ -243,7 +243,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 //        }
     }
 
-
     private void getLastMessage(View v) throws JSONException {
 
         Uri uri = new Uri.Builder()
