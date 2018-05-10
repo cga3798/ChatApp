@@ -1,12 +1,15 @@
 package group1.tcss450.uw.edu.a450groupone;
 
 import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,13 +29,23 @@ public class MainActivity extends AppCompatActivity implements
     private Credentials mCredentials;
     public static Activity mainActivity;
 
-    public static String myFirstname, myLastName, myUsername, myMemberid, myEmail;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mainActivity = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        if (ContextCompat.checkSelfPermission(getApplicationContext(),
+//                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+//                && ActivityCompat.checkSelfPermission(getApplicationContext(),
+//                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//
+//            ActivityCompat.requestPermissions(this,
+//                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
+//                            android.Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+//
+//        }
+
         if(savedInstanceState == null) {
             SharedPreferences prefs =
                     getSharedPreferences(
@@ -171,11 +184,11 @@ public class MainActivity extends AppCompatActivity implements
             boolean success = resultsJSON.getBoolean("success");
 
             if (success) {
-                myMemberid = resultsJSON.getString("id");
-                myFirstname = resultsJSON.getString("first");
-                myLastName = resultsJSON.getString("last");
-                myUsername = resultsJSON.getString("username");
-                myEmail = resultsJSON.getString("email");
+//                myMemberid = resultsJSON.getString("id");
+//                myFirstname = resultsJSON.getString("first");
+//                myLastName = resultsJSON.getString("last");
+//                myUsername = resultsJSON.getString("username");
+//                myEmail = resultsJSON.getString("email");
 
                 checkStayLoggedIn();
                 setCurrentUserInfo(resultsJSON);
@@ -292,7 +305,6 @@ public class MainActivity extends AppCompatActivity implements
     public void onNewChat() {
 
     }
-
 
     @Override
     public void NewWeather() {

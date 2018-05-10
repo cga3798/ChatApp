@@ -53,7 +53,7 @@ public class FriendFragment extends Fragment {
 //        SearchView searchView = v.findViewById(R.id.friendSearchView);
 //        searchView.setActivated(true);
 
-        v.findViewById(R.id.friendButtonAddNewFriend).setOnClickListener(view -> onAddNewFriend(v));
+//        v.findViewById(R.id.friendButtonAddNewFriend).setOnClickListener(view -> onAddNewFriend(v));
 
         return v;
     }
@@ -101,13 +101,17 @@ public class FriendFragment extends Fragment {
             JSONObject response = new JSONObject(res);
             if (response.getBoolean("success")) {
                 JSONArray friendsList = response.getJSONArray("friends");
-
-                for (int i = 0; i < friendsList.length(); i++) {
-                    JSONObject friend = friendsList.getJSONObject(i);
+                if (friendsList.length() == 0) {
                     contactsListContainer.addView(
-                            getContactView(friend.getString("username"),
-                                    friend.getString("firstname") + " "
-                                            + friend.getString("lastname")));
+                            getContactView("", "There are no contacts to display"));
+                } else {
+                    for (int i = 0; i < friendsList.length(); i++) {
+                        JSONObject friend = friendsList.getJSONObject(i);
+                        contactsListContainer.addView(
+                                getContactView(friend.getString("username"),
+                                        friend.getString("firstname") + " "
+                                                + friend.getString("lastname")));
+                    }
                 }
             }
         } catch (JSONException e) {
@@ -124,9 +128,9 @@ public class FriendFragment extends Fragment {
     }
 
 
-    private void onAddNewFriend(View v) {
-        mListener.onAddNewFriend();
-    }
+//    private void onAddNewFriend(View v) {
+//        mListener.onAddNewFriend();
+//    }
 
     @Override
     public void onAttach(Context context) {

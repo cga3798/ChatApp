@@ -3,12 +3,15 @@ package group1.tcss450.uw.edu.a450groupone;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -41,6 +44,17 @@ public class NavigationActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
         MainActivity.mainActivity.finish();
+
+        if (ContextCompat.checkSelfPermission(getApplicationContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getApplicationContext(),
+                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
+                            android.Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+
+        }
 
         if(savedInstanceState == null) {
             if (findViewById(R.id.navigationFragmentContainer) != null) {
@@ -139,7 +153,7 @@ public class NavigationActivity extends AppCompatActivity implements
         if (id == R.id.nav_home) {
             loadFragment(new HomeFragment());
         } else if (id == R.id.nav_friends) {
-            loadFragment(new FriendFragment());
+            loadFragment(new ConnectionTabsFragment());
         } else if (id == R.id.nav_weather) {
             loadFragment(new WeatherFragment());
         } else if (id == R.id.nav_settings) {
@@ -196,6 +210,21 @@ public class NavigationActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
+    @Override
+    public void onInviteNewFriend(String memberidB) {
+        //current user -> sender:A receiver ->  B
+        Log.d("Navigation: ", "memeberidB: " + memberidB);
+        SharedPreferences prefs =
+                getSharedPreferences(getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        String memberidA = prefs.getString(getString(R.string.keys_json_id), "");
+
+        Log.e("memberid A: ", memberidA);
+        Log.e("memberid B: ", memberidB);
+
+    }
+
+
     /*
      * NewWeather creates a new weather fragment then replaces the currently displayed fragment with
      * the newly created weather fragment.
@@ -207,12 +236,4 @@ public class NavigationActivity extends AppCompatActivity implements
 
     @Override
     public void onAddNewFriend() { loadFragment(new AddNewFriendFragment());}
-
-    @Override
-    public void onInviteNewFriend(String memberid) {
-        Log.d("Navigation: ", "onSearchNewFriends");
-        Log.d("Navigation: ", "memeberid: " + memberid);
-
-
-    }
 }
