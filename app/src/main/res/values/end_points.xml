@@ -8,8 +8,14 @@
     <string name="ep_weather">weather</string>
     <string name="ep_weather_current">current</string>
     <string name="ep_weather_daily">dailyHourly</string>
+    <string name="ep_get_chatMembers">getChatMembers</string>
+
+    <string name="ep_invite_new_friend">sendinvite</string>
+    <string name="ep_invites_sent">invitesent</string>
+    <string name="ep_invites_received">invitereceived</string>
 
     <string name="ep_send_message">sendMessages</string>
     <string name="ep_get_message">getMessages</string>
+    <string name="ep_get_last_message">getLastMessages</string>
     <string name="ep_lab_url">group1-tcss450-backend.herokuapp.com</string>
 </resources>

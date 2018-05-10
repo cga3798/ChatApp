@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -32,7 +33,7 @@ public class ChatFragment extends Fragment {
     private String mSendUrl;
     private TextView mOutputTextView;
     private ListenManager mListenManager;
-
+    private SharedPreferences prefs;
     public ChatFragment() {
         // Required empty public constructor
     }
@@ -42,10 +43,14 @@ public class ChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_chat, container, false);
-
+        prefs =
+                getActivity().getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
         v.findViewById(R.id.chatSendButton).setOnClickListener(this::sendMessage);
-        mOutputTextView = v.findViewById(R.id.chatOutputTextView);
 
+        mOutputTextView = v.findViewById(R.id.chatOutputTextView);
+        Log.wtf("CHAT ROOM", "" + prefs.getInt("chatId", R.string.keys_prefs_chatId));
         return v;
     }
 
@@ -58,7 +63,7 @@ public class ChatFragment extends Fragment {
         try {
             messageJson.put(getString(R.string.keys_json_username), mUsername);
             messageJson.put(getString(R.string.keys_json_message), msg);
-            messageJson.put(getString(R.string.keys_json_chat_id), 1);
+            messageJson.put(getString(R.string.keys_json_chat_id), prefs.getInt("chatId", R.string.keys_prefs_chatId));/// update to new chatid
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -117,16 +122,20 @@ public class ChatFragment extends Fragment {
                     mOutputTextView.append(System.lineSeparator());
                 }
             });
+            final ScrollView scrollview = ((ScrollView) this.getActivity().findViewById(R.id.scrollViewChat));
+            scrollview.post(new Runnable() {
+                @Override
+                public void run() {
+                    scrollview.fullScroll(ScrollView.FOCUS_DOWN);
+                }
+            });
         }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        SharedPreferences prefs =
-                getActivity().getSharedPreferences(
-                        getString(R.string.keys_shared_prefs),
-                        Context.MODE_PRIVATE);
+
         if (!prefs.contains(getString(R.string.keys_prefs_username))) {
             throw new IllegalStateException("No username in prefs!");
         }
@@ -142,9 +151,8 @@ public class ChatFragment extends Fragment {
                 .scheme("https")
                 .appendPath(getString(R.string.ep_lab_url))
                 .appendPath(getString(R.string.ep_get_message))
-                .appendQueryParameter("chatId", "1")
+                .appendQueryParameter("chatId", "" + prefs.getInt("chatId", R.string.keys_prefs_chatId)) // upadate  to new chatid
                 .build();
-
         if (prefs.contains(getString(R.string.keys_prefs_time_stamp))) {
             //ignore all of the seen messages. You may want to store these messages locally
             mListenManager = new ListenManager.Builder(retrieve.toString(),
@@ -162,6 +170,7 @@ public class ChatFragment extends Fragment {
                     .build();
         }
 
+
     }
     @Override
     public void onResume() {
@@ -174,10 +183,6 @@ public class ChatFragment extends Fragment {
     public void onStop() {
         super.onStop();
         String latestMessage = mListenManager.stopListening();
-        SharedPreferences prefs =
-                getActivity().getSharedPreferences(
-                        getString(R.string.keys_shared_prefs),
-                        Context.MODE_PRIVATE);
         // Save the most recent message timestamp
         prefs.edit().putString(
                 getString(R.string.keys_prefs_time_stamp),

@@ -1,14 +1,15 @@
 package group1.tcss450.uw.edu.a450groupone;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -22,7 +23,7 @@ import group1.tcss450.uw.edu.a450groupone.utils.ListViewAdapter;
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
 
-public class AddNewFriendFragment extends Fragment implements SearchView.OnQueryTextListener{
+public class SearchNewFriendFragment extends Fragment implements SearchView.OnQueryTextListener{
 
     private OnAddFriendFragmentInteractionListener mListener;
 
@@ -31,10 +32,10 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
     private SearchView searchView;
     private String queryEntered;
     private boolean showInvite = true;
-    public static ArrayList<String> connectionResultList, memberIds;
+    public static ArrayList<String> connectionResultList, memberIds, fullnames;
 
 
-    public AddNewFriendFragment() {
+    public SearchNewFriendFragment() {
         // Required empty public constructor
     }
 
@@ -42,12 +43,12 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_add_new_friend, container, false);
+        View v = inflater.inflate(R.layout.fragment_search_new_friend, container, false);
 
-        searchView = v.findViewById(R.id.addFriendSearchView);
+        searchView = v.findViewById(R.id.searchFriendSearchView);
         searchView.setActivated(true);
         searchView.setOnQueryTextListener(this);
-        v.findViewById(R.id.addFriendButtonInvite).setVisibility(View.GONE);
+//        v.findViewById(R.id.addFriendButtonInvite).setVisibility(View.GONE);
 
         return v;
     }
@@ -60,9 +61,9 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        onSearch(newText);
-        getView().findViewById(R.id.addFriendButtonInvite)
-                .setVisibility(View.GONE);
+//        onSearch(newText);
+//        getView().findViewById(R.id.addFriendButtonInvite)
+//                .setVisibility(View.GONE);
         return false;
     }
 
@@ -86,13 +87,9 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
                 //TODO: add onCancelled handler.
                 .onCancelled(this::handleErrorsInTask)
                 .build().execute();
-
     }
 
-    /**
-     * Handle errors that may occur during the AsyncTask.
-     * @param result the error message provide from the AsyncTask
-     */
+
     private void handleErrorsInTask(String result) {
         Log.e("ASYNCT_TASK_ERROR", result);
     }
@@ -106,16 +103,16 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
             Log.d("Name: ", result);
 
             if (success) {
-                list = (ListView) getActivity().findViewById(R.id.addFriendListView);
+                list = (ListView) getActivity().findViewById(R.id.searchFriendListView);
 
                 int length = resultsJSON.getJSONArray("names").length();
                 memberIds = new ArrayList<>();
                 connectionResultList = new ArrayList<>();
+                fullnames = new ArrayList<>();
 
                 if (length < 1) {
                     showInvite = false;
                     connectionResultList.add("No results found for \'" + queryEntered + " \' ");
-
                 } else {
                     showInvite = true;
                     for (int i = 0; i < length; i++) {
@@ -131,6 +128,8 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
 
                         //array that will be displayed in search result
                         connectionResultList.add(first + " " + last + "\n" + "Username: " + user);
+                        fullnames.add(first + " " + last);
+
                     }
                 }
 
@@ -141,8 +140,8 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
                 });
 
             } else {
-//                Toast.makeText(getActivity(),
-//                        "Search unsuccessful. Please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),
+                        "Search unsuccessful. Please try again", Toast.LENGTH_SHORT).show();
             }
 
         } catch (JSONException e) {
@@ -154,31 +153,42 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
 
     private void onClickOnSearchResult(int position) {
         if (showInvite) {
-            getView().findViewById(R.id.addFriendButtonInvite)
-                    .setVisibility(View.VISIBLE);
+//            getView().findViewById(R.id.addFriendButtonInvite)
+//                    .setVisibility(View.VISIBLE);
             //invite button listener
-            getView().findViewById(R.id.addFriendButtonInvite)
-                    .setOnClickListener(v -> mListener.onInviteNewFriend(memberIds.get(position)));
+
+            DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        Log.d("YES: ", "clicked");
+                        mListener.onInviteNewFriend(memberIds.get(position), fullnames.get(position));
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        Log.d("NO: ", "clicked");
+
+                        break;
+                }
+            };
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("Would you like to send an invitation to " + fullnames.get(position) + "?" )
+                    .setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener).show();
+
         }
     }
 
-    /**
-     * Get all of the fields in a single JSON object. Note, if no values were provided for the
-     * optional fields via the Builder, the JSON object will include the empty string for those
-     * fields.
-     *
-     * Keys: search query
-     *
-     * @return all of the fields in a single JSON object
-     */
-    public JSONObject asJSONObject(String query) {
 
+    public JSONObject asJSONObject(String query) {
         //build the JSONObject
         JSONObject msg = new JSONObject();
 
         query = query.trim();
+        //TODO: DON'T SEND CURRENT USER INFO. CAN'T SEE SELF IN RESULT.
         try {
-            if (query.contains("@")) {
+            if (query.contains("@") ) {
                 msg.put("email", query);
             } else if (query.contains(" ")){
                 String[] fullname = query.split("\\s+");
@@ -197,8 +207,8 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof AddNewFriendFragment.OnAddFriendFragmentInteractionListener) {
-            mListener = (AddNewFriendFragment.OnAddFriendFragmentInteractionListener) context;
+        if (context instanceof SearchNewFriendFragment.OnAddFriendFragmentInteractionListener) {
+            mListener = (SearchNewFriendFragment.OnAddFriendFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFriendFragmentInteractionListener");
@@ -211,9 +221,8 @@ public class AddNewFriendFragment extends Fragment implements SearchView.OnQuery
         mListener = null;
     }
 
-
     public interface OnAddFriendFragmentInteractionListener {
-        void onInviteNewFriend(String memberid);
+        void onInviteNewFriend(String memberidB, String fullname);
     }
 
 }
