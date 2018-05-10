@@ -2,11 +2,14 @@ package group1.tcss450.uw.edu.a450groupone;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,11 +36,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
     private int mMemberId;
 
-    private ListenManager mListenManager;
-
     private OnHomeFragmentInteractionListener mListener;
 
     private TextView cityTv, tempTv, weatherDescTv;
+
+    private SharedPreferences prefs;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -60,8 +63,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         b = (Button) v.findViewById(R.id.weatherButton1);
         b.setOnClickListener(this);
 
-
-
         TextView tv = (TextView) v.findViewById(R.id.HomeTextViewCurrentDate);
         long date = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy h:mm a");
@@ -73,6 +74,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         weatherDescTv = v.findViewById(R.id.HomeTextViewWeatherDesc);
 
         setWeatherData();
+
+
+
+        // call to populate users chat rooms
         try {
             getChats(v);
         } catch (JSONException e) {
@@ -83,8 +88,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     }
 
     private void getChats ( View v ) throws JSONException {
-        SharedPreferences prefs =
-                getActivity().getSharedPreferences(
+        prefs = getActivity().getSharedPreferences(
                         getString(R.string.keys_shared_prefs),
                         Context.MODE_PRIVATE);
         if (!prefs.contains(getString(R.string.keys_prefs_username))) {
@@ -92,20 +96,20 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         }
         mMemberId = prefs.getInt(getString(R.string.keys_prefs_id), 0);
 
+        Log.wtf("USERID", "" + mMemberId);
+
+
         Uri retrieve = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
-                .appendPath("getChatMembers")
+                .appendPath(getString(R.string.ep_get_chatMembers))
                 .build();
 
 
         JSONObject body = new JSONObject();
         // provide current user id
         try {
-            body.put("memberId",
-                    getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),
-                            Context.MODE_PRIVATE)
-                            .getInt(getString(R.string.keys_prefs_id), 0) );
+            body.put("memberId", mMemberId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -116,51 +120,53 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 //TODO: add onCancelled handler.
                 .onCancelled(this::handleErrorsInTask)
                 .build().execute();
+
+
     }
     private void populateChats(String res) {
+
         LinearLayout buttonContainer = getActivity().findViewById(R.id.HomeLinearLayoutButtonContainer);
-        Log.d("GOTCONTACTS", res);
-        SharedPreferences prefs =
-                getActivity().getSharedPreferences(
-                        getString(R.string.keys_shared_prefs),
-                        Context.MODE_PRIVATE);
+        Log.wtf("GOTCHATS", res);
+
         if (!prefs.contains(getString(R.string.keys_prefs_username))) {
             throw new IllegalStateException("No username in prefs!");
         }
 
-        for (int i = -1; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            // layout to hold chatroom buttons and textviews
             LinearLayout container = new LinearLayout(this.getActivity());
             container.setOrientation(LinearLayout.HORIZONTAL);
 
-            container.setId(i);
-            final int id_ = container.getId();
-
-
-            Button button = new Button(this.getActivity());
-
-            button.setId(i);
-            button.setText("button " + id_);
-            //button.setBackgroundColor(this.getActivity().getColor(R.color.colorAccent));
-
+            // button for chatrooms
+            Button button = new Button(this.getActivity(), null, android.R.attr.buttonBarButtonStyle);
+            button.setText("name " );
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     mListener.onNewChat();
                 }});
 
             container.addView(button, params);
+
+            // textView to display chatrooms last message
+            TextView textView = new TextView(this.getActivity());
+            textView.setId(R.id.chat_text_button_on);
+
+            // method to get messages for textView
             try {
-                String text = getLastMessage();
+                getLastMessage(textView);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            TextView text = new TextView(this.getActivity());
-            text.setText("hello");
-            container.addView(text);
+            // adding textView to layout
+            container.addView(textView);
+
+            // adding layout to container
             buttonContainer.addView(container, params);
 
         }
@@ -171,23 +177,41 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 //            if (response.getBoolean("success")) {
 //                JSONArray chatList = response.getJSONArray("name");
 //
-//                for (int i = -1; i < chatList.length(); i++) {
-//                    JSONObject chat = chatList.getJSONObject(i);
+//                for (int i = 0; i < chatList.length(); i++) {
 //                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-//                    LinearLayout.LayoutParams.WRAP_CONTENT,
-//                    LinearLayout.LayoutParams.WRAP_CONTENT);
-//                    Button button = new Button(this.getActivity());
+//                            LinearLayout.LayoutParams.WRAP_CONTENT,
+//                            LinearLayout.LayoutParams.WRAP_CONTENT);
 //
-//                    button.setId(i);
-//                    final int id_ = button.getId();
-//                    button.setText("button " + id_);
-//                    button.setBackgroundColor(this.getActivity().getColor(R.color.colorAccent));
+//                    // layout to hold chatroom buttons and textviews
+//                    LinearLayout container = new LinearLayout(this.getActivity());
+//                    container.setOrientation(LinearLayout.HORIZONTAL);
 //
+//                    // button for chatrooms
+//                    Button button = new Button(this.getActivity(), null, android.R.attr.buttonBarButtonStyle);
+//                    button.setText("name " );
 //                    button.setOnClickListener(new View.OnClickListener() {
-//                    public void onClick(View view) {
-//                        mListener.onNewChat();
-//                    }});
-//                    buttonContainer.addView(button, params);
+//                        public void onClick(View view) {
+//                            mListener.onNewChat();
+//                        }});
+//
+//                    container.addView(button, params);
+//
+//                    // textView to display chatrooms last message
+//                    TextView textView = new TextView(this.getActivity());
+//                    textView.setId(R.id.chat_text_button_on);
+//
+//                    // method to get messages for textView
+//                    try {
+//                        getLastMessage(textView);
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                    // adding textView to layout
+//                    container.addView(textView);
+//
+//                    // adding layout to container
+//                    buttonContainer.addView(container, params);
 //
 //                }
 //            }
@@ -195,33 +219,54 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 //            e.printStackTrace();
 //        }
     }
-    private void handleError(final Exception e) {
-        Log.e("LISTEN ERROR!!!", e.getMessage());
+
+
+    private void getLastMessage(View v) throws JSONException {
+
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_get_last_message))
+                .build();
+
+        JSONObject body = new JSONObject();
+
+        // provide current chat id and a timestamp to get all messages
+        body.put("chatId", 1);
+        body.put("after", "1970-01-01 00:00:00.000000");
+
+        new SendPostAsyncTask.Builder(uri.toString(), body)
+                .onPostExecute(this::populateChatText)
+                //TODO: add onCancelled handler.
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
     }
 
 
-//    private String getLastMessage(String res) {
-//        String message;
-//
-//        try {
-//            JSONObject response = new JSONObject(res);
-//            if (response.getBoolean("success")) {
-//                JSONArray msg = response.getJSONArray("messsage");
-//                msg
-//
-//
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return message;
-//    }
-    private String getLastMessage() {
-        String message = "hello";
+    private void populateChatText(String res) {
 
-        return message;
+        Log.wtf("GOTCHATS", res);
+        String text = "";
+
+
+        try {
+            JSONObject response = new JSONObject(res);
+
+            JSONObject message = response.getJSONObject("messages");
+            text = message.getString("message");
+            Log.wtf("GOTCHATS", text);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // set id for text view
+        TextView textView = getActivity().findViewById(R.id.chat_text_button_on);
+        textView.setId(R.id.chat_text_button_off);
+
+        // turns off prior id
+        textView.setText("text");
     }
+
     /**
      * Handle errors that may occur during the AsyncTask.
      * @param result the error message provide from the AsyncTask
