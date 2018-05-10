@@ -119,8 +119,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         }
         mMemberId = prefs.getInt(getString(R.string.keys_prefs_id), 0);
 
-        Log.wtf("USERID", "" + mMemberId);
-
 
         Uri retrieve = new Uri.Builder()
                 .scheme("https")
@@ -149,51 +147,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     private void populateChats(String res) {
 
         LinearLayout buttonContainer = getActivity().findViewById(R.id.HomeLinearLayoutButtonContainer);
-        Log.wtf("GOTCHATS", res);
 
         if (!prefs.contains(getString(R.string.keys_prefs_username))) {
             throw new IllegalStateException("No username in prefs!");
         }
-
-//        for (int i = 0; i < 5; i++) {
-//
-//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-//                    LinearLayout.LayoutParams.WRAP_CONTENT,
-//                    LinearLayout.LayoutParams.WRAP_CONTENT);
-//
-//            // layout to hold chatroom buttons and textviews
-//            LinearLayout container = new LinearLayout(this.getActivity());
-//            container.setOrientation(LinearLayout.HORIZONTAL);
-//
-//            // button for chatrooms
-//            Button button = new Button(this.getActivity(), null, android.R.attr.buttonBarButtonStyle);
-//            button.setText("name " );
-//            button.setOnClickListener(new View.OnClickListener() {
-//                public void onClick(View view) {
-//                    mListener.onNewChat();
-//                }});
-//
-//            container.addView(button, params);
-//
-//            // textView to display chatrooms last message
-//            TextView textView = new TextView(this.getActivity());
-//            textView.setId(R.id.chat_text_button_on);
-//
-//            // method to get messages for textView
-//            try {
-//                getLastMessage(textView);
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//
-//            // adding textView to layout
-//            container.addView(textView);
-//
-//            // adding layout to container
-//            buttonContainer.addView(container, params);
-//
-//        }
-
 
         try {
             JSONObject response = new JSONObject(res);
@@ -215,9 +172,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                     button.setText(name.getString("name") );
                     button.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View view) {
+                            try {
+                                prefs.edit().putString(
+                                        getString(R.string.keys_prefs_chatId),
+                                        name.getString("chatid"))
+                                        .apply();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             mListener.onNewChat();
                         }});
-
                     container.addView(button, params);
 
                     // textView to display chatrooms last message
@@ -269,7 +233,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
     private void populateChatText(String res) {
 
-        Log.wtf("GOTCHATS", res);
         String text = "";
 
 
@@ -278,7 +241,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
             JSONObject message = response.getJSONObject("messages");
             text = message.getString("message");
-            Log.wtf("GOTCHATS", text);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -303,7 +265,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     private void setWeatherData() {
         Weather.RetrieveData asyncTask = new Weather.RetrieveData(R.id.fragmentWeather ,new Weather.AsyncResponse() {
             public void processFinish(Bundle args) {
-                Log.d("WEATHER_FRAG", "setting data");
                 cityTv.setText(args.getString(Weather.K_CITY));
                 weatherDescTv.setText(args.getString(Weather.K_WEATHER_DESC));
                 tempTv.setText(args.getString(Weather.K_CURRENT_TEMP));

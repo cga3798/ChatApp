@@ -32,7 +32,7 @@ public class ChatFragment extends Fragment {
     private String mSendUrl;
     private TextView mOutputTextView;
     private ListenManager mListenManager;
-
+    private SharedPreferences prefs;
     public ChatFragment() {
         // Required empty public constructor
     }
@@ -42,7 +42,10 @@ public class ChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_chat, container, false);
-
+        prefs =
+                getActivity().getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
         v.findViewById(R.id.chatSendButton).setOnClickListener(this::sendMessage);
         mOutputTextView = v.findViewById(R.id.chatOutputTextView);
 
@@ -58,7 +61,7 @@ public class ChatFragment extends Fragment {
         try {
             messageJson.put(getString(R.string.keys_json_username), mUsername);
             messageJson.put(getString(R.string.keys_json_message), msg);
-            messageJson.put(getString(R.string.keys_json_chat_id), 1);/// update to new chatid
+            messageJson.put(getString(R.string.keys_json_chat_id), prefs.getInt("", R.string.keys_prefs_chatId));/// update to new chatid
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -123,10 +126,7 @@ public class ChatFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        SharedPreferences prefs =
-                getActivity().getSharedPreferences(
-                        getString(R.string.keys_shared_prefs),
-                        Context.MODE_PRIVATE);
+
         if (!prefs.contains(getString(R.string.keys_prefs_username))) {
             throw new IllegalStateException("No username in prefs!");
         }
@@ -142,9 +142,8 @@ public class ChatFragment extends Fragment {
                 .scheme("https")
                 .appendPath(getString(R.string.ep_lab_url))
                 .appendPath(getString(R.string.ep_get_message))
-                .appendQueryParameter("chatId", "1")
+                .appendQueryParameter("chatId", "" + prefs.getInt("", R.string.keys_prefs_chatId)) // upadate  to new chatid
                 .build();
-                Log.wtf("prefs", prefs.getString("chatid", ""));
         if (prefs.contains(getString(R.string.keys_prefs_time_stamp))) {
             //ignore all of the seen messages. You may want to store these messages locally
             mListenManager = new ListenManager.Builder(retrieve.toString(),

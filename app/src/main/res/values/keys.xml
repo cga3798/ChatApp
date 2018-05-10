@@ -8,6 +8,7 @@
     <string name="keys_prefs_email">email</string>
     <string name="keys_prefs_id">id</string>
     <string name="keys_prefs_chatId">chatId</string>
+    <string name="keys_prefs_chatId2">chatId</string>
 
     <string name="keys_prefs_stay_logged_in">loggedIn</string>
     <string name="keys_fragment_login">loginFragmentTag</string>
