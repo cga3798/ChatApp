@@ -18,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import group1.tcss450.uw.edu.a450groupone.utils.ListenManager;
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 import group1.tcss450.uw.edu.a450groupone.utils.Weather;
 
@@ -31,6 +32,8 @@ import group1.tcss450.uw.edu.a450groupone.utils.Weather;
 public class HomeFragment extends Fragment implements View.OnClickListener{
 
     private int mMemberId;
+
+    private ListenManager mListenManager;
 
     private OnHomeFragmentInteractionListener mListener;
 
@@ -56,29 +59,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         b.setOnClickListener(this);
         b = (Button) v.findViewById(R.id.weatherButton1);
         b.setOnClickListener(this);
-
-
-
-
-       // LinearLayout buttonContainer = v.findViewById(R.id.HomeLinearLayoutButtonContainer);
-//        for (int i  = 1; i < 20; i++) {
-//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-//                    LinearLayout.LayoutParams.WRAP_CONTENT,
-//                    LinearLayout.LayoutParams.WRAP_CONTENT);
-//            Button button = new Button(this.getActivity());
-//
-//            button.setId(i);
-//            final int id_ = button.getId();
-//            button.setText("button " + id_);
-//            button.setBackgroundColor(this.getActivity().getColor(R.color.colorAccent));
-//            buttonContainer.addView(button, params);
-//            button = ((Button) v.findViewById(id_));
-//            button.setOnClickListener(new View.OnClickListener() {
-//                public void onClick(View view) {
-//                    mListener.onNewChat();
-//                }
-//            });
-//        }
 
 
 
@@ -138,36 +118,109 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 .build().execute();
     }
     private void populateChats(String res) {
-        LinearLayout chatListContainer = getActivity().findViewById(R.id.HomeLinearLayoutButtonContainer);
-        Log.wtf("GOTCHATS", res);
+        LinearLayout buttonContainer = getActivity().findViewById(R.id.HomeLinearLayoutButtonContainer);
+        Log.d("GOTCONTACTS", res);
+        SharedPreferences prefs =
+                getActivity().getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        if (!prefs.contains(getString(R.string.keys_prefs_username))) {
+            throw new IllegalStateException("No username in prefs!");
+        }
 
-        try {
-            JSONObject response = new JSONObject(res);
-            if (response.getBoolean("success")) {
-                JSONArray chatList = response.getJSONArray("name");
+        for (int i = -1; i < 5; i++) {
 
-                for (int i = 0; i < chatList.length(); i++) {
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
-                    Button button = new Button(this.getActivity());
+            LinearLayout container = new LinearLayout(this.getActivity());
+            container.setOrientation(LinearLayout.HORIZONTAL);
 
-                    button.setId(i);
-                    final int id_ = button.getId();
-                    button.setText("button " + id_);
-                    button.setBackgroundColor(this.getActivity().getColor(R.color.colorAccent));
-                    chatListContainer.addView(button, params);
-                    button = ((Button) this.getActivity().findViewById(id_));
-                    button.setOnClickListener(new View.OnClickListener() {
+            container.setId(i);
+            final int id_ = container.getId();
+
+
+            Button button = new Button(this.getActivity());
+
+            button.setId(i);
+            button.setText("button " + id_);
+            //button.setBackgroundColor(this.getActivity().getColor(R.color.colorAccent));
+
+            button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     mListener.onNewChat();
-                }
-            });
-                }
+                }});
+
+            container.addView(button, params);
+            try {
+                String text = getLastMessage();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+
+            TextView text = new TextView(this.getActivity());
+            text.setText("hello");
+            container.addView(text);
+            buttonContainer.addView(container, params);
+
         }
+
+
+//        try {
+//            JSONObject response = new JSONObject(res);
+//            if (response.getBoolean("success")) {
+//                JSONArray chatList = response.getJSONArray("name");
+//
+//                for (int i = -1; i < chatList.length(); i++) {
+//                    JSONObject chat = chatList.getJSONObject(i);
+//                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.WRAP_CONTENT,
+//                    LinearLayout.LayoutParams.WRAP_CONTENT);
+//                    Button button = new Button(this.getActivity());
+//
+//                    button.setId(i);
+//                    final int id_ = button.getId();
+//                    button.setText("button " + id_);
+//                    button.setBackgroundColor(this.getActivity().getColor(R.color.colorAccent));
+//
+//                    button.setOnClickListener(new View.OnClickListener() {
+//                    public void onClick(View view) {
+//                        mListener.onNewChat();
+//                    }});
+//                    buttonContainer.addView(button, params);
+//
+//                }
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+    }
+    private void handleError(final Exception e) {
+        Log.e("LISTEN ERROR!!!", e.getMessage());
+    }
+
+
+//    private String getLastMessage(String res) {
+//        String message;
+//
+//        try {
+//            JSONObject response = new JSONObject(res);
+//            if (response.getBoolean("success")) {
+//                JSONArray msg = response.getJSONArray("messsage");
+//                msg
+//
+//
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return message;
+//    }
+    private String getLastMessage() {
+        String message = "hello";
+
+        return message;
     }
     /**
      * Handle errors that may occur during the AsyncTask.
