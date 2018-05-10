@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
@@ -17,18 +18,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import org.json.JSONObject;
-
-import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
-
 /*
- * Navigation fragment holds the currently displayed screen overlaying it with a toolbar and clickable nav menu.
+ * Navigation fragment holds the currently displayed
+ * screen overlaying it with a toolbar and clickable nav menu.
  */
 
 public class NavigationActivity extends AppCompatActivity implements
@@ -37,7 +34,7 @@ public class NavigationActivity extends AppCompatActivity implements
         WeatherFragment.OnWeatherFragmentInteractionListener,
         HomeFragment.OnHomeFragmentInteractionListener,
         FriendFragment.OnFriendFragmentInteractionListener,
-        AddNewFriendFragment.OnAddFriendFragmentInteractionListener {
+        SearchNewFriendFragment.OnAddFriendFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,27 +200,11 @@ public class NavigationActivity extends AppCompatActivity implements
     /*
      * onNewChat is a handle for calling new chat calls. Calls the loadFrament method passing a new ChatFragment
      */
-
     @Override
     public void onNewChat() {
         Intent intent = new Intent(this, ChatActivity.class);
         startActivity(intent);
     }
-
-    @Override
-    public void onInviteNewFriend(String memberidB) {
-        //current user -> sender:A receiver ->  B
-        Log.d("Navigation: ", "memeberidB: " + memberidB);
-        SharedPreferences prefs =
-                getSharedPreferences(getString(R.string.keys_shared_prefs),
-                        Context.MODE_PRIVATE);
-        String memberidA = prefs.getString(getString(R.string.keys_json_id), "");
-
-        Log.e("memberid A: ", memberidA);
-        Log.e("memberid B: ", memberidB);
-
-    }
-
 
     /*
      * NewWeather creates a new weather fragment then replaces the currently displayed fragment with
@@ -235,5 +216,24 @@ public class NavigationActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onAddNewFriend() { loadFragment(new AddNewFriendFragment());}
+    public void onAddNewFriend() { loadFragment(new SearchNewFriendFragment());}
+
+    @Override
+    public void onInviteNewFriend(String memberidB, String fullname) {
+
+        Bundle bundle = new Bundle();
+        bundle.putString("memberidB", memberidB);
+        bundle.putString("fullname", fullname);
+        bundle.putBoolean("invite", true);
+
+        ConnectionRequestsFragment requestFrag = new ConnectionRequestsFragment();
+        requestFrag.setArguments(bundle);
+
+        Fragment fragment = new ConnectionRequestsFragment();
+        fragment.setArguments(bundle);
+
+        loadFragment(fragment);
+
+
+    }
 }

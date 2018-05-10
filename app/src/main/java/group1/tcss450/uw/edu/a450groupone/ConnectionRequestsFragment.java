@@ -1,108 +1,163 @@
 package group1.tcss450.uw.edu.a450groupone;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import es.dmoral.toasty.Toasty;
+import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ConnectionRequestsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ConnectionRequestsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ConnectionRequestsFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
+    private String memberidA;
 
     public ConnectionRequestsFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ConnectionRequestsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ConnectionRequestsFragment newInstance(String param1, String param2) {
-        ConnectionRequestsFragment fragment = new ConnectionRequestsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_connection_requests, container, false);
+        View v = inflater.inflate(R.layout.fragment_connection_requests, container, false);
+        SharedPreferences prefs =
+                this.getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        memberidA =  String.valueOf(prefs.getInt(getString(R.string.keys_prefs_id), -1));
+
+        if (getArguments() != null) {
+            if (getArguments().getBoolean("invite"))  {
+                String memberidB = getArguments().getString("memberidB");
+                onInvite(memberidB);
+            }
+        } else {
+            Log.e("getArguments: ", "NULL");
+        }
+
+        sentInvites();
+        receivedInvites();
+        return v;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+
+    public void onInvite(String memberidB) {
+        //current user -> sender:A receiver ->  B
+
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_invite_new_friend))
+                .build();
+
+        JSONObject searchJSON = asJSONObject(memberidA, memberidB);
+        new SendPostAsyncTask.Builder(uri.toString(), searchJSON)
+                .onPostExecute(this::handleInviteOnPost)
+                //TODO: add onCancelled handler.
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
+    }
+
+    private void handleInviteOnPost(String result) {
+        Log.d("invite result", result);
+        String fullname = getArguments().getString("fullname");
+
+        Map<Integer, String> messages = new HashMap<Integer, String>();
+        messages.put(1, "An invitation to " + fullname + " has been sent!");
+        messages.put(2, "You and " + fullname + " are already friends. Please check your friend list");
+        messages.put(3, fullname + " has already sent you an invitation. Please check your invitations");
+        messages.put(4, "You cannot add yourself as a friend"); // TODO: change this so you don't appear in search.
+        messages.put(5, "You have already sent an invitation to " + fullname + ".");
+
+        try {
+            JSONObject resultsJSON = new JSONObject(result);
+            boolean success = resultsJSON.getBoolean("success");
+            if (success) {
+                int msg = resultsJSON.getInt("message");
+                if (msg == 1) {
+                    for (int i=0; i < 1; i++)
+                        Toasty.success(getActivity(), messages.get(1), Toast.LENGTH_LONG, true).show();
+                } else {
+                    for (int i=0; i < 1; i++)
+                        Toasty.info(getActivity(), messages.get(msg), Toast.LENGTH_LONG, true).show();
+                }
+            } else {
+                // Not success.
+            }
+        } catch (JSONException e) {
+            Log.e("JSON_PARSE_ERROR", result
+                    + System.lineSeparator()
+                    + e.getMessage());
         }
     }
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    private void handleErrorsInTask(String result) {
+        Log.e("ASYNCT_TASK_ERROR", result);
     }
+
+    public JSONObject asJSONObject(String memberidA, String memberidB) {
+        //build the JSONObject
+        JSONObject msg = new JSONObject();
+
+        try {
+            msg.put("memberidA", memberidA);
+            msg.put("memberidB", memberidB);
+        } catch (JSONException e) {
+            Log.wtf("QUERY ", "Error creating JSON: " + e.getMessage());
+        }
+        return msg;
+    }
+
+    private void sentInvites() {
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_invites_sent))
+                .build();
+
+        JSONObject msg = asJSONObject(memberidA, null);
+
+        new SendPostAsyncTask.Builder(uri.toString(), msg)
+                .onPostExecute(this::handleSentInviteOnPost)
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
+    }
+
+    private void handleSentInviteOnPost(String result) {
+        Log.e("Sent invite: ", result);
+    }
+
+    private void receivedInvites() {
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_invites_received))
+                .build();
+
+        JSONObject msg = asJSONObject(memberidA, null);
+
+        new SendPostAsyncTask.Builder(uri.toString(), msg)
+                .onPostExecute(this::handleReceivedInviteOnPost)
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
+    }
+
+    private void handleReceivedInviteOnPost(String result) {
+        Log.e("Received invite: ", result);
+
+    }
+
 }

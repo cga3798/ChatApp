@@ -45,7 +45,7 @@ public class ConnectionTabsFragment extends Fragment {
 
         Adapter adapter = new Adapter(getChildFragmentManager());
         adapter.addFragment(new FriendFragment(), "Friends");
-        adapter.addFragment(new AddNewFriendFragment(), "Add a New Friend");
+        adapter.addFragment(new SearchNewFriendFragment(), "Add a New Friend");
         adapter.addFragment(new ConnectionRequestsFragment(), "Friend Requests");
         viewPager.setAdapter(adapter);
 
@@ -79,7 +79,5 @@ public class ConnectionTabsFragment extends Fragment {
             return mFragmentTitleList.get(position);
         }
     }
-
-
 
 }

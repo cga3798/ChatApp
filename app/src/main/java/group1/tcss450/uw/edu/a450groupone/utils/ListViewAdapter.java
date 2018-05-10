@@ -7,15 +7,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import java.util.ArrayList;
-import java.util.Locale;
 
-import group1.tcss450.uw.edu.a450groupone.AddNewFriendFragment;
+import group1.tcss450.uw.edu.a450groupone.SearchNewFriendFragment;
 import group1.tcss450.uw.edu.a450groupone.R;
 
 public class ListViewAdapter extends BaseAdapter {
 
-
-    // Declare Variables
 
     Context mContext;
     LayoutInflater inflater;
@@ -25,7 +22,7 @@ public class ListViewAdapter extends BaseAdapter {
         mContext = context;
         inflater = LayoutInflater.from(mContext);
         this.arraylist = new ArrayList<String>();
-        this.arraylist.addAll(AddNewFriendFragment.connectionResultList);
+        this.arraylist.addAll(SearchNewFriendFragment.connectionResultList);
     }
 
     public class ViewHolder {
@@ -34,12 +31,12 @@ public class ListViewAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return AddNewFriendFragment.connectionResultList.size();
+        return SearchNewFriendFragment.connectionResultList.size();
     }
 
     @Override
     public String getItem(int position) {
-        return AddNewFriendFragment.connectionResultList.get(position);
+        return SearchNewFriendFragment.connectionResultList.get(position);
     }
 
     @Override
@@ -59,25 +56,8 @@ public class ListViewAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
         // Set the results into TextViews
-        //TODO: This was returning animal name
-        holder.name.setText(AddNewFriendFragment.connectionResultList.get(position));
+        holder.name.setText(SearchNewFriendFragment.connectionResultList.get(position));
         return view;
-    }
-
-    // Filter Class
-    public void filter(String charText) {
-        charText = charText.toLowerCase(Locale.getDefault());
-        AddNewFriendFragment.connectionResultList.clear();
-        if (charText.length() == 0) {
-            AddNewFriendFragment.connectionResultList.addAll(arraylist);
-        } else {
-            for (String wp : arraylist) {
-                if (wp.toLowerCase(Locale.getDefault()).contains(charText)) {
-                    AddNewFriendFragment.connectionResultList.add(wp);
-                }
-            }
-        }
-        notifyDataSetChanged();
     }
 
 }
