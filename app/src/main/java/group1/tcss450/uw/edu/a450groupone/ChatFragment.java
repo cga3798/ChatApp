@@ -58,7 +58,7 @@ public class ChatFragment extends Fragment {
         try {
             messageJson.put(getString(R.string.keys_json_username), mUsername);
             messageJson.put(getString(R.string.keys_json_message), msg);
-            messageJson.put(getString(R.string.keys_json_chat_id), 1);
+            messageJson.put(getString(R.string.keys_json_chat_id), 1);/// update to new chatid
         } catch (JSONException e) {
             e.printStackTrace();
         }

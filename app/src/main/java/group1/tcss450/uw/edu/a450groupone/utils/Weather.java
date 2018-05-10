@@ -131,7 +131,7 @@ public class Weather {
     }
 
     private static void parseCurrentWeatherJSON(JSONObject simpleWeatherJSON, Bundle b) {
-        Log.d("SHOWcurrentJSON", simpleWeatherJSON.toString());
+        //Log.d("SHOWcurrentJSON", simpleWeatherJSON.toString());
         try {
             if (simpleWeatherJSON != null) {
 
