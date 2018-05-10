@@ -69,6 +69,9 @@
     <string name="username_fragment">Username</string>
     <string name="password_fragment">Password</string>
     <string name="search_text_view">Please enter full name, email or username </string>
+    <string name="invite_sent">Invitation Sent Successfully!</string>
+    <string name="sent">Sent</string>
+    <string name="received">Received</string>
 
 
 </resources>

@@ -169,12 +169,6 @@ public class MainActivity extends AppCompatActivity implements
             boolean success = resultsJSON.getBoolean("success");
 
             if (success) {
-//                myMemberid = resultsJSON.getString("id");
-//                myFirstname = resultsJSON.getString("first");
-//                myLastName = resultsJSON.getString("last");
-//                myUsername = resultsJSON.getString("username");
-//                myEmail = resultsJSON.getString("email");
-
                 checkStayLoggedIn();
                 setCurrentUserInfo(resultsJSON);
                 loadHomeFragment();
