@@ -2,6 +2,7 @@ package group1.tcss450.uw.edu.a450groupone;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ScrollView;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -17,4 +18,5 @@ public class ChatActivity extends AppCompatActivity {
             }
         }
     }
+
 }

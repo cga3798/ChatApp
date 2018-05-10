@@ -169,13 +169,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                     // button for chatrooms
                     Button button = new Button(this.getActivity(), null, android.R.attr.buttonBarButtonStyle);
                     JSONObject name = chatList.getJSONObject(i);
+                    try {
+                        prefs.edit().putInt(
+                                getString(R.string.keys_prefs_chatId),
+                                name.getInt("chatid"))
+                                .apply();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     button.setText(name.getString("name") );
                     button.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View view) {
                             try {
-                                prefs.edit().putString(
+                                prefs.edit().putInt(
                                         getString(R.string.keys_prefs_chatId),
-                                        name.getString("chatid"))
+                                        name.getInt("chatid"))
                                         .apply();
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -220,7 +228,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         JSONObject body = new JSONObject();
 
         // provide current chat id and a timestamp to get all messages
-        body.put("chatId", 1);
+        body.put("chatId", prefs.getInt("chatId", R.string.keys_prefs_chatId));
         body.put("after", "1970-01-01 00:00:00.000000");
 
         new SendPostAsyncTask.Builder(uri.toString(), body)
