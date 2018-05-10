@@ -1,5 +1,8 @@
 package group1.tcss450.uw.edu.a450groupone.utils;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,10 +13,12 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.format.ResolverStyle;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -70,10 +75,12 @@ public class Weather {
         private AsyncResponse delegate = null;//Call back interface
         /* The request for data is coming from HomeFragment or weatherFragment*/
         private int source;
+        public Context context;
 
-        public RetrieveData(int frag, AsyncResponse asyncResponse) {
+        public RetrieveData(Context c, int frag, AsyncResponse asyncResponse) {
             delegate = asyncResponse;//Assigning call back interfacethrough constructor
             source = frag;
+            context = c;
         }
 
         // TODO : can modify to use two params if we get by lat/lon OR one param by city id
@@ -81,10 +88,10 @@ public class Weather {
         protected WeatherBundle doInBackground(String... params) {
 
             WeatherBundle weatherBundle = new WeatherBundle();
-
-            // TODO : request based on src
             try {
                 if (source == R.id.fragmentHome) {
+
+                    Log.d("SHOW url____", "more trash");
                     weatherBundle.setCurrentWeather(getCurrentWeatherJSON(params[0], params[1]));
                 } else if (source == R.id.fragmentWeather) {
                     weatherBundle.setCurrentWeather(getCurrentWeatherJSON(params[0], params[1]));
@@ -96,6 +103,7 @@ public class Weather {
                 //jsonDaily = getWeatherJSON(params[0], params[1]);
             } catch (Exception e) {
                 Log.d("Error", "Cannot process JSON results", e);
+                e.printStackTrace();
             }
 
             return weatherBundle;
@@ -128,13 +136,119 @@ public class Weather {
             parseHourlyDailyWeatherJSON(hourlyDailyWeatherJSON, b);
 
         }
+
+        public JSONObject getCurrentWeatherJSON(String lat, String lon) {
+            try {
+                // make url
+                URL url = new URL(new Uri.Builder()
+                        .scheme("https")
+                        .appendPath(context.getString(R.string.ep_base_url))
+                        .appendPath(context.getString(R.string.ep_weather))
+                        .appendPath(context.getString(R.string.ep_weather_current))
+                        .build().toString());
+
+                //Log.d("SHOW url____", url.toString());
+
+                JSONObject body = new JSONObject();
+                // provide current user id
+                body.put("latitude", lat);
+                body.put("longitude", lon);
+
+                HttpURLConnection connection =
+                        (HttpURLConnection) url.openConnection();
+                connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                connection.setRequestMethod("POST");
+
+                OutputStreamWriter wr= new OutputStreamWriter(connection.getOutputStream());
+                wr.write(body.toString());
+                wr.flush();
+                wr.close();
+                //connection.addRequestProperty("x-api-key", OPEN_WEATHER_MAP_API);
+
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(connection.getInputStream()));
+
+                StringBuffer json = new StringBuffer(1024);
+                String tmp = "";
+                while ((tmp = reader.readLine()) != null)
+                    json.append(tmp).append("\n");
+                reader.close();
+
+                JSONObject data = new JSONObject(json.toString());
+
+                // This value will be 404 if the request was not
+                // successful
+//            if (data.getInt("cod") != 200) {
+//                return null;
+//            }
+                if (!data.getBoolean("success")) {
+                    Log.e("request weatherERRO", data.toString());
+                    return null;
+                }
+
+                return data;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        public JSONObject getHourlyDailyWeatherJSON(String lat, String lon) {
+            try {
+                // make url
+                URL url = new URL(new Uri.Builder()
+                        .scheme("https")
+                        .appendPath(context.getString(R.string.ep_base_url))
+                        .appendPath(context.getString(R.string.ep_weather))
+                        .appendPath(context.getString(R.string.ep_weather_daily))
+                        .build().toString());
+
+                //Log.d("SHOW url____", url.toString());
+
+                JSONObject body = new JSONObject();
+                // provide current user id
+                body.put("latitude", lat);
+                body.put("longitude", lon);
+
+                HttpURLConnection connection =
+                        (HttpURLConnection) url.openConnection();
+                connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                connection.setRequestMethod("POST");
+
+                OutputStreamWriter wr= new OutputStreamWriter(connection.getOutputStream());
+                wr.write(body.toString());
+                wr.flush();
+                wr.close();
+
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(connection.getInputStream()));
+
+                StringBuffer json = new StringBuffer(1024);
+                String tmp = "";
+                while ((tmp = reader.readLine()) != null)
+                    json.append(tmp).append("\n");
+                reader.close();
+
+                JSONObject data = new JSONObject(json.toString());
+
+                if (!data.getBoolean("success")) {
+                    Log.e("request weatherERRO", data.toString());
+                    return null;
+                }
+
+                return data;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
     }
 
-    private static void parseCurrentWeatherJSON(JSONObject simpleWeatherJSON, Bundle b) {
-        Log.d("SHOWcurrentJSON", simpleWeatherJSON.toString());
+    private static void parseCurrentWeatherJSON(JSONObject res, Bundle b) {
+        Log.d("SHOWcurrentJSON", res.toString());
         try {
-            if (simpleWeatherJSON != null) {
-
+            if (res != null) {
+                JSONObject simpleWeatherJSON = res.getJSONObject("data");
                 JSONObject details = simpleWeatherJSON.getJSONArray("weather").getJSONObject(0);
                 JSONObject main = simpleWeatherJSON.getJSONObject("main");
                 JSONObject sys = simpleWeatherJSON.getJSONObject("sys");
@@ -188,9 +302,11 @@ public class Weather {
     }
 
 
-    private static void parseHourlyDailyWeatherJSON(JSONObject json, Bundle b) {
+    private static void parseHourlyDailyWeatherJSON(JSONObject res, Bundle b) {
+        Log.d("SHOWdailyJSON", res.toString());
         try {
-            if (json != null) {
+            if (res != null) {
+                JSONObject json = res.getJSONObject("data");
                 JSONArray hourlyList = json.getJSONArray("list");
                 b.putString(K_HOURLY_DAILY_LIST, hourlyList.toString());
                 Log.d("SHOWhourJSON", hourlyList.toString());
@@ -200,9 +316,12 @@ public class Weather {
         }
     }
 
-    private static void loadHomeFragmentData(JSONObject json, Bundle b) {
+    private static void loadHomeFragmentData(JSONObject res, Bundle b) {
         try {
-            if (json != null) {
+            Log.d("SHOWcurrentJSON", res.toString());
+            if (res != null) {
+
+                JSONObject json = res.getJSONObject("data");
 
                 JSONObject details = json.getJSONArray("weather").getJSONObject(0);
                 JSONObject main = json.getJSONObject("main");
@@ -224,67 +343,10 @@ public class Weather {
         }
     }
 
-    public static JSONObject getCurrentWeatherJSON(String lat, String lon) {
-        try {
-            URL url = new URL(String.format(OPEN_WEATHER_CURRENT_URL, lat, lon));
-            HttpURLConnection connection =
-                    (HttpURLConnection) url.openConnection();
 
-            connection.addRequestProperty("x-api-key", OPEN_WEATHER_MAP_API);
 
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(connection.getInputStream()));
 
-            StringBuffer json = new StringBuffer(1024);
-            String tmp = "";
-            while ((tmp = reader.readLine()) != null)
-                json.append(tmp).append("\n");
-            reader.close();
 
-            JSONObject data = new JSONObject(json.toString());
-
-            // This value will be 404 if the request was not
-            // successful
-            if (data.getInt("cod") != 200) {
-                return null;
-            }
-
-            return data;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public static JSONObject getHourlyDailyWeatherJSON(String lat, String lon) {
-        try {
-            URL url = new URL(String.format(OPEN_WEATHER_HOURLY_URL, lat, lon));
-            HttpURLConnection connection =
-                    (HttpURLConnection) url.openConnection();
-
-            connection.addRequestProperty("x-api-key", OPEN_WEATHER_MAP_API);
-
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(connection.getInputStream()));
-
-            StringBuffer json = new StringBuffer(1024);
-            String tmp = "";
-            while ((tmp = reader.readLine()) != null)
-                json.append(tmp).append("\n");
-            reader.close();
-
-            JSONObject data = new JSONObject(json.toString());
-
-            // This value will be 404 if the request was not
-            // successful
-            if (data.getInt("cod") != 200) {
-                return null;
-            }
-
-            return data;
-        } catch (Exception e) {
-            return null;
-        }
-    }
 
     public static String getWindDirection(int degrees) {
         int val = (int) ((degrees/22.5)+.5);
@@ -330,6 +392,10 @@ public class Weather {
             }
         }
         return icon;
+    }
+
+    private static void handleErrorsInTask(String result) {
+        Log.e("ASYNCT_WEATHER_TASK_ERROR", result);
     }
 
 

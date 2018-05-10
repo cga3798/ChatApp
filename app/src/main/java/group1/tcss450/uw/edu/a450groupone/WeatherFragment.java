@@ -74,7 +74,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
     }
 
     private void getWeatherData(View fragmentView) {
-        Weather.RetrieveData asyncTask = new Weather.RetrieveData(R.id.fragmentWeather ,new Weather.AsyncResponse() {
+        Weather.RetrieveData asyncTask = new Weather.RetrieveData(getContext(), R.id.fragmentWeather ,new Weather.AsyncResponse() {
             public void processFinish(Bundle args) {
                 data = args;
                 setWeatherData(fragmentView);

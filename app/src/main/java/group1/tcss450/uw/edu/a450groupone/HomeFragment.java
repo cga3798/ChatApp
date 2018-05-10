@@ -2,7 +2,6 @@ package group1.tcss450.uw.edu.a450groupone;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.icu.text.SimpleDateFormat;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -15,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -63,14 +64,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         b.setOnClickListener(this);
         b = (Button) v.findViewById(R.id.tempChat2);
         b.setOnClickListener(this);
-        b = (Button) v.findViewById(R.id.weatherButton1);
-        b.setOnClickListener(this);
+
+        // set click listener on weather view
+        v.findViewById(R.id.homeCurrentWeatherDisplay).setOnClickListener(this);
 
 
 
         TextView tv = (TextView) v.findViewById(R.id.HomeTextViewCurrentDate);
         long date = System.currentTimeMillis();
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy h:mm a");
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
+        sdf.setTimeZone(TimeZone.getTimeZone(Weather.GMT_PACIFIC));
         String dateString = sdf.format(date);
         tv.setText(dateString);
 
@@ -99,7 +102,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     }
 
     private void setWeatherData() {
-        Weather.RetrieveData asyncTask = new Weather.RetrieveData(R.id.fragmentWeather ,new Weather.AsyncResponse() {
+        Weather.RetrieveData asyncTask = new Weather.RetrieveData(getContext(), R.id.fragmentHome ,new Weather.AsyncResponse() {
             public void processFinish(Bundle args) {
                 Log.d("WEATHER_FRAG", "setting data");
                 cityTv.setText(args.getString(Weather.K_CITY));
@@ -151,7 +154,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
               case R.id.HomeButtonNewChat:
                     mListener.onNewChat();
                     break;
-                case R.id.weatherButton1:
+                case R.id.homeCurrentWeatherDisplay:
                     mListener.NewWeather(); // temp weather button for navigation
                     break;
                 case R.id.tempChat1:
