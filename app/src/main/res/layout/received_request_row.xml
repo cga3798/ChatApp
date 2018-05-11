@@ -1,23 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="5dp"
     android:background="@drawable/contact_border">
 
+    <ImageButton
+        android:id="@+id/receivedRequestDecline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:background="@color/medium_grey"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_clear" />
+
+    <ImageButton
+        android:id="@+id/receivedRequestAccept"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/medium_grey"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/receivedRequestDecline"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_tick" />
+
     <TextView
-    android:id="@+id/receivedRequestLinearLayoutTextViewNickname"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="nickname"
-    android:textSize="10sp"/>
+        android:id="@+id/receivedRequestLinearLayoutTextViewNickname"
+        android:layout_width="291dp"
+        android:layout_height="13dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:text="nickname"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toStartOf="@+id/receivedRequestAccept"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/receivedRequestLinearLayoutTextViewFullName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="full_name"/>
+        android:layout_width="292dp"
+        android:layout_height="18dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:text="full_name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/receivedRequestAccept"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/receivedRequestLinearLayoutTextViewNickname" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
