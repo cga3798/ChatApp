@@ -42,13 +42,13 @@ public class ConnectionTabsFragment extends Fragment {
     // Add Fragments to Tabs
     private void setupViewPager(ViewPager viewPager) {
 
-
         Adapter adapter = new Adapter(getChildFragmentManager());
         adapter.addFragment(new FriendFragment(), "Friends");
-        adapter.addFragment(new SearchNewFriendFragment(), "Add a New Friend");
-        adapter.addFragment(new ConnectionRequestsFragment(), "Friend Requests");
-        viewPager.setAdapter(adapter);
+        adapter.addFragment(new SearchNewFriendFragment(), "Search");
+        adapter.addFragment(new SentRequestsFragment(), "Sent Invites");
+        adapter.addFragment(new ReceivedRequestsFragment(), "Received Invites");
 
+        viewPager.setAdapter(adapter);
     }
 
     static class Adapter extends FragmentPagerAdapter {
