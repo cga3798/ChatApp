@@ -109,7 +109,7 @@ public class SentRequestsFragment extends Fragment {
 
     private void onCancelInvite(View view) {
 
-        //delete using username,
+        //delete using username,  
     }
 
     private void handleErrorsInTask(String result) {
