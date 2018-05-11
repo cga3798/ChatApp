@@ -99,7 +99,7 @@ public class ListenManager {
         }
 
         public Builder setTimeStamp(final String val) {
-            mDate = val;
+            //mDate = val; /// CHANGE THIS TO EFFECT MESSAGES
             return this;
         }
 

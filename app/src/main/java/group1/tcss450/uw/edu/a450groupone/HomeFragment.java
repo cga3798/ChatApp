@@ -1,10 +1,8 @@
 package group1.tcss450.uw.edu.a450groupone;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -20,6 +18,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -71,12 +71,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         // these are temporary buttons
         Button b = (Button) v.findViewById(R.id.HomeButtonNewChat);
         b.setOnClickListener(this);
-        b = (Button) v.findViewById(R.id.weatherButton1);
-        b.setOnClickListener(this);
+
+        // set click listener on weather view
+        v.findViewById(R.id.homeCurrentWeatherDisplay).setOnClickListener(this);
 
         TextView tv = (TextView) v.findViewById(R.id.HomeTextViewCurrentDate);
         long date = System.currentTimeMillis();
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy h:mm a");
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
+        sdf.setTimeZone(TimeZone.getTimeZone(Weather.GMT_PACIFIC));
         String dateString = sdf.format(date);
         tv.setText(dateString);
 
@@ -169,13 +171,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                     // button for chatrooms
                     Button button = new Button(this.getActivity(), null, android.R.attr.buttonBarButtonStyle);
                     JSONObject name = chatList.getJSONObject(i);
+                    try {
+                        prefs.edit().putInt(
+                                getString(R.string.keys_prefs_chatId),
+                                name.getInt("chatid"))
+                                .apply();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     button.setText(name.getString("name") );
                     button.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View view) {
                             try {
-                                prefs.edit().putString(
+                                prefs.edit().putInt(
                                         getString(R.string.keys_prefs_chatId),
-                                        name.getString("chatid"))
+                                        name.getInt("chatid"))
                                         .apply();
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -219,7 +229,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         JSONObject body = new JSONObject();
 
         // provide current chat id and a timestamp to get all messages
-        body.put("chatId", 1);
+        body.put("chatId", prefs.getInt("chatId", R.string.keys_prefs_chatId));
         body.put("after", "1970-01-01 00:00:00.000000");
 
         new SendPostAsyncTask.Builder(uri.toString(), body)
@@ -262,7 +272,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
 
     private void setWeatherData() {
-        Weather.RetrieveData asyncTask = new Weather.RetrieveData(R.id.fragmentWeather ,new Weather.AsyncResponse() {
+        Weather.RetrieveData asyncTask = new Weather.RetrieveData(getContext(), R.id.fragmentHome ,new Weather.AsyncResponse() {
             public void processFinish(Bundle args) {
                 cityTv.setText(args.getString(Weather.K_CITY));
                 weatherDescTv.setText(args.getString(Weather.K_WEATHER_DESC));
@@ -313,7 +323,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
               case R.id.HomeButtonNewChat:
                     mListener.onNewChat();
                     break;
-                case R.id.weatherButton1:
+                case R.id.homeCurrentWeatherDisplay:
                     mListener.NewWeather(); // temp weather button for navigation
                     break;
                 default:
