@@ -247,9 +247,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
         try {
             JSONObject response = new JSONObject(res);
-
-            JSONObject message = response.getJSONObject("messages");
-            text = message.getString("message");
+            if (response.getBoolean("success")) {
+                JSONObject message = response.getJSONObject("messages");
+                text = message.getString("message");
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
