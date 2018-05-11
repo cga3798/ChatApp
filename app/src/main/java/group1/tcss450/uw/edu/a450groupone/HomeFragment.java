@@ -71,12 +71,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         // these are temporary buttons
         Button b = (Button) v.findViewById(R.id.HomeButtonNewChat);
         b.setOnClickListener(this);
-        b = (Button) v.findViewById(R.id.tempChat3);
-        b.setOnClickListener(this);
-        b = (Button) v.findViewById(R.id.tempChat1);
-        b.setOnClickListener(this);
-        b = (Button) v.findViewById(R.id.tempChat2);
-        b.setOnClickListener(this);
 
         // set click listener on weather view
         v.findViewById(R.id.homeCurrentWeatherDisplay).setOnClickListener(this);
