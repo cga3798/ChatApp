@@ -1,23 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="5dp"
     android:background="@drawable/contact_border">
 
     <TextView
         android:id="@+id/sentRequestLinearLayoutTextViewNickname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="291dp"
+        android:layout_height="13dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
         android:text="nickname"
-        android:textSize="10sp"/>
+        android:textSize="10sp"
+        app:layout_constraintBottom_toTopOf="@+id/sentRequestLinearLayoutTextViewFullName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/sentRequestLinearLayoutTextViewFullName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="full_name"/>
+        android:layout_width="292dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="16dp"
+        android:text="full_name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sentRequestLinearLayoutTextViewNickname" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/sentRequestCancelInvite"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="103dp"
+        android:layout_height="29dp"
+        android:background="@color/medium_grey"
+        android:text="@string/cancel_invite"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

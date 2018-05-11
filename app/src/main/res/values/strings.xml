@@ -72,6 +72,7 @@
     <string name="invite_sent">Invitation Sent Successfully!</string>
     <string name="sent">Sent</string>
     <string name="received">Received</string>
+    <string name="cancel_invite">Cancel Invite</string>
 
 
 </resources>
