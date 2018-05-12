@@ -112,22 +112,40 @@ public class SentRequestsFragment extends Fragment {
             v = LayoutInflater.from(getContext())
                     .inflate(R.layout.sent_request_row, null, false);
 
-            TextView tv = v.findViewById(R.id.sentRequestLinearLayoutTextViewNickname);
-            tv.setText(nickname);
-            tv = v.findViewById(R.id.sentRequestLinearLayoutTextViewFullName);
+            TextView tvUsername = v.findViewById(R.id.sentRequestLinearLayoutTextViewNickname);
+            tvUsername.setText(nickname);
+            TextView tv = v.findViewById(R.id.sentRequestLinearLayoutTextViewFullName);
             tv.setText(fullName);
 
             Button b  = (Button) v.findViewById(R.id.sentRequestCancelInvite);
-            b.setOnClickListener(view -> onCancelInvite(v));
+            b.setOnClickListener(view -> onCancelInvite(v, tvUsername.getText().toString()));
         }
 
         return v;
     }
 
-    private void onCancelInvite(View view) {
+    private void onCancelInvite(View view, String username_b) {
         //delete using username.
-        Log.e("onClick: ", "Clicked");
+        Log.e("onCancelInvite: ", username_b);
 
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_connections_ops))
+                .build();
+
+        JSONObject searchJSON = asJSONObject(memberidA, username_b, "canceldelete");
+
+        new SendPostAsyncTask.Builder(uri.toString(), searchJSON)
+                .onPostExecute(this::handleCancelOnPost)
+                //TODO: add onCancelled handler.
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
+
+    }
+
+    private void handleCancelOnPost(String result) {
+        Log.d("Cancel: ", result);
     }
 
     private void handleErrorsInTask(String result) {
@@ -146,6 +164,19 @@ public class SentRequestsFragment extends Fragment {
         return msg;
     }
 
+    private JSONObject asJSONObject(String memberidA, String username_b, String op) {
+        //build the JSONObject
+        JSONObject msg = new JSONObject();
+        try {
+            msg.put("memberid_a", memberidA);
+            msg.put("username_b", username_b);
+            msg.put("op", op);
+
+        } catch (JSONException e) {
+            Log.wtf("QUERY ", "Error creating JSON: " + e.getMessage());
+        }
+        return msg;
+    }
 
 
 }

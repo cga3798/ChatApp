@@ -106,33 +106,85 @@ public class ReceivedRequestsFragment extends Fragment {
             v = LayoutInflater.from(getContext())
                     .inflate(R.layout.received_request_row, null, false);
 
-            TextView tv = v.findViewById(R.id.receivedRequestLinearLayoutTextViewNickname);
-            tv.setText(nickname);
-            tv = v.findViewById(R.id.receivedRequestLinearLayoutTextViewFullName);
+            TextView tvUsername = v.findViewById(R.id.receivedRequestLinearLayoutTextViewNickname);
+            tvUsername.setText(nickname);
+            TextView tv = v.findViewById(R.id.receivedRequestLinearLayoutTextViewFullName);
             tv.setText(fullName);
 
             ImageView im = (ImageView) v.findViewById(R.id.receivedRequestAccept);
-            im.setOnClickListener(view -> onAcceptInvite(v));
+            im.setOnClickListener(view -> onAcceptInvite(v, tvUsername.getText().toString()));
 
             im = (ImageView) v.findViewById(R.id.receivedRequestDecline);
-            im.setOnClickListener(view -> onDeclineInvite(v));
+            im.setOnClickListener(view -> onDeclineInvite(v, tvUsername.getText().toString()));
         }
 
         return v;
     }
 
-    private void onAcceptInvite(View v) {
-        Log.e("onAcceptInvite: ", "Clicked");
+    private void onAcceptInvite(View v, String username_b) {
+        Log.e("onAcceptInvite: ", username_b);
+
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_connections_ops))
+                .build();
+
+        JSONObject searchJSON = asJSONObject(memberidA, username_b, "accept");
+
+        new SendPostAsyncTask.Builder(uri.toString(), searchJSON)
+                .onPostExecute(this::handleAcceptOnPost)
+                //TODO: add onCancelled handler.
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
     }
 
-    private void onDeclineInvite(View v) {
-        Log.e("onDeclineInvite: ", "Clicked");
+    private void handleAcceptOnPost(String result) {
+        Log.d("accept: ", result);
+
+    }
+
+    private void onDeclineInvite(View v, String username_b) {
+        Log.e("onDeclineInvite: ", username_b);
+
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_connections_ops))
+                .build();
+
+        JSONObject searchJSON = asJSONObject(memberidA, username_b, "decline");
+
+        new SendPostAsyncTask.Builder(uri.toString(), searchJSON)
+                .onPostExecute(this::handleDeclineOnPost)
+                //TODO: add onCancelled handler.
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
+    }
+
+    private void handleDeclineOnPost(String result) {
+        Log.d("Decline: ", result);
+
     }
 
     private void handleErrorsInTask(String result) {
         Log.e("ASYNCT_TASK_ERROR", result);
     }
 
+
+    private JSONObject asJSONObject(String memberidA, String username_b, String op) {
+        //build the JSONObject
+        JSONObject msg = new JSONObject();
+        try {
+            msg.put("memberid_a", memberidA);
+            msg.put("username_b", username_b);
+            msg.put("op", op);
+
+        } catch (JSONException e) {
+            Log.wtf("QUERY ", "Error creating JSON: " + e.getMessage());
+        }
+        return msg;
+    }
 
     private JSONObject asJSONObject(String memberidA, String memberidB) {
         //build the JSONObject
