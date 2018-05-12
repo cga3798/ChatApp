@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -50,6 +51,8 @@ public class ChatFragment extends Fragment {
         v.findViewById(R.id.chatSendButton).setOnClickListener(this::sendMessage);
 
         mOutputTextView = v.findViewById(R.id.chatOutputTextView);
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         Log.wtf("CHAT ROOM", "" + prefs.getInt("chatId", R.string.keys_prefs_chatId));
         return v;
     }
@@ -72,6 +75,15 @@ public class ChatFragment extends Fragment {
                 .onPostExecute(this::endOfSendMsgTask)
                 .onCancelled(this::handleError)
                 .build().execute();
+
+        final ScrollView scrollview = ((ScrollView) this.getActivity().findViewById(R.id.scrollViewChat));
+        scrollview.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollview.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        });
+
     }
 
     private void handleError(final String msg) {
@@ -91,6 +103,7 @@ public class ChatFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
     }
     private void handleError(final Exception e) {
         Log.e("LISTEN ERROR!!!", e.getMessage());
@@ -122,14 +135,10 @@ public class ChatFragment extends Fragment {
                     mOutputTextView.append(System.lineSeparator());
                 }
             });
-            final ScrollView scrollview = ((ScrollView) this.getActivity().findViewById(R.id.scrollViewChat));
-            scrollview.post(new Runnable() {
-                @Override
-                public void run() {
-                    scrollview.fullScroll(ScrollView.FOCUS_DOWN);
-                }
-            });
+
         }
+
+
     }
 
     @Override
@@ -169,6 +178,7 @@ public class ChatFragment extends Fragment {
                     .setDelay(1000)
                     .build();
         }
+
 
 
     }
