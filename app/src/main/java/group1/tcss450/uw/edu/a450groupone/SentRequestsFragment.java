@@ -146,6 +146,8 @@ public class SentRequestsFragment extends Fragment {
 
     private void handleCancelOnPost(String result) {
         Log.d("Cancel: ", result);
+        Toasty.info(getActivity(), "Invitation Canceled.", Toast.LENGTH_SHORT, true).show();
+
     }
 
     private void handleErrorsInTask(String result) {

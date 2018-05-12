@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.SearchView;
@@ -106,16 +107,19 @@ public class FriendFragment extends Fragment {
             JSONObject response = new JSONObject(res);
             if (response.getBoolean("success")) {
                 JSONArray friendsList = response.getJSONArray("friends");
-                if (friendsList.length() == 0) {
+                int length = friendsList.length();
+
+                if (length == 0) {
                     contactsListContainer.addView(
-                            getContactView("", "There are no contacts to display"));
+                            getContactView("", "There are no contacts to display", length));
                 } else {
                     for (int i = 0; i < friendsList.length(); i++) {
                         JSONObject friend = friendsList.getJSONObject(i);
                         contactsListContainer.addView(
                                 getContactView(friend.getString("username"),
                                         friend.getString("firstname") + " "
-                                                + friend.getString("lastname")));
+                                                + friend.getString("lastname"), length
+                                ));
                     }
                 }
             }
@@ -154,43 +158,32 @@ public class FriendFragment extends Fragment {
         void onAddNewFriend();
     }
 
-    private View getContactView(String nickname, String fullName) {
+    private View getContactView(String nickname, String fullName, int length) {
         View v = LayoutInflater.from(getContext())
                 .inflate(R.layout.contact_row, null, false);
+
 
         TextView tvUsername = v.findViewById(R.id.friendsTextViewNickname);
         tvUsername.setText(nickname);
         TextView tv = v.findViewById(R.id.friendsTextViewFullName);
         tv.setText(fullName);
 
-        fullname = tv.getText().toString();
-        tv.setOnLongClickListener(view -> onDeleteFriend(v, tvUsername.getText().toString()));
-        tvUsername.setOnLongClickListener(view -> onDeleteFriend(v, tvUsername.getText().toString()));
+        if (length != 0) {
+            fullname = tv.getText().toString();
+            tv.setOnLongClickListener(view -> onDeleteFriend(v, tvUsername.getText().toString()));
+            tvUsername.setOnLongClickListener(view -> onDeleteFriend(v, tvUsername.getText().toString()));
+        }
+
 
         return v;
     }
 
     private boolean onDeleteFriend(View v, String username_b) {
         Log.d("onDeleteFriend: ", username_b);
-        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-            switch (which){
-                case DialogInterface.BUTTON_POSITIVE:
-                    Log.d("YES: ", "clicked");
-                    confirmDelete(username_b);
-                    break;
 
-                case DialogInterface.BUTTON_NEGATIVE:
-                    //No button clicked
-                    Log.d("NO: ", "clicked");
-                    break;
-            }
-        };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Are you sure you want to delete your friend?" )
-                .setPositiveButton("Yes", dialogClickListener)
-                .setNegativeButton("No", dialogClickListener).show();
-
+        ImageButton im = v.findViewById(R.id.friendImageButtonDelete);
+        im.setVisibility(View.VISIBLE);
+        im.setOnClickListener(view -> confirmDelete(username_b));
 
         return true;
     }
@@ -218,7 +211,7 @@ public class FriendFragment extends Fragment {
     }
 
     private void handleDeleteOnPost(String result) {
-        Toasty.error(getActivity(), fullname + "has been successfully deleted.", Toast.LENGTH_SHORT).show();
+        Toasty.error(getActivity(), fullname + "has been successfully deleted.", Toast.LENGTH_SHORT, true).show();
 
     }
 
