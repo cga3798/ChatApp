@@ -134,7 +134,7 @@ public class SentRequestsFragment extends Fragment {
                 .appendPath(getString(R.string.ep_connections_ops))
                 .build();
 
-        JSONObject searchJSON = asJSONObject(memberidA, username_b, "canceldelete");
+        JSONObject searchJSON = asJSONObject(memberidA, username_b, "cancel");
 
         new SendPostAsyncTask.Builder(uri.toString(), searchJSON)
                 .onPostExecute(this::handleCancelOnPost)

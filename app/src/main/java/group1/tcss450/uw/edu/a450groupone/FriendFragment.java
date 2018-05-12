@@ -2,9 +2,12 @@ package group1.tcss450.uw.edu.a450groupone;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,11 +18,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import es.dmoral.toasty.Toasty;
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
 
@@ -29,7 +34,7 @@ import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 public class FriendFragment extends Fragment {
 
     private OnFriendFragmentInteractionListener mListener;
-
+    private String fullname;
 
     public FriendFragment() {
         // Required empty public constructor
@@ -153,12 +158,82 @@ public class FriendFragment extends Fragment {
         View v = LayoutInflater.from(getContext())
                 .inflate(R.layout.contact_row, null, false);
 
-        TextView tv = v.findViewById(R.id.friendsTextViewNickname);
-        tv.setText(nickname);
-        tv = v.findViewById(R.id.friendsTextViewFullName);
+        TextView tvUsername = v.findViewById(R.id.friendsTextViewNickname);
+        tvUsername.setText(nickname);
+        TextView tv = v.findViewById(R.id.friendsTextViewFullName);
         tv.setText(fullName);
 
+        fullname = tv.getText().toString();
+        tv.setOnLongClickListener(view -> onDeleteFriend(v, tvUsername.getText().toString()));
+        tvUsername.setOnLongClickListener(view -> onDeleteFriend(v, tvUsername.getText().toString()));
+
         return v;
+    }
+
+    private boolean onDeleteFriend(View v, String username_b) {
+        Log.d("onDeleteFriend: ", username_b);
+        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    Log.d("YES: ", "clicked");
+                    confirmDelete(username_b);
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //No button clicked
+                    Log.d("NO: ", "clicked");
+                    break;
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Are you sure you want to delete your friend?" )
+                .setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+
+
+        return true;
+    }
+
+    private void confirmDelete(String username_b) {
+
+        SharedPreferences prefs =
+                this.getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        String memberidA =  String.valueOf(prefs.getInt(getString(R.string.keys_prefs_id), -1));
+
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_connections_ops))
+                .build();
+
+        JSONObject searchJSON = asJSONObject(memberidA, username_b, "delete");
+
+        new SendPostAsyncTask.Builder(uri.toString(), searchJSON)
+                .onPostExecute(this::handleDeleteOnPost)
+                //TODO: add onCancelled handler.
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
+    }
+
+    private void handleDeleteOnPost(String result) {
+        Toasty.error(getActivity(), fullname + "has been successfully deleted.", Toast.LENGTH_SHORT).show();
+
+    }
+
+    private JSONObject asJSONObject(String memberidA, String username_b, String op) {
+        //build the JSONObject
+        JSONObject msg = new JSONObject();
+        try {
+            msg.put("memberid_a", memberidA);
+            msg.put("username_b", username_b);
+            msg.put("op", op);
+
+        } catch (JSONException e) {
+            Log.wtf("QUERY ", "Error creating JSON: " + e.getMessage());
+        }
+        return msg;
     }
 
     @Override
