@@ -4,7 +4,9 @@
     android:id="@+id/frameLayout4"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ChatFragment">
+    tools:context=".ChatFragment"
+    android:layout_marginBottom="?attr/actionBarSize">
+    <View style="@style/Divider"/>
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -16,7 +18,11 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:clipToPadding="true"
         android:fillViewport="true"
+        android:focusableInTouchMode="true"
+        android:focusedByDefault="true"
+        android:gravity="bottom"
         app:layout_constraintBottom_toTopOf="@+id/chatInputEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,11 +31,12 @@
         <TextView
             android:id="@+id/chatOutputTextView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="32dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="1dp"
+            android:lineSpacingExtra="@dimen/activity_horizontal_margin"
             app:layout_constraintBottom_toTopOf="@+id/chatInputEditText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +51,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:hint="Write a message"
-        android:selectAllOnFocus="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/chatSendButton"
         app:layout_constraintStart_toStartOf="parent" />
