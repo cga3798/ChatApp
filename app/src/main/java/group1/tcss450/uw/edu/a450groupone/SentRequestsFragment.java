@@ -3,6 +3,7 @@ package group1.tcss450.uw.edu.a450groupone;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,13 +12,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import es.dmoral.toasty.Toasty;
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
 
@@ -39,9 +43,6 @@ public class SentRequestsFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_sent_requests, container, false);
         sentInvites();
-
-//
-
 
         return v;
     }
@@ -75,16 +76,17 @@ public class SentRequestsFragment extends Fragment {
 
             if (success) {
                 JSONArray requestsSent = response.getJSONArray("sent");
-                if (requestsSent.length() == 0) {
+                int length = requestsSent.length();
+                if (length == 0) {
                     sentInvitesContainer.addView(
-                            getSentView("", "There are no sent invites"));
+                            getSentView( "", "There are no sent invites", length));
                 } else {
                     for (int i = 0; i < requestsSent.length(); i++) {
                         JSONObject request = requestsSent.getJSONObject(i);
                         sentInvitesContainer.addView(
                                 getSentView(request.getString("username"),
                                         request.getString("firstname")
-                                                + " " + request.getString("lastname")));
+                                                + " " + request.getString("lastname"), length));
                     }
                 }
             }
@@ -95,21 +97,37 @@ public class SentRequestsFragment extends Fragment {
 
     }
 
-    private View getSentView(String nickname, String fullName) {
-        View v = LayoutInflater.from(getContext())
-                .inflate(R.layout.sent_request_row, null, false);
 
-        TextView tv = v.findViewById(R.id.sentRequestLinearLayoutTextViewNickname);
-        tv.setText(nickname);
-        tv = v.findViewById(R.id.sentRequestLinearLayoutTextViewFullName);
-        tv.setText(fullName);
+    private View getSentView(String nickname, String fullName, int length) {
+        View v;
+
+        if (length == 0 ) {
+            v = LayoutInflater.from(getContext())
+                    .inflate(R.layout.contact_row, null, false);
+            TextView tv = v.findViewById(R.id.friendsTextViewNickname);
+            tv.setText(nickname);
+            tv = v.findViewById(R.id.friendsTextViewFullName);
+            tv.setText(fullName);
+        } else {
+            v = LayoutInflater.from(getContext())
+                    .inflate(R.layout.sent_request_row, null, false);
+
+            TextView tv = v.findViewById(R.id.sentRequestLinearLayoutTextViewNickname);
+            tv.setText(nickname);
+            tv = v.findViewById(R.id.sentRequestLinearLayoutTextViewFullName);
+            tv.setText(fullName);
+
+            Button b  = (Button) v.findViewById(R.id.sentRequestCancelInvite);
+            b.setOnClickListener(view -> onCancelInvite(v));
+        }
 
         return v;
     }
 
     private void onCancelInvite(View view) {
+        //delete using username.
+        Log.e("onClick: ", "Clicked");
 
-        //delete using username,  
     }
 
     private void handleErrorsInTask(String result) {

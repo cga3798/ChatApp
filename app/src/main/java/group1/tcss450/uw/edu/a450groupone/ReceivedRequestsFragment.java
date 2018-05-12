@@ -3,6 +3,7 @@ package group1.tcss450.uw.edu.a450groupone;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -70,16 +72,17 @@ public class ReceivedRequestsFragment extends Fragment {
 
             if (success) {
                 JSONArray requestsSent = response.getJSONArray("received");
-                if (requestsSent.length() == 0) {
+                int length = requestsSent.length();
+                if (length == 0) {
                     receivedInvitesContainer.addView(
-                            getReceivedView("", "There are no received invites"));
+                            getReceivedView("", "There are no received invites", length));
                 } else {
                     for (int i = 0; i < requestsSent.length(); i++) {
                         JSONObject request = requestsSent.getJSONObject(i);
                         receivedInvitesContainer.addView(
                                 getReceivedView(request.getString("username"),
                                         request.getString("firstname")
-                                                + " " + request.getString("lastname")));
+                                                + " " + request.getString("lastname"), length));
                     }
                 }
             }
@@ -89,16 +92,41 @@ public class ReceivedRequestsFragment extends Fragment {
         }
     }
 
-    private View getReceivedView(String nickname, String fullName) {
-        View v = LayoutInflater.from(getContext())
-                .inflate(R.layout.received_request_row, null, false);
+    private View getReceivedView(String nickname, String fullName, int length) {
+        View v;
+        if ( length == 0) {
+            v = LayoutInflater.from(getContext())
+                    .inflate(R.layout.contact_row, null, false);
+            TextView tv = v.findViewById(R.id.friendsTextViewNickname);
+            tv.setText(nickname);
+            tv = v.findViewById(R.id.friendsTextViewFullName);
+            tv.setText(fullName);
 
-        TextView tv = v.findViewById(R.id.receivedRequestLinearLayoutTextViewNickname);
-        tv.setText(nickname);
-        tv = v.findViewById(R.id.receivedRequestLinearLayoutTextViewFullName);
-        tv.setText(fullName);
+        } else {
+            v = LayoutInflater.from(getContext())
+                    .inflate(R.layout.received_request_row, null, false);
+
+            TextView tv = v.findViewById(R.id.receivedRequestLinearLayoutTextViewNickname);
+            tv.setText(nickname);
+            tv = v.findViewById(R.id.receivedRequestLinearLayoutTextViewFullName);
+            tv.setText(fullName);
+
+            ImageView im = (ImageView) v.findViewById(R.id.receivedRequestAccept);
+            im.setOnClickListener(view -> onAcceptInvite(v));
+
+            im = (ImageView) v.findViewById(R.id.receivedRequestDecline);
+            im.setOnClickListener(view -> onDeclineInvite(v));
+        }
 
         return v;
+    }
+
+    private void onAcceptInvite(View v) {
+        Log.e("onAcceptInvite: ", "Clicked");
+    }
+
+    private void onDeclineInvite(View v) {
+        Log.e("onDeclineInvite: ", "Clicked");
     }
 
     private void handleErrorsInTask(String result) {
