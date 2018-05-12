@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -50,6 +51,8 @@ public class ChatFragment extends Fragment {
         v.findViewById(R.id.chatSendButton).setOnClickListener(this::sendMessage);
 
         mOutputTextView = v.findViewById(R.id.chatOutputTextView);
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         Log.wtf("CHAT ROOM", "" + prefs.getInt("chatId", R.string.keys_prefs_chatId));
         return v;
     }
