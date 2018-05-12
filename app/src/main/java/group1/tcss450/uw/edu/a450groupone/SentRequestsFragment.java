@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -36,9 +37,15 @@ public class SentRequestsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_sent_requests, container, false);
         sentInvites();
-        return inflater.inflate(R.layout.fragment_sent_requests, container, false);
+
+//
+
+
+        return v;
     }
+
 
     private void sentInvites() {
         SharedPreferences prefs =
@@ -61,10 +68,7 @@ public class SentRequestsFragment extends Fragment {
     }
 
     private void handleSentInviteOnPost(String result) {
-//        Log.e("Sent invite: ", result);
-
         LinearLayout sentInvitesContainer = getActivity().findViewById(R.id.sentRequestLinearLayout);
-
         try {
             JSONObject response = new JSONObject(result);
             Boolean success = response.getBoolean("success");
@@ -103,6 +107,11 @@ public class SentRequestsFragment extends Fragment {
         return v;
     }
 
+    private void onCancelInvite(View view) {
+
+        //delete using username,  
+    }
+
     private void handleErrorsInTask(String result) {
         Log.e("ASYNCT_TASK_ERROR", result);
     }
@@ -118,4 +127,7 @@ public class SentRequestsFragment extends Fragment {
         }
         return msg;
     }
+
+
+
 }
