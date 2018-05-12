@@ -190,6 +190,28 @@ public class FriendFragment extends Fragment {
 
     private void confirmDelete(String username_b) {
 
+        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    Log.d("YES: ", "clicked");
+                    deleteFriend(username_b);
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //No button clicked
+                    Log.d("NO: ", "clicked");
+                    break;
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Are you sure you wnt to delete your friend?" )
+                .setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+    }
+
+    private void deleteFriend(String username_b) {
+
         SharedPreferences prefs =
                 this.getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),
                         Context.MODE_PRIVATE);
@@ -211,7 +233,7 @@ public class FriendFragment extends Fragment {
     }
 
     private void handleDeleteOnPost(String result) {
-        Toasty.error(getActivity(), fullname + "has been successfully deleted.", Toast.LENGTH_SHORT, true).show();
+        Toasty.info(getActivity(), fullname + " has been successfully deleted.", Toast.LENGTH_SHORT, true).show();
 
     }
 
