@@ -73,6 +73,6 @@
     <string name="sent">Sent</string>
     <string name="received">Received</string>
     <string name="cancel_invite">Cancel Invite</string>
-
+    <string name="invite">Invite</string>
 
 </resources>
