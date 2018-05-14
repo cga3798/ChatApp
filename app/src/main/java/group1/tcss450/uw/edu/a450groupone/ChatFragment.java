@@ -54,6 +54,9 @@ public class ChatFragment extends Fragment {
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         Log.wtf("CHAT ROOM", "" + prefs.getInt("chatId", R.string.keys_prefs_chatId));
+
+        TextView chatName = (TextView) v.findViewById(R.id.chatNameOfChatRoomView);
+        chatName.setText(String.valueOf(prefs.getString(getString(R.string.keys_prefs_chatName), "Chat Room")));
         return v;
     }
 
