@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -56,10 +57,7 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
         searchView = v.findViewById(R.id.searchFriendSearchView);
         searchView.setActivated(true);
         searchView.setOnQueryTextListener(this);
-//        v.findViewById(R.id.addFriendButtonInvite).setVisibility(View.GONE);
 
-//        sentInvites();
-//        receivedInvites();
 
         return v;
     }
@@ -123,7 +121,8 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
 
                 if (length < 1) {
                     showInvite = false;
-                    connectionResultList.add("No results found for \'" + queryEntered + " \' ");
+                    connectionResultList.add("\nNo results found for \'" + queryEntered + " \' ");
+
                 } else {
                     showInvite = true;
                     for (int i = 0; i < length; i++) {
@@ -146,9 +145,7 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
 
                 adapter = new ListViewAdapter(getActivity());
                 list.setAdapter(adapter);
-                list.setOnItemClickListener((parent, view, position, id) -> {
-                    onClickOnSearchResult(position);
-                });
+                list.setOnItemClickListener((parent, view, position, id) -> onClickOnSearchResult(position));
 
             } else {
                 Toast.makeText(getActivity(),
@@ -164,6 +161,8 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
 
     private void onClickOnSearchResult(int position) {
         if (showInvite) {
+//            onSearchResults(memberIds.get(position), fullnames.get(position));
+
             DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
@@ -186,8 +185,8 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
     }
 
     private void onSearchResults(String memberidB, String fullnameB) {
-        fullname = fullnameB;
 
+        fullname = fullnameB;
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))

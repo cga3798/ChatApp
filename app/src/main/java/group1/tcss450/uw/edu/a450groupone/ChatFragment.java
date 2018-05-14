@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ScrollView;
@@ -54,6 +55,9 @@ public class ChatFragment extends Fragment {
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         Log.wtf("CHAT ROOM", "" + prefs.getInt("chatId", R.string.keys_prefs_chatId));
+
+        TextView chatName = (TextView) v.findViewById(R.id.chatNameOfChatRoomView);
+        chatName.setText(String.valueOf(prefs.getString(getString(R.string.keys_prefs_chatName), "Chat Room")));
         return v;
     }
 
@@ -76,7 +80,7 @@ public class ChatFragment extends Fragment {
                 .onCancelled(this::handleError)
                 .build().execute();
 
-        final ScrollView scrollview = ((ScrollView) this.getActivity().findViewById(R.id.scrollViewChat));
+        final ScrollView scrollview = ((ScrollView) getView().findViewById(R.id.scrollViewChat));
         scrollview.post(new Runnable() {
             @Override
             public void run() {
@@ -178,6 +182,17 @@ public class ChatFragment extends Fragment {
                     .setDelay(1000)
                     .build();
         }
+        final ScrollView scrollview = ((ScrollView) getView().findViewById(R.id.scrollViewChat));
+        scrollview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                scrollview.post(new Runnable() {
+                    public void run() {
+                        scrollview.fullScroll(View.FOCUS_DOWN);
+                    }
+                });
+            }
+        });
 
 
 

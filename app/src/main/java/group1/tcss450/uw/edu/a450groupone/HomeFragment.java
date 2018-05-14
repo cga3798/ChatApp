@@ -52,6 +52,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
     private SharedPreferences prefs;
 
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -75,7 +76,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         b.setOnClickListener(this);
 
         // set click listener on weather view
-        v.findViewById(R.id.homeCurrentWeatherDisplay).setOnClickListener(this);
+//        v.findViewById(R.id.homeCurrentWeatherDisplay).setOnClickListener(this);
 
         TextView tv = (TextView) v.findViewById(R.id.HomeTextViewCurrentDate);
         long date = System.currentTimeMillis();
@@ -192,6 +193,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                                 prefs.edit().putInt(
                                         getString(R.string.keys_prefs_chatId),
                                         name.getInt("chatid"))
+                                        .apply();
+                                prefs.edit().putString(
+                                        getString(R.string.keys_prefs_chatName),
+                                        name.getString("name"))
                                         .apply();
                             } catch (JSONException e) {
                                 e.printStackTrace();

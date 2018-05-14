@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,14 +44,18 @@ public class ConnectionTabsFragment extends Fragment {
     private void setupViewPager(ViewPager viewPager) {
 
         Adapter adapter = new Adapter(getChildFragmentManager());
+
         adapter.addFragment(new FriendFragment(), "Friends");
         adapter.addFragment(new SearchNewFriendFragment(), "Search");
         adapter.addFragment(new ReceivedRequestsFragment(), "Received Invites");
         adapter.addFragment(new SentRequestsFragment(), "Sent Invites");
+
+
         viewPager.setAdapter(adapter);
     }
 
-    static class Adapter extends FragmentPagerAdapter {
+    static class Adapter extends FragmentStatePagerAdapter {
+
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
@@ -72,6 +77,7 @@ public class ConnectionTabsFragment extends Fragment {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }
+
 
         @Override
         public CharSequence getPageTitle(int position) {
