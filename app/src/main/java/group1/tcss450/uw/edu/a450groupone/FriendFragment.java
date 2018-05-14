@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.util.JsonReader;
 import android.util.Log;
@@ -233,6 +234,9 @@ public class FriendFragment extends Fragment {
     }
 
     private void handleDeleteOnPost(String result) {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(FriendFragment.this).attach(FriendFragment.this).commit();
+
         Toasty.info(getActivity(), fullname + " has been successfully deleted.", Toast.LENGTH_SHORT, true).show();
 
     }

@@ -7,6 +7,7 @@ import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -142,6 +143,8 @@ public class ReceivedRequestsFragment extends Fragment {
     }
 
     private void handleAcceptOnPost(String result) {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(ReceivedRequestsFragment.this).attach(ReceivedRequestsFragment.this).commit();
         Log.d("accept: ", result);
         Toasty.info(getActivity(), "Invitation Accepted!.", Toast.LENGTH_SHORT, true).show();
 
@@ -166,6 +169,9 @@ public class ReceivedRequestsFragment extends Fragment {
     }
 
     private void handleDeclineOnPost(String result) {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(ReceivedRequestsFragment.this).attach(ReceivedRequestsFragment.this).commit();
+
         Log.d("Decline: ", result);
         Toasty.info(getActivity(), "Invitation Declined.", Toast.LENGTH_SHORT, true).show();
 

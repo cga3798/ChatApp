@@ -7,6 +7,7 @@ import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -145,6 +146,9 @@ public class SentRequestsFragment extends Fragment {
     }
 
     private void handleCancelOnPost(String result) {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(SentRequestsFragment.this).attach(SentRequestsFragment.this).commit();
+
         Log.d("Cancel: ", result);
         Toasty.info(getActivity(), "Invitation Canceled.", Toast.LENGTH_SHORT, true).show();
 
