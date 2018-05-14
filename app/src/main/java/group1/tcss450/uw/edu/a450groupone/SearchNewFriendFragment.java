@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
 //    private OnAddFriendFragmentInteractionListener mListener;
 
     private ListView list;
+    Button inviteButton;
     private ListViewAdapter adapter;
     private SearchView searchView;
     private String queryEntered;
@@ -56,10 +58,9 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
         searchView = v.findViewById(R.id.searchFriendSearchView);
         searchView.setActivated(true);
         searchView.setOnQueryTextListener(this);
-//        v.findViewById(R.id.addFriendButtonInvite).setVisibility(View.GONE);
 
-//        sentInvites();
-//        receivedInvites();
+        View vListView = inflater.inflate(R.layout.listview_item, null);
+        inviteButton = vListView.findViewById(R.id.searchButtonInvite);
 
         return v;
     }
@@ -123,7 +124,7 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
 
                 if (length < 1) {
                     showInvite = false;
-                    connectionResultList.add("No results found for \'" + queryEntered + " \' ");
+                    connectionResultList.add("\nNo results found for \'" + queryEntered + " \' ");
                 } else {
                     showInvite = true;
                     for (int i = 0; i < length; i++) {
@@ -146,9 +147,8 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
 
                 adapter = new ListViewAdapter(getActivity());
                 list.setAdapter(adapter);
-                list.setOnItemClickListener((parent, view, position, id) -> {
-                    onClickOnSearchResult(position);
-                });
+                inviteButton.setOnClickListener(view -> ann());
+                list.setOnItemClickListener((parent, view, position, id) -> onClickOnSearchResult(position));
 
             } else {
                 Toast.makeText(getActivity(),
@@ -162,32 +162,38 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
         }
     }
 
+    private void ann() {
+        Log.e("Invite: ", "button clicked");
+    }
+
     private void onClickOnSearchResult(int position) {
         if (showInvite) {
-            DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
-                        Log.d("YES: ", "clicked");
-                        onSearchResults(memberIds.get(position), fullnames.get(position));
-                        break;
+            onSearchResults(memberIds.get(position), fullnames.get(position));
 
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        //No button clicked
-                        Log.d("NO: ", "clicked");
-                        break;
-                }
-            };
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Would you like to send an invitation to " + fullnames.get(position) + "?" )
-                    .setPositiveButton("Yes", dialogClickListener)
-                    .setNegativeButton("No", dialogClickListener).show();
+//            DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+//                switch (which){
+//                    case DialogInterface.BUTTON_POSITIVE:
+//                        Log.d("YES: ", "clicked");
+//                        onSearchResults(memberIds.get(position), fullnames.get(position));
+//                        break;
+//
+//                    case DialogInterface.BUTTON_NEGATIVE:
+//                        //No button clicked
+//                        Log.d("NO: ", "clicked");
+//                        break;
+//                }
+//            };
+//
+//            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//            builder.setMessage("Would you like to send an invitation to " + fullnames.get(position) + "?" )
+//                    .setPositiveButton("Yes", dialogClickListener)
+//                    .setNegativeButton("No", dialogClickListener).show();
         }
     }
 
     private void onSearchResults(String memberidB, String fullnameB) {
-        fullname = fullnameB;
 
+        fullname = fullnameB;
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
