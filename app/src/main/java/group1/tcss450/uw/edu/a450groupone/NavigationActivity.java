@@ -207,6 +207,14 @@ public class NavigationActivity extends AppCompatActivity implements
         loadFragment(new ConnectionTabsFragment());
     }
 
+     @Override
+    public void onOpenChat() {
+        Intent intent = new Intent(this, ChatActivity.class);
+        startActivity(intent);
+
+
+    }
+
     /*
      * NewWeather creates a new weather fragment then replaces the currently displayed fragment with
      * the newly created weather fragment.

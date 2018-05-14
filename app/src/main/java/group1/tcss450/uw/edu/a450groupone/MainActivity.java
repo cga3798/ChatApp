@@ -299,6 +299,11 @@ public class MainActivity extends AppCompatActivity implements
     public void onNewChat() {
 
     }
+    // TODO: probably methods below will be in activity with navigation bar (after logging in)
+    @Override
+    public void onOpenChat() {
+
+    }
 
     @Override
     public void NewWeather() {

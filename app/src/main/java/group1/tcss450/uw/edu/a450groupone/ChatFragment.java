@@ -217,6 +217,7 @@ public class ChatFragment extends Fragment {
 
     public interface OnChatFragmentInteractionListener {
         void onNewChat();
+        void onOpenChat();
     }
 
 
