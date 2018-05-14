@@ -201,8 +201,10 @@ public class NavigationActivity extends AppCompatActivity implements
      */
     @Override
     public void onNewChat() {
-        Intent intent = new Intent(this, ChatActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(this, ChatActivity.class);
+//        startActivity(intent);
+        // loads friends fragment so user can choose who to start the chat with
+        loadFragment(new ConnectionTabsFragment());
     }
 
     /*

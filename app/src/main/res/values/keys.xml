@@ -10,6 +10,9 @@
     <string name="keys_prefs_chatId">chatId</string>
     <string name="keys_prefs_chatId2">chatId</string>
 
+    <string name="keys_friend_id">friendId</string>
+
+
     <string name="keys_prefs_stay_logged_in">loggedIn</string>
     <string name="keys_fragment_login">loginFragmentTag</string>
     <string name="keys_fragment_register">registerFragmentTag</string>

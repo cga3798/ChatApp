@@ -3,11 +3,13 @@ package group1.tcss450.uw.edu.a450groupone;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
@@ -45,7 +47,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
     private OnHomeFragmentInteractionListener mListener;
 
-    private TextView cityTv, tempTv, weatherDescTv;
+    private TextView cityTv, tempTv, weatherDescTv, weatherIcon;
     //private MyLocation location;
 
     private SharedPreferences prefs;
@@ -85,6 +87,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         cityTv = v.findViewById(R.id.HomeTextViewCity);
         tempTv = v.findViewById(R.id.HomeTextViewTemperature);
         weatherDescTv = v.findViewById(R.id.HomeTextViewWeatherDesc);
+
+        Typeface weatherFont = Typeface.createFromAsset(getContext().getAssets(), Weather.FONT_PATH);
+        weatherIcon = v.findViewById(R.id.homeTextViewWeatherIcon);
+        weatherIcon.setTypeface(weatherFont);
 
 
 //        Timer myTimer = new Timer();
@@ -278,6 +284,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 cityTv.setText(args.getString(Weather.K_CITY));
                 weatherDescTv.setText(args.getString(Weather.K_WEATHER_DESC));
                 tempTv.setText(args.getString(Weather.K_CURRENT_TEMP));
+                weatherIcon.setText(Html.fromHtml(args.getString(Weather.K_ICON)));
             }
         });
         // get current location
@@ -321,7 +328,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         if (mListener != null) {
             switch (view.getId()) {
-              case R.id.HomeButtonNewChat:
+                case R.id.HomeButtonNewChat:
                     mListener.onNewChat();
                     break;
                 case R.id.homeCurrentWeatherDisplay:

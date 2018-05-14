@@ -3,6 +3,7 @@ package group1.tcss450.uw.edu.a450groupone;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -111,14 +113,15 @@ public class FriendFragment extends Fragment {
 
                 if (length == 0) {
                     contactsListContainer.addView(
-                            getContactView("", "There are no contacts to display", length));
+                            getContactView("", "There are no contacts to display", 0, length));
                 } else {
                     for (int i = 0; i < friendsList.length(); i++) {
                         JSONObject friend = friendsList.getJSONObject(i);
                         contactsListContainer.addView(
                                 getContactView(friend.getString("username"),
                                         friend.getString("firstname") + " "
-                                                + friend.getString("lastname"), length
+                                                + friend.getString("lastname"),
+                                                friend.getInt("memberid"), length
                                 ));
                     }
                 }
@@ -158,7 +161,7 @@ public class FriendFragment extends Fragment {
         void onAddNewFriend();
     }
 
-    private View getContactView(String nickname, String fullName, int length) {
+    private View getContactView(String nickname, String fullName, int friendID, int length) {
         View v = LayoutInflater.from(getContext())
                 .inflate(R.layout.contact_row, null, false);
 
@@ -170,12 +173,23 @@ public class FriendFragment extends Fragment {
 
         if (length != 0) {
             fullname = tv.getText().toString();
-            tv.setOnLongClickListener(view -> onDeleteFriend(v, tvUsername.getText().toString()));
-            tvUsername.setOnLongClickListener(view -> onDeleteFriend(v, tvUsername.getText().toString()));
+            // long click listener to delete contact
+            v.setOnLongClickListener(view -> onDeleteFriend(v, tvUsername.getText().toString()));
+//            tv.setOnLongClickListener(view -> onDeleteFriend(v, tvUsername.getText().toString()));
+//            tvUsername.setOnLongClickListener(view -> onDeleteFriend(v, tvUsername.getText().toString()));
+            // clicklistenrr to start chat with contact
+            v.setOnClickListener(view -> startChat(friendID) );
         }
 
 
         return v;
+    }
+
+    private void startChat(int theFriendId) {
+        Intent intent = new Intent(getContext(), ChatActivity.class);
+        //send friend id to chat activity
+        intent.putExtra(getString(R.string.keys_friend_id), theFriendId);
+        startActivity(intent);
     }
 
     private boolean onDeleteFriend(View v, String username_b) {
