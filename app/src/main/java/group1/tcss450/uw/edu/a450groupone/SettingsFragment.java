@@ -64,9 +64,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener{
     //when clicked
     void sendDelete() {
 
-
-
-
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
