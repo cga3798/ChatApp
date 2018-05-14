@@ -33,7 +33,6 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
 //    private OnAddFriendFragmentInteractionListener mListener;
 
     private ListView list;
-    Button inviteButton;
     private ListViewAdapter adapter;
     private SearchView searchView;
     private String queryEntered;
@@ -59,8 +58,6 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
         searchView.setActivated(true);
         searchView.setOnQueryTextListener(this);
 
-        View vListView = inflater.inflate(R.layout.listview_item, null);
-        inviteButton = vListView.findViewById(R.id.searchButtonInvite);
 
         return v;
     }
@@ -125,6 +122,7 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
                 if (length < 1) {
                     showInvite = false;
                     connectionResultList.add("\nNo results found for \'" + queryEntered + " \' ");
+
                 } else {
                     showInvite = true;
                     for (int i = 0; i < length; i++) {
@@ -147,7 +145,6 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
 
                 adapter = new ListViewAdapter(getActivity());
                 list.setAdapter(adapter);
-                inviteButton.setOnClickListener(view -> ann());
                 list.setOnItemClickListener((parent, view, position, id) -> onClickOnSearchResult(position));
 
             } else {
@@ -162,32 +159,28 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
         }
     }
 
-    private void ann() {
-        Log.e("Invite: ", "button clicked");
-    }
-
     private void onClickOnSearchResult(int position) {
         if (showInvite) {
-            onSearchResults(memberIds.get(position), fullnames.get(position));
+//            onSearchResults(memberIds.get(position), fullnames.get(position));
 
-//            DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-//                switch (which){
-//                    case DialogInterface.BUTTON_POSITIVE:
-//                        Log.d("YES: ", "clicked");
-//                        onSearchResults(memberIds.get(position), fullnames.get(position));
-//                        break;
-//
-//                    case DialogInterface.BUTTON_NEGATIVE:
-//                        //No button clicked
-//                        Log.d("NO: ", "clicked");
-//                        break;
-//                }
-//            };
-//
-//            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//            builder.setMessage("Would you like to send an invitation to " + fullnames.get(position) + "?" )
-//                    .setPositiveButton("Yes", dialogClickListener)
-//                    .setNegativeButton("No", dialogClickListener).show();
+            DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        Log.d("YES: ", "clicked");
+                        onSearchResults(memberIds.get(position), fullnames.get(position));
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        Log.d("NO: ", "clicked");
+                        break;
+                }
+            };
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("Would you like to send an invitation to " + fullnames.get(position) + "?" )
+                    .setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener).show();
         }
     }
 
