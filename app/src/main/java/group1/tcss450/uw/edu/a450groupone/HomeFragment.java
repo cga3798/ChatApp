@@ -285,7 +285,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
                             }
 
-                            mListener.onNewChat();
+                            mListener.onOpenChat();
 
                         }});
 
