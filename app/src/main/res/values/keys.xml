@@ -42,6 +42,9 @@
     <string name="keys_json_firstname">first</string>
     <string name="keys_json_lastname">last</string>
     <string name="keys_json_success">success</string>
+    <string name="keys_fragment_search">searchNewFriendFragmentTag</string>
+    <string name="keys_fragment_connection_tab">ConnectionTabFragmentTag</string>
+
 
 
 

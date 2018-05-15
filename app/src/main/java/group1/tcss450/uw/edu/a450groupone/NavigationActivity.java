@@ -110,6 +110,7 @@ public class NavigationActivity extends AppCompatActivity implements
         } else {
             super.onBackPressed();
         }
+
     }
 
     @Override
@@ -128,7 +129,8 @@ public class NavigationActivity extends AppCompatActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            loadFragment(new SettingsFragment());
+            loadFragment(new SettingsFragment(),
+                     getString(R.string.keys_fragment_settings));
             return true;
         }
 
@@ -147,13 +149,17 @@ public class NavigationActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            loadFragment(new HomeFragment());
+            loadFragment(new HomeFragment(),
+                    getString(R.string.keys_fragment_home));
         } else if (id == R.id.nav_friends) {
-            loadFragment(new ConnectionTabsFragment());
+            loadFragment(new ConnectionTabsFragment(),
+                    getString(R.string.keys_fragment_connection_tab));
         } else if (id == R.id.nav_weather) {
-            loadFragment(new WeatherFragment());
+            loadFragment(new WeatherFragment(),
+                    getString(R.string.keys_fragment_weather));
         } else if (id == R.id.nav_settings) {
-            loadFragment(new SettingsFragment());
+            loadFragment(new SettingsFragment(),
+                    getString(R.string.keys_fragment_settings));
         } else if (id == R.id.nav_logout) {
             SharedPreferences prefs =
                     getSharedPreferences(
@@ -179,11 +185,11 @@ public class NavigationActivity extends AppCompatActivity implements
      * loadFragment loads the passed fragment into the nav menu screen replacing the current fragment.
      * @param frag
      */
-    private void loadFragment(Fragment frag) {
+    private void loadFragment(Fragment frag, String tag) {
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.navigationFragmentContainer, frag)
-                .addToBackStack(null);
+                .replace(R.id.navigationFragmentContainer, frag, tag)
+                .addToBackStack(tag);
         // Commit the transaction
         transaction.commit();
     }
@@ -193,7 +199,8 @@ public class NavigationActivity extends AppCompatActivity implements
      */
     @Override
     public void onSelectCityButtonClicked() {
-        loadFragment(new SelectWeatherCityFragment());
+        loadFragment(new SelectWeatherCityFragment(),
+                getString(R.string.keys_fragment_select_weather));
     }
 
     /*
@@ -204,14 +211,14 @@ public class NavigationActivity extends AppCompatActivity implements
 //        Intent intent = new Intent(this, ChatActivity.class);
 //        startActivity(intent);
         // loads friends fragment so user can choose who to start the chat with
-        loadFragment(new ConnectionTabsFragment());
+        loadFragment(new ConnectionTabsFragment(),
+                getString(R.string.keys_fragment_connection_tab));
     }
 
      @Override
     public void onOpenChat() {
         Intent intent = new Intent(this, ChatActivity.class);
         startActivity(intent);
-
 
     }
 
@@ -221,10 +228,11 @@ public class NavigationActivity extends AppCompatActivity implements
      */
     @Override
     public void NewWeather() {
-        loadFragment(new WeatherFragment());
+        loadFragment(new WeatherFragment(), getString(R.string.keys_fragment_weather));
     }
 
     @Override
-    public void onAddNewFriend() { loadFragment(new SearchNewFriendFragment());}
+    public void onAddNewFriend() { loadFragment(new SearchNewFriendFragment(),
+            getString(R.string.keys_fragment_search));}
 
 }
