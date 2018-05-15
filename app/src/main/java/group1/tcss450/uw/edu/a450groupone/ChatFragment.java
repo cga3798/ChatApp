@@ -31,6 +31,8 @@ import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
  */
 public class ChatFragment extends Fragment {
 
+    private OnChatFragmentInteractionListener mListener;
+
     private String mUsername;
     private String mSendUrl;
     private TextView mOutputTextView;
@@ -198,9 +200,35 @@ public class ChatFragment extends Fragment {
             }
         });
 
-
-
     }
+
+    /**
+     * onAttach method to attach login fragment listener.
+     *
+     * author: Casey Anderson
+     */
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof ChatFragment.OnChatFragmentInteractionListener) {
+            mListener = (ChatFragment.OnChatFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    /**
+     * default onDetach method
+     *
+     * author: Casey Anderson
+     */
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
     @Override
     public void onResume() {
         super.onResume();

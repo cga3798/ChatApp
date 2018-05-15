@@ -289,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragmentContainer, frag, tag)
-                .addToBackStack(null); // uncomment this if you want to go back
+                .addToBackStack(tag); // uncomment this if you want to go back
         // Commit the transaction
         transaction.commit();
     }
