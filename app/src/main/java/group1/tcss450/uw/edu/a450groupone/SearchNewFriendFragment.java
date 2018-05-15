@@ -189,6 +189,13 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
         }
     }
 
+    /**
+     * Send a request to the server to search for the query typed in when the
+     * choose to send them an invitation.
+     *
+     * @param memberidB member ID of the user to invite
+     * @param fullnameB
+     */
     private void onSearchResults(String memberidB, String fullnameB) {
 
         fullname = fullnameB;
