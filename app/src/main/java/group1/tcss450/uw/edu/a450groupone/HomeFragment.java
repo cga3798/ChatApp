@@ -219,7 +219,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                                                 getString(R.string.keys_prefs_chatName),
                                                 name)
                                                 .apply();
-                                        mListener.onNewChat();
+                                        mListener.onOpenChat();
                                     }});
             button.setOnLongClickListener(view -> onDeleteChat(v, name, chatid));
 
