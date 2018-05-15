@@ -221,7 +221,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                                                 .apply();
                                         mListener.onNewChat();
                                     }});
-            v.setOnLongClickListener(view -> onDeleteChat(v, name, chatid));
+            button.setOnLongClickListener(view -> onDeleteChat(v, name, chatid));
 
             TextView textView = getActivity().findViewById(R.id.chat_text_button_on2);
 
