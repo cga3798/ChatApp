@@ -10,18 +10,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -57,13 +54,6 @@ public class FriendFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        //populateContactsList(v);
-
-//        SearchView searchView = v.findViewById(R.id.friendSearchView);
-//        searchView.setActivated(true);
-
-//        v.findViewById(R.id.friendButtonAddNewFriend).setOnClickListener(view -> onAddNewFriend(v));
-
         return v;
     }
 
@@ -175,13 +165,11 @@ public class FriendFragment extends Fragment {
         if (length != 0) {
             fullname = tv.getText().toString();
             // long click listener to delete contact
-            v.setOnLongClickListener(view -> onDeleteFriend(v, tvUsername.getText().toString()));
-//            tv.setOnLongClickListener(view -> onDeleteFriend(v, tvUsername.getText().toString()));
-//            tvUsername.setOnLongClickListener(view -> onDeleteFriend(v, tvUsername.getText().toString()));
+            v.setOnLongClickListener(view -> onShowDeleteButton(v, tvUsername.getText().toString()));
+
             // clicklistenrr to start chat with contact
             v.setOnClickListener(view -> startChat(friendID) );
         }
-
 
         return v;
     }
@@ -193,18 +181,33 @@ public class FriendFragment extends Fragment {
         startActivity(intent);
     }
 
-    private boolean onDeleteFriend(View v, String username_b) {
-        Log.d("onDeleteFriend: ", username_b);
+    /**
+     * This method will show the delete button after a user long-presses
+     * on the connection name.
+     *
+     * @param v the current view.
+     * @param username_b the username of the connection that will be removed.
+     * @return true
+     */
+    private boolean onShowDeleteButton(View v, String username_b) {
+        Log.d("onShowDeleteButton: ", username_b);
 
         ImageButton im = v.findViewById(R.id.friendImageButtonDelete);
         im.setVisibility(View.VISIBLE);
-        im.setOnClickListener(view -> confirmDelete(username_b));
+        // listener to the delete button.
+        im.setOnClickListener(view -> onDeleteFriend(username_b));
 
         return true;
     }
 
-    private void confirmDelete(String username_b) {
-
+    /**
+     * Handle deleting a friend by showing dialog to confirm
+     * deleting a connection.
+     *
+     * @param username_b username of the connection that will be removed.
+     */
+    private void onDeleteFriend(String username_b) {
+        //listener for user's click
         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
             switch (which){
                 case DialogInterface.BUTTON_POSITIVE:
@@ -219,14 +222,19 @@ public class FriendFragment extends Fragment {
             }
         };
 
+        // display an alert dialog to confirm deleting a connection.
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("Are you sure you wnt to delete your friend?" )
                 .setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
     }
 
+    /**
+     * Sends a request to the server to delete a connection.
+     *
+     * @param username_b username of the connection to delete.
+     */
     private void deleteFriend(String username_b) {
-
         SharedPreferences prefs =
                 this.getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),
                         Context.MODE_PRIVATE);
@@ -247,6 +255,12 @@ public class FriendFragment extends Fragment {
                 .build().execute();
     }
 
+    /**
+     * Updates the fragment to show the new connection's list after
+     * removing a connection.
+     *
+     * @param result response from server.
+     */
     private void handleDeleteOnPost(String result) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.detach(FriendFragment.this).attach(FriendFragment.this).commit();
@@ -255,11 +269,19 @@ public class FriendFragment extends Fragment {
 
     }
 
-    private JSONObject asJSONObject(String memberidA, String username_b, String op) {
+    /**
+     * Creates a JSONObject to send it with the request.
+     *
+     * @param memberid_a member id for the user sending the delete request.
+     * @param username_b username of the user that is being removed from the list.
+     * @param op detele connection operation.
+     * @return a JSONObject that holds memberid_a, username_b, and operation.
+     */
+    private JSONObject asJSONObject(String memberid_a, String username_b, String op) {
         //build the JSONObject
         JSONObject msg = new JSONObject();
         try {
-            msg.put("memberid_a", memberidA);
+            msg.put("memberid_a", memberid_a);
             msg.put("username_b", username_b);
             msg.put("op", op);
 

@@ -3,7 +3,6 @@ package group1.tcss450.uw.edu.a450groupone;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -26,7 +25,8 @@ import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * A fragment that will handle requests and all the operations related to it.
+ *
  */
 public class ReceivedRequestsFragment extends Fragment {
 
@@ -44,8 +44,12 @@ public class ReceivedRequestsFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_received_requests, container, false);
     }
 
+    /**
+     * Send a request to the server to retrieve a list of
+     * received invites.
+     *
+     */
     private void receivedInvites() {
-
         SharedPreferences prefs =
                 this.getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),
                         Context.MODE_PRIVATE);
@@ -65,6 +69,11 @@ public class ReceivedRequestsFragment extends Fragment {
                 .build().execute();
     }
 
+    /**
+     * Parse the response from the server and display it on the
+     * screen.
+     * @param result response from server.
+     */
     private void handleReceivedInviteOnPost(String result) {
 //        Log.e("Received invite: ", result);
         LinearLayout receivedInvitesContainer = getActivity().findViewById(R.id.receivedRequestLinearLayout);
@@ -95,6 +104,15 @@ public class ReceivedRequestsFragment extends Fragment {
         }
     }
 
+    /**
+     * Create the text view for the each connection and add it to the list
+     * of conncention.
+     * @param nickname nickname of the connection
+     * @param fullName full name of the connection
+     * @param length the number of connections a user have.
+     *
+     * @return A view to display the list of received connections.
+     */
     private View getReceivedView(String nickname, String fullName, int length) {
         View v;
         if ( length == 0) {
@@ -124,6 +142,12 @@ public class ReceivedRequestsFragment extends Fragment {
         return v;
     }
 
+    /**
+     * Handles when current user press on accept invitation.
+     *
+     * @param v current view.
+     * @param username_b username of the person who sent an invite.
+     */
     private void onAcceptInvite(View v, String username_b) {
         Log.e("onAcceptInvite: ", username_b);
 
@@ -142,6 +166,12 @@ public class ReceivedRequestsFragment extends Fragment {
                 .build().execute();
     }
 
+    /**
+     * Updates the current fragment to display the
+     * new list of of received requests.
+     *
+     * @param result
+     */
     private void handleAcceptOnPost(String result) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.detach(ReceivedRequestsFragment.this).attach(ReceivedRequestsFragment.this).commit();
@@ -150,6 +180,13 @@ public class ReceivedRequestsFragment extends Fragment {
 
     }
 
+    /**
+     * Handles when the user chooses to decline an invitation.
+     * Sends a request to the server.
+     *
+     * @param v current view
+     * @param username_b username of the connection who sent the request
+     */
     private void onDeclineInvite(View v, String username_b) {
         Log.e("onDeclineInvite: ", username_b);
 
@@ -168,6 +205,12 @@ public class ReceivedRequestsFragment extends Fragment {
                 .build().execute();
     }
 
+    /**
+     * Updates the fragment to display the list without the
+     * connection that declines the request.
+     *
+     * @param result the response from the server.
+     */
     private void handleDeclineOnPost(String result) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.detach(ReceivedRequestsFragment.this).attach(ReceivedRequestsFragment.this).commit();
@@ -177,11 +220,25 @@ public class ReceivedRequestsFragment extends Fragment {
 
     }
 
+    /**
+     * Handles when the request to the server fails.
+     *
+     * @param result the error that occurred.
+     */
     private void handleErrorsInTask(String result) {
         Log.e("ASYNCT_TASK_ERROR", result);
     }
 
 
+    /**
+     * Create the JSONObject that will be sent to the server and contains
+     * the following parameters:
+     *
+     * @param memberidA the current member of the
+     * @param username_b the username of the connection that sent the request.
+     * @param op the operation that we want to preform
+     * @return a JSON object with the parameters passed in.
+     */
     private JSONObject asJSONObject(String memberidA, String username_b, String op) {
         //build the JSONObject
         JSONObject msg = new JSONObject();
@@ -196,6 +253,15 @@ public class ReceivedRequestsFragment extends Fragment {
         return msg;
     }
 
+    /**
+     * Create a JSONObject that will be sent to server and
+     * contains the following parameters:
+     *
+     * @param memberidA member id of the current app user.
+     * @param memberidB member id of the request sender.
+     *
+     * @return A JSONObject with the above parameters.
+     */
     private JSONObject asJSONObject(String memberidA, String memberidB) {
         //build the JSONObject
         JSONObject msg = new JSONObject();
