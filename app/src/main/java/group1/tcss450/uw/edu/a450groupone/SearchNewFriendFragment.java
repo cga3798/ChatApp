@@ -11,26 +11,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import es.dmoral.toasty.Toasty;
 import group1.tcss450.uw.edu.a450groupone.utils.ListViewAdapter;
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
-
+/**
+ * A fragment that will handle searching for a new connection and
+ * sending a request to them.
+ */
 public class SearchNewFriendFragment extends Fragment implements SearchView.OnQueryTextListener{
-
-//    private OnAddFriendFragmentInteractionListener mListener;
 
     private ListView list;
     private ListViewAdapter adapter;
@@ -70,16 +67,12 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
 
     @Override
     public boolean onQueryTextChange(String newText) {
-//        onSearch(newText);
-//        getView().findViewById(R.id.addFriendButtonInvite)
-//                .setVisibility(View.GONE);
         return false;
     }
 
     /**
      * Establish connection to web services to search users.
-     *
-     * @param query
+     * @param query what the user types in the search view.
      */
     private void onSearch(String query) {
         Uri uri = new Uri.Builder()
@@ -98,11 +91,20 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
                 .build().execute();
     }
 
-
+    /**
+     * Handle any errors that might occur when calling the server
+     * @param result response from server.
+     */
     private void handleErrorsInTask(String result) {
         Log.e("ASYNCT_TASK_ERROR", result);
     }
 
+    /**
+     * Handles the search result that is returned from the server, parse it and
+     * add it to a list view to be displayed on the screen.
+     *
+     * @param result response from server.
+     */
     private void handleSearchOnPost(String result) {
         try {
             //results
@@ -159,10 +161,13 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
         }
     }
 
+    /**
+     * Handles the click on the search results.
+     *
+     * @param position the position of the item that is being clicked.
+     */
     private void onClickOnSearchResult(int position) {
         if (showInvite) {
-//            onSearchResults(memberIds.get(position), fullnames.get(position));
-
             DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:

@@ -15,7 +15,11 @@ import android.support.v4.app.Fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * A fragment that will contain the view pager and will load all the tabs related to
+ * connections.
+ *
+ */
 public class ConnectionTabsFragment extends Fragment {
 
     @Override
@@ -39,22 +43,23 @@ public class ConnectionTabsFragment extends Fragment {
 
     }
 
-
-    // Add Fragments to Tabs
+    /**
+     * Add fragments as tabs to the page viewer
+     * @param viewPager viewer that will hold all the tabs
+     */
     private void setupViewPager(ViewPager viewPager) {
-
         Adapter adapter = new Adapter(getChildFragmentManager());
-
         adapter.addFragment(new FriendFragment(), "Friends");
         adapter.addFragment(new SearchNewFriendFragment(), "Search");
         adapter.addFragment(new ReceivedRequestsFragment(), "Received Invites");
         adapter.addFragment(new SentRequestsFragment(), "Sent Invites");
-
-
         viewPager.setAdapter(adapter);
     }
 
-    static class Adapter extends FragmentStatePagerAdapter {
+    /**
+     * Adapter class that will manage all the fragments in the view pager.
+     */
+    private static class Adapter extends FragmentStatePagerAdapter {
 
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
