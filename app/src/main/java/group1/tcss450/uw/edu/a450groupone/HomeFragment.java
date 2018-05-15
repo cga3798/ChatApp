@@ -1,6 +1,7 @@
 package group1.tcss450.uw.edu.a450groupone;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -8,7 +9,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
@@ -17,14 +20,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import es.dmoral.toasty.Toasty;
 import group1.tcss450.uw.edu.a450groupone.utils.MyLocation;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -108,7 +114,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 //        }, 0, 500);
 
 
-
         // call to populate users chat rooms
         try {
             getChats(v);
@@ -126,8 +131,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
      */
     private void getChats ( View v ) throws JSONException {
         prefs = getActivity().getSharedPreferences(
-                        getString(R.string.keys_shared_prefs),
-                        Context.MODE_PRIVATE);
+                getString(R.string.keys_shared_prefs),
+                Context.MODE_PRIVATE);
         if (!prefs.contains(getString(R.string.keys_prefs_username))) {
             throw new IllegalStateException("No username in prefs!");
         }
@@ -176,68 +181,133 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
             JSONObject response = new JSONObject(res);
             if (response.getBoolean("success")) {
                 JSONArray chatList = response.getJSONArray("name");
+                int length = chatList.length();
 
-                for (int i = 0; i < chatList.length(); i++) {
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT);
-
-                    // layout to hold chatroom buttons and textviews
-                    LinearLayout container = new LinearLayout(this.getActivity());
-                    container.setOrientation(LinearLayout.HORIZONTAL);
-
-                    // button for chatrooms
-                    Button button = new Button(this.getActivity(), null, android.R.attr.buttonBarButtonStyle);
-                    JSONObject name = chatList.getJSONObject(i);
-                    try {
-                        prefs.edit().putInt(
-                                getString(R.string.keys_prefs_chatId),
-                                name.getInt("chatid"))
-                                .apply();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                if (length == 0) {
+                    //do nothing?
+                } else {
+                    for (int i = 0; i < length; i++) {
+                        JSONObject chat = chatList.getJSONObject(i);
+                        buttonContainer.addView(
+                                getChatView( mMemberId, chat.getInt("chatid"), chat.getString("name"), length)
+                        );
                     }
-                    button.setText(name.getString("name") );
-                    button.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View view) {
-                            try {
-                                prefs.edit().putInt(
-                                        getString(R.string.keys_prefs_chatId),
-                                        name.getInt("chatid"))
-                                        .apply();
-                                prefs.edit().putString(
-                                        getString(R.string.keys_prefs_chatName),
-                                        name.getString("name"))
-                                        .apply();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            mListener.onOpenChat();
-                        }});
-                    container.addView(button, params);
-
-                    // textView to display chatrooms last message
-                    TextView textView = new TextView(this.getActivity());
-                    textView.setId(R.id.chat_text_button_on);
-
-                    // method to get messages for textView
-                    try {
-                        getLastMessage(textView);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    // adding textView to layout
-                    container.addView(textView);
-
-                    // adding layout to container
-                    buttonContainer.addView(container, params);
-
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    /*
+    * creates the chat view objects to be used in the chat list.
+     */
+    private View getChatView(int mMemberId, int chatid, String name, int length){
+        View v = LayoutInflater.from(getContext())
+                .inflate(R.layout.chat_row, null, false);
+
+        if(length!= 0) {
+            Button button = v.findViewById(R.id.buttonHomeChat);
+            button.setText(name);
+            button.setOnClickListener(new View.OnClickListener() {
+                                    public void onClick(View view) {
+                                        prefs.edit().putInt(
+                                                getString(R.string.keys_prefs_chatId),
+                                                chatid)
+                                                .apply();
+                                        prefs.edit().putString(
+                                                getString(R.string.keys_prefs_chatName),
+                                                name)
+                                                .apply();
+                                        mListener.onNewChat();
+                                    }});
+            v.setOnLongClickListener(view -> onDeleteChat(v, name, chatid));
+
+            TextView textView = getActivity().findViewById(R.id.chat_text_button_on2);
+
+            try {
+                getLastMessage(textView);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return v;
+    }
+
+    /*
+     * Displays the delete button next to chats.
+     */
+
+    private boolean onDeleteChat(View v, String name, int chatid) {
+        Log.d("onDeleteChat: ", name);
+
+        ImageButton im = v.findViewById(R.id.chatImageButtonDelete);
+        im.setVisibility(View.VISIBLE);
+        im.setOnClickListener(view -> confirmDelete(chatid));
+
+        return true;
+    }
+
+    /*
+    * Prompts user for confirmation to delete the chat.
+     */
+    private void confirmDelete(int chatid) {
+
+        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    Log.d("YES: ", "clicked");
+                    deleteChat(chatid);
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //No button clicked
+                    Log.d("NO: ", "clicked");
+                    break;
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Are you sure you wnt to delete your chat?" )
+                .setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+    }
+
+    /*
+    * Sends the delete chat json to the server.
+     */
+    private void deleteChat(int chatid){
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_delete_chat))
+                .build();
+
+        JSONObject msg = new JSONObject();
+
+        try {
+            msg.put("chatid", chatid);
+            msg.put("memberid", mMemberId);
+        } catch (JSONException e) {
+            Log.e("DELETECHAT", "Error creating JSON: " + e.getMessage());
+        }
+
+        new SendPostAsyncTask.Builder(uri.toString(), msg)
+                .onPostExecute(this::handleDeleteOnPost)
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
+    }
+
+    /*
+    *   Reloads home and displays a confirmation that chat was deleted.
+     */
+    private void handleDeleteOnPost(String result) {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(HomeFragment.this).attach(HomeFragment.this).commit();
+
+        Toasty.info(getActivity(),"Chat successfully deleted.", Toast.LENGTH_SHORT, true).show();
+
     }
 
     /**
@@ -287,7 +357,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         }
 
         // set id for text view
-        TextView textView = getActivity().findViewById(R.id.chat_text_button_on);
+        TextView textView = getActivity().findViewById(R.id.chat_text_button_on2);
         textView.setId(R.id.chat_text_button_off);
 
         // turns off prior id
