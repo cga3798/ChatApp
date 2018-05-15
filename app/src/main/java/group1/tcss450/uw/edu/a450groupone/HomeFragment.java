@@ -197,6 +197,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
     }
 
+    /**
+
+     * method to create chat room list from users available chatrooms
+
+     *
+
+     * author: Casey Anderson
+
+     */
+
     private void populateChats(String res) {
 
 
@@ -276,6 +286,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                                         getString(R.string.keys_prefs_chatId),
 
                                         name.getInt("chatid"))
+
+                                        .apply();
+
+                                prefs.edit().putString(
+
+                                        getString(R.string.keys_prefs_chatName),
+
+                                        name.getString("name"))
 
                                         .apply();
 
