@@ -178,6 +178,7 @@ public class ReceivedRequestsFragment extends Fragment {
         Log.d("accept: ", result);
         Toasty.info(getActivity(), "Invitation Accepted!.", Toast.LENGTH_SHORT, true).show();
 
+
     }
 
     /**
@@ -194,6 +195,7 @@ public class ReceivedRequestsFragment extends Fragment {
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_connections_ops))
+
                 .build();
 
         JSONObject searchJSON = asJSONObject(memberidA, username_b, "decline");
