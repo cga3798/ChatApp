@@ -58,6 +58,10 @@ public class ChatFragment extends Fragment {
 
         TextView chatName = (TextView) v.findViewById(R.id.chatNameOfChatRoomView);
         chatName.setText(String.valueOf(prefs.getString(getString(R.string.keys_prefs_chatName), "Chat Room")));
+        chatName.setAllCaps(true);
+        chatName.setTextSize(20);
+        chatName.setTextColor(getResources().getColor(R.color.colorAccent));
+
         return v;
     }
 
@@ -217,6 +221,7 @@ public class ChatFragment extends Fragment {
 
     public interface OnChatFragmentInteractionListener {
         void onNewChat();
+        void onOpenChat();
     }
 
 

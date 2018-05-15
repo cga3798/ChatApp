@@ -21,10 +21,10 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat1);
         if(savedInstanceState == null) {
             if (findViewById(R.id.chatContainer) != null) {
-//                getSupportFragmentManager().beginTransaction()
-//                        .add(R.id.chatContainer, new ChatFragment())
-//                        .commit();
-                checkFriendHasExistingChat();
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.chatContainer, new ChatFragment())
+                        .commit();
+                //checkFriendHasExistingChat();
             }
         }
 

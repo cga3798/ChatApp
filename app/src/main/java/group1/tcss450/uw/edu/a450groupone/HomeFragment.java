@@ -119,6 +119,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         return v;
     }
 
+    /**
+     * method to get all chatrooms for user and start building chatroom buttons
+     *
+     * author: Casey Anderson
+     */
     private void getChats ( View v ) throws JSONException {
         prefs = getActivity().getSharedPreferences(
                         getString(R.string.keys_shared_prefs),
@@ -153,6 +158,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
 
     }
+
+    /**
+     * method to create chat room list from users available chatrooms
+     *
+     * author: Casey Anderson
+     */
     private void populateChats(String res) {
 
         LinearLayout buttonContainer = getActivity().findViewById(R.id.HomeLinearLayoutButtonContainer);
@@ -201,7 +212,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            mListener.onNewChat();
+                            mListener.onOpenChat();
                         }});
                     container.addView(button, params);
 
@@ -229,6 +240,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         }
     }
 
+    /**
+     * Method to put last message from chatroom next to chat room button
+     *
+     * author: Casey Anderson
+     */
     private void getLastMessage(View v) throws JSONException {
 
         Uri uri = new Uri.Builder()
@@ -250,7 +266,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 .build().execute();
     }
 
-
+    /**
+     * onAtttach method for home fragment listener
+     *
+     * author: Casey Anderson
+     */
     private void populateChatText(String res) {
 
         String text = "";
@@ -353,6 +373,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
       */
     public interface OnHomeFragmentInteractionListener {
         void onNewChat();
+        void onOpenChat();
         void NewWeather();
     }
 }

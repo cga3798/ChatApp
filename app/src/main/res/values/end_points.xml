@@ -11,6 +11,7 @@
     <string name="ep_get_chatMembers">getChatMembers</string>
     <string name="ep_chats">chats</string>
     <string name="ep_chats_get_chat">getChat</string>
+    <string name="ep_delete_chat">deleteChat</string>
 
     <string name="ep_invite_new_friend">sendinvite</string>
     <string name="ep_invites_sent">invitesent</string>
