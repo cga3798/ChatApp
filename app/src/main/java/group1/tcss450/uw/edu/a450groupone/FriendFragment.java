@@ -168,16 +168,19 @@ public class FriendFragment extends Fragment {
             v.setOnLongClickListener(view -> onShowDeleteButton(v, tvUsername.getText().toString()));
 
             // clicklistenrr to start chat with contact
-            v.setOnClickListener(view -> startChat(friendID) );
+            v.setOnClickListener(view -> startChat(friendID, fullName) );
         }
 
         return v;
     }
 
-    private void startChat(int theFriendId) {
+    // TODO: we can change to use fragment listener
+    private void startChat(int theFriendId, String theFullName) {
         Intent intent = new Intent(getContext(), ChatActivity.class);
         //send friend id to chat activity
+        intent.putExtra(getString(R.string.keys_open_chat_source), R.id.fragmentFriend);
         intent.putExtra(getString(R.string.keys_friend_id), theFriendId);
+        intent.putExtra(getString(R.string.keys_friend_full_name), theFullName);
         startActivity(intent);
     }
 

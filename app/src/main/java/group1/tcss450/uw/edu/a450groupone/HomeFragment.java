@@ -82,7 +82,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         b.setOnClickListener(this);
 
         // set click listener on weather view
-//        v.findViewById(R.id.homeCurrentWeatherDisplay).setOnClickListener(this);
+        v.findViewById(R.id.homeCurrentWeatherDisplay).setOnClickListener(this);
 
         TextView tv = (TextView) v.findViewById(R.id.HomeTextViewCurrentDate);
         long date = System.currentTimeMillis();
@@ -436,13 +436,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         // set id for text view
 
         TextView textView = getActivity().findViewById(R.id.chat_text_button_on);
-
         textView.setId(R.id.chat_text_button_off);
 
-
-
         // turns off prior id
-
         textView.setText(text);
 
     }

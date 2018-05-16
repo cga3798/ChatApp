@@ -41,16 +41,16 @@ public class NavigationActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_navigation);
         MainActivity.mainActivity.finish();
 
-        if (ContextCompat.checkSelfPermission(getApplicationContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getApplicationContext(),
-                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
-                            android.Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
-
-        }
+//        if (ContextCompat.checkSelfPermission(getApplicationContext(),
+//                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+//                && ActivityCompat.checkSelfPermission(getApplicationContext(),
+//                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//
+//            ActivityCompat.requestPermissions(this,
+//                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
+//                            android.Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+//
+//        }
 
         if(savedInstanceState == null) {
             if (findViewById(R.id.navigationFragmentContainer) != null) {
@@ -218,8 +218,8 @@ public class NavigationActivity extends AppCompatActivity implements
      @Override
     public void onOpenChat() {
         Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra(getString(R.string.keys_open_chat_source), R.id.fragmentHome);
         startActivity(intent);
-
     }
 
     /*

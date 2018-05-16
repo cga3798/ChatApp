@@ -24,6 +24,7 @@
     <string name="se_confirm_pass">Please confirm your password</string>
     <string name="se_pass_tooshort">Password should be at least 6 characters</string>
     <string name="se_pass_notmatch">Passwords don\'t match</string>
+    <string name="se_dont_use_underscore">Please don\'t use underscore in our last name or first name</string>
 
     <string name="application_name">Chat App</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
