@@ -1,4 +1,4 @@
-package group1.tcss450.uw.edu.a450groupone.model;
+package group1.tcss450.uw.edu.a450groupone;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -6,10 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import group1.tcss450.uw.edu.a450groupone.R;
-
 /**
- * This class is used to communicate, A broadcast receiver can be used to 
+ * This class is used to communicate, A broadcast receiver can be used to
  * listen to different things like rebooting, battery down, etc. We are
  * configuring a receiver to listen to rebooting and to start the service
  * automatically on restart.
