@@ -12,6 +12,7 @@
     <string name="keys_prefs_chatName">chatName</string>
 
     <string name="keys_friend_id">friendId</string>
+    <string name="keys_friend_full_name">friendFullName</string>
 
 
     <string name="keys_prefs_stay_logged_in">loggedIn</string>
@@ -29,6 +30,7 @@
     <string name="keys_fragment_settings">settingsFragmentTag</string>
     <string name="keys_fragment_success">successFragmentTag</string>
     <string name="keys_fragment_weather">weatherFragmentTag</string>
+
     <string name="keys_json_message">message</string>
     <string name="keys_json_messages">messages</string>
     <string name="keys_json_chat_id">chatId</string>
@@ -44,6 +46,7 @@
     <string name="keys_json_success">success</string>
     <string name="keys_fragment_search">searchNewFriendFragmentTag</string>
     <string name="keys_fragment_connection_tab">ConnectionTabFragmentTag</string>
+    <string name="keys_open_chat_source">sourceFragment</string>
 
 
 

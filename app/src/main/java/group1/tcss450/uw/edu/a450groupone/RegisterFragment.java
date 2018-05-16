@@ -70,6 +70,13 @@ public class RegisterFragment extends Fragment {
             confirmPassEt.setError(getString(R.string.se_confirm_pass));
         }
 
+        // check user doesnt put '_' (underscore) in their first or last name
+        // --- because it's a delimiter for naming chats
+        if (firstEt.getText().toString().contains("_")
+                || lastEt.getText().toString().contains("_")) {
+            firstEt.setError(getString(R.string.se_dont_use_underscore));
+        }
+
         if (passEt.getText().toString().length() < MIN_PASS_LENGTH) {
             passEt.setError(getString(R.string.se_pass_tooshort));
         }  // passwords dont match

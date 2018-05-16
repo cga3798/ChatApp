@@ -10,19 +10,18 @@
     <ScrollView
         android:id="@+id/receivedRequestScrollView"
         android:layout_width="395dp"
-        android:layout_height="586dp"
-        android:layout_marginBottom="8dp"
+        android:layout_height="448dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        >
 
         <LinearLayout
             android:id="@+id/receivedRequestLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical" />
+            android:orientation="vertical"/>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

@@ -2,6 +2,7 @@ package group1.tcss450.uw.edu.a450groupone;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -25,10 +26,20 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnCh
         setContentView(R.layout.activity_chat1);
         if(savedInstanceState == null) {
             if (findViewById(R.id.chatContainer) != null) {
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.chatContainer, new ChatFragment())
-                        .commit();
-                //checkFriendHasExistingChat();
+
+                int sourceFragment = getIntent().getIntExtra(getString(R.string.keys_open_chat_source), 0);
+
+                // opening chat from clicking on a friend in friends fragment
+                if (sourceFragment == R.id.fragmentFriend) {
+                    checkFriendHasExistingChat();
+                } // opening chat from clicking a chat in home fragment
+                else if (sourceFragment == R.id.fragmentHome) {
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.chatContainer, new ChatFragment())
+                            .commit();
+                } else {
+                    throw new IllegalArgumentException("Invalid chat access! Should not happen");
+                }
             }
         }
 
@@ -37,9 +48,14 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnCh
     // check if user has existing chat with friend or makes new one in backend.
     private void checkFriendHasExistingChat() {
         int friendId = getIntent().getIntExtra(getString(R.string.keys_friend_id), 0);
-        int myId = getSharedPreferences(
+        String friendFullName = getIntent().getStringExtra(getString(R.string.keys_friend_full_name));
+
+        SharedPreferences prefs = getSharedPreferences(
                 getString(R.string.keys_shared_prefs),
-                Context.MODE_PRIVATE).getInt(getString(R.string.keys_prefs_id), 0);
+                Context.MODE_PRIVATE);
+        int myId = prefs.getInt(getString(R.string.keys_prefs_id), 0);
+        String myFullName = prefs.getString(getString(R.string.keys_prefs_first_name), "")
+                    + " " + prefs.getString(getString(R.string.keys_prefs_last_name), "");
 
         if (friendId > 0) { // valid id
             // make async task to get chats
@@ -54,7 +70,9 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnCh
             // provide current user id
             try {
                 body.put("friendid", friendId);
+                body.put("friendfullname", friendFullName);
                 body.put("myid", myId);
+                body.put("myfullname", myFullName);
             } catch (JSONException e){
                 e.printStackTrace();
             }
@@ -82,25 +100,26 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnCh
                 {
                         success:true,
                         chatid: 12,
-                        chatname: "149_161"
+                        chatname: "friend fullname_my fullname"
                     }
                  */
                 if (res.has("chatid")) {
                     chatId = res.getInt("chatid");
 
-                } // look in chats -> found one or multiple chats
+                } // look in chats -> found one chat
                 /* example response
                 {
                     "success": true,
                     "chats": [
                         {
                             "chatid": 12,
-                            "name": "149_161"
+                            "name": "friend fullname_my fullname"
                         }
                     ]
                   }
                  */
                 else {
+                    // use the first match for now
                     chatId = res.getJSONArray("chats")
                             .getJSONObject(0).getInt("chatid");
                 }
