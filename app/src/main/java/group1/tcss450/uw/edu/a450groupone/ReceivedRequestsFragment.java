@@ -35,7 +35,6 @@ public class ReceivedRequestsFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -175,6 +174,8 @@ public class ReceivedRequestsFragment extends Fragment {
     private void handleAcceptOnPost(String result) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.detach(ReceivedRequestsFragment.this).attach(ReceivedRequestsFragment.this).commit();
+
+
         Log.d("accept: ", result);
         Toasty.info(getActivity(), "Invitation Accepted!.", Toast.LENGTH_SHORT, true).show();
 

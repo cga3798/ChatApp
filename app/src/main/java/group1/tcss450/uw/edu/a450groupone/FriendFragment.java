@@ -147,8 +147,7 @@ public class FriendFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-
-
+    
 
     private View getContactView(String nickname, String fullName, int friendID, int length) {
         View v = LayoutInflater.from(getContext())
