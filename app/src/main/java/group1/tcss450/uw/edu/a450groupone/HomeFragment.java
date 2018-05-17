@@ -132,315 +132,191 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     private void getChats ( View v ) throws JSONException {
 
         prefs = getActivity().getSharedPreferences(
-
                 getString(R.string.keys_shared_prefs),
-
                 Context.MODE_PRIVATE);
 
         if (!prefs.contains(getString(R.string.keys_prefs_username))) {
-
             throw new IllegalStateException("No username in prefs!");
-
         }
 
         mMemberId = prefs.getInt(getString(R.string.keys_prefs_id), 0);
 
-
-
-
-
         Uri retrieve = new Uri.Builder()
-
                 .scheme("https")
-
                 .appendPath(getString(R.string.ep_base_url))
-
                 .appendPath(getString(R.string.ep_get_chatMembers))
-
                 .build();
-
-
-
-
 
         JSONObject body = new JSONObject();
 
         // provide current user id
-
         try {
-
             body.put("memberId", mMemberId);
-
         } catch (JSONException e) {
-
             e.printStackTrace();
-
         }
 
-
-
-
-
         new SendPostAsyncTask.Builder(retrieve.toString(), body)
-
                 .onPostExecute(this::populateChats)
-
                 //TODO: add onCancelled handler.
-
                 .onCancelled(this::handleErrorsInTask)
-
                 .build().execute();
-
-
-
-
-
     }
 
     /**
-
      * method to create chat room list from users available chatrooms
-
      *
-
      * author: Casey Anderson
-
      */
 
     private void populateChats(String res) {
-
-
-
         LinearLayout buttonContainer = getActivity().findViewById(R.id.HomeLinearLayoutButtonContainer);
 
-
-
         if (!prefs.contains(getString(R.string.keys_prefs_username))) {
-
             throw new IllegalStateException("No username in prefs!");
-
         }
 
-
-
         try {
-
             JSONObject response = new JSONObject(res);
-
             if (response.getBoolean("success")) {
-
                 JSONArray chatList = response.getJSONArray("name");
 
-
-
                 for (int i = 0; i < chatList.length(); i++) {
-
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-
                             LinearLayout.LayoutParams.WRAP_CONTENT,
-
                             LinearLayout.LayoutParams.WRAP_CONTENT);
 
-
-
                     // layout to hold chatroom buttons and textviews
-
                     LinearLayout container = new LinearLayout(this.getActivity());
-
                     container.setOrientation(LinearLayout.HORIZONTAL);
 
-
-
                     // button for chatrooms
-
                     Button button = new Button(this.getActivity(), null, android.R.attr.buttonBarButtonStyle);
-
                     JSONObject name = chatList.getJSONObject(i);
-
                     try {
-
                         prefs.edit().putInt(
-
                                 getString(R.string.keys_prefs_chatId),
-
                                 name.getInt("chatid"))
-
                                 .apply();
 
                     } catch (JSONException e) {
-
                         e.printStackTrace();
-
                     }
 
-                    button.setText(name.getString("name") );
+                    // parse name string here...
+                    String chatName = parseChatName(name.getString("name"));
 
+                    button.setText(chatName);
                     button.setOnClickListener(new View.OnClickListener() {
-
                         public void onClick(View view) {
-
                             try {
-
                                 prefs.edit().putInt(
-
                                         getString(R.string.keys_prefs_chatId),
-
                                         name.getInt("chatid"))
-
                                         .apply();
-
                                 prefs.edit().putString(
-
                                         getString(R.string.keys_prefs_chatName),
-
-                                        name.getString("name"))
-
+                                        chatName)
                                         .apply();
-
                             } catch (JSONException e) {
-
                                 e.printStackTrace();
-
                             }
-
                             mListener.onOpenChat();
-
                         }});
 
                     container.addView(button, params);
 
-
-
                     // textView to display chatrooms last message
 
                     TextView textView = new TextView(this.getActivity());
-
                     textView.setId(R.id.chat_text_button_on);
 
-
-
                     // method to get messages for textView
-
                     try {
-
                         getLastMessage(textView);
-
                     } catch (JSONException e) {
-
                         e.printStackTrace();
-
                     }
 
-
-
                     // adding textView to layout
-
                     container.addView(textView);
 
-
-
                     // adding layout to container
-
                     buttonContainer.addView(container, params);
-
-
-
                 }
 
             }
 
         } catch (JSONException e) {
-
             e.printStackTrace();
-
         }
-
     }
 
+    /**
+     * Parses chat name from composed response chatname.
+     * @param responseName response chatname
+     * @return parsed chat name
+     */
+    private String parseChatName(String responseName) {
+        String result;
+        // chat is a group
+        if (responseName.charAt(0) == '_') {
+            // name of chat is whatever after "_" char
+            result = responseName.substring(1);
+        } else { // chat between two people
+            String userFullName = prefs.getString(getString(R.string.keys_prefs_first_name), "")
+                                + " " + prefs.getString(getString(R.string.keys_prefs_last_name), "");
+
+            String name1 = responseName.split("_")[0];
+            String name2 = responseName.split("_")[1];
+
+            // if name1 is current user -> friend name is name2
+            result = (name1.equals(userFullName)) ? name2 : name1;
+        }
+
+        return result;
+    }
 
 
     private void getLastMessage(View v) throws JSONException {
-
-
-
         Uri uri = new Uri.Builder()
-
                 .scheme("https")
-
                 .appendPath(getString(R.string.ep_base_url))
-
                 .appendPath(getString(R.string.ep_get_last_message))
-
                 .build();
-
-
 
         JSONObject body = new JSONObject();
 
-
-
         // provide current chat id and a timestamp to get all messages
-
         body.put("chatId", prefs.getInt("chatId", R.string.keys_prefs_chatId));
-
         body.put("after", "1970-01-01 00:00:00.000000");
 
-
-
         new SendPostAsyncTask.Builder(uri.toString(), body)
-
                 .onPostExecute(this::populateChatText)
-
                 //TODO: add onCancelled handler.
-
                 .onCancelled(this::handleErrorsInTask)
-
                 .build().execute();
-
     }
-
-
-
-
 
     private void populateChatText(String res) {
 
-
-
         String text = "";
-
-
-
-
-
         try {
-
             JSONObject response = new JSONObject(res);
-
             if (response.getBoolean("success")) {
-
                 JSONObject message = response.getJSONObject("messages");
-
                 text = message.getString("message");
-
             }
-
         } catch (JSONException e) {
-
             e.printStackTrace();
-
         }
 
-
-
         // set id for text view
-
         TextView textView = getActivity().findViewById(R.id.chat_text_button_on);
         textView.setId(R.id.chat_text_button_off);
 
         // turns off prior id
         textView.setText(text);
-
     }
 
     /*
