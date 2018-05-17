@@ -145,10 +145,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
         mMemberId = prefs.getInt(getString(R.string.keys_prefs_id), 0);
 
-
-
-
-
         Uri retrieve = new Uri.Builder()
 
                 .scheme("https")
@@ -158,10 +154,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 .appendPath(getString(R.string.ep_get_chatMembers))
 
                 .build();
-
-
-
-
 
         JSONObject body = new JSONObject();
 
@@ -177,10 +169,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
         }
 
-
-
-
-
         new SendPostAsyncTask.Builder(retrieve.toString(), body)
 
                 .onPostExecute(this::populateChats)
@@ -190,10 +178,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 .onCancelled(this::handleErrorsInTask)
 
                 .build().execute();
-
-
-
-
 
     }
 
@@ -208,13 +192,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
      */
 
     private void populateChats(String res) {
-
-
-
         LinearLayout buttonContainer = getActivity().findViewById(R.id.HomeLinearLayoutButtonContainer);
-
-
-
+        
         if (!prefs.contains(getString(R.string.keys_prefs_username))) {
 
             throw new IllegalStateException("No username in prefs!");
@@ -309,15 +288,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
                     container.addView(button, params);
 
-
-
                     // textView to display chatrooms last message
 
                     TextView textView = new TextView(this.getActivity());
 
                     textView.setId(R.id.chat_text_button_on);
-
-
 
                     // method to get messages for textView
 
@@ -331,19 +306,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
                     }
 
-
-
                     // adding textView to layout
 
                     container.addView(textView);
 
-
-
                     // adding layout to container
 
                     buttonContainer.addView(container, params);
-
-
 
                 }
 
@@ -357,12 +326,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
     }
 
-
-
     private void getLastMessage(View v) throws JSONException {
-
-
-
         Uri uri = new Uri.Builder()
 
                 .scheme("https")
@@ -373,19 +337,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
                 .build();
 
-
-
         JSONObject body = new JSONObject();
-
-
 
         // provide current chat id and a timestamp to get all messages
 
         body.put("chatId", prefs.getInt("chatId", R.string.keys_prefs_chatId));
 
         body.put("after", "1970-01-01 00:00:00.000000");
-
-
 
         new SendPostAsyncTask.Builder(uri.toString(), body)
 
@@ -399,20 +357,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
     }
 
-
-
-
-
     private void populateChatText(String res) {
-
-
-
         String text = "";
-
-
-
-
-
         try {
 
             JSONObject response = new JSONObject(res);
@@ -430,8 +376,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
             e.printStackTrace();
 
         }
-
-
 
         // set id for text view
 
