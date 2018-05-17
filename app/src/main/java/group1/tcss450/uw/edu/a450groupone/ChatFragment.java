@@ -32,7 +32,7 @@ import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 public class ChatFragment extends Fragment {
 
     private OnChatFragmentInteractionListener mListener;
-
+    private int mChatId;
     private String mUsername;
     private String mSendUrl;
     private TextView mOutputTextView;
@@ -64,9 +64,106 @@ public class ChatFragment extends Fragment {
         chatName.setTextSize(20);
         chatName.setTextColor(getResources().getColor(R.color.colorAccent));
 
+        // call to populate users chat rooms
+        try {
+            getMembers(v);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return v;
     }
 
+    /**
+     * method to get all members that are in chatroom
+     *
+     * author: Casey Anderson
+     */
+    private void getMembers ( View v ) throws JSONException {
+
+        prefs = getActivity().getSharedPreferences(
+
+                getString(R.string.keys_shared_prefs),
+
+                Context.MODE_PRIVATE);
+
+        if (!prefs.contains(getString(R.string.keys_prefs_chatId))) {
+
+            throw new IllegalStateException("No chatId in prefs!");
+
+        }
+
+        mChatId = prefs.getInt(getString(R.string.keys_prefs_chatId), 0);
+
+        Uri retrieve = new Uri.Builder()
+
+                .scheme("https")
+
+                .appendPath(getString(R.string.ep_base_url))
+
+                .appendPath(getString(R.string.ep_get_chatMembers_list))
+
+                .build();
+
+        JSONObject body = new JSONObject();
+
+        // provide current user id
+
+        try {
+
+            body.put("chatId", mChatId);
+
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+
+        }
+
+        new SendPostAsyncTask.Builder(retrieve.toString(), body)
+
+                .onPostExecute(this::populateMembers)
+
+                //TODO: add onCancelled handler.
+
+                .onCancelled(this::handleErrorsInTask)
+
+                .build().execute();
+
+    }
+
+    private void populateMembers(String res) {
+        TextView membersView = getActivity().findViewById(R.id.chatRoomMembers);
+        membersView.setSingleLine(false);
+        try {
+
+            JSONObject response = new JSONObject(res);
+
+            if (response.getBoolean("success")) {
+
+                JSONArray memberList = response.getJSONArray("name");
+
+                for (int i = 0; i < memberList.length(); i++) {
+                    JSONObject member = memberList.getJSONObject(i);
+                    membersView.append("\n" + member.getString("name"));
+
+                }
+
+            }
+
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+
+        }
+
+    }
+
+    /**
+     * Handle errors that may occur during the AsyncTask.
+     * @param result the error message provide from the AsyncTask
+     */
+    private void handleErrorsInTask(String result) {
+        Log.wtf("ASYNCT_TASK_ERROR", result);
+    }
 
     private void sendMessage(final View theButton) {
         JSONObject messageJson = new JSONObject();

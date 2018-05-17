@@ -47,6 +47,7 @@
     <string name="keys_fragment_search">searchNewFriendFragmentTag</string>
     <string name="keys_fragment_connection_tab">ConnectionTabFragmentTag</string>
     <string name="keys_open_chat_source">sourceFragment</string>
+    <string name="keys_sp_on">true</string>
 
 
 

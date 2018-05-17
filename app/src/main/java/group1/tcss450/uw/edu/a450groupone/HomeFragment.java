@@ -54,10 +54,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     private OnHomeFragmentInteractionListener mListener;
 
     private TextView cityTv, tempTv, weatherDescTv, weatherIcon;
+
     //private MyLocation location;
-
     private SharedPreferences prefs;
-
 
     public HomeFragment() {
         // Required empty public constructor
@@ -130,7 +129,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
      * author: Casey Anderson
      */
     private void getChats ( View v ) throws JSONException {
-
         prefs = getActivity().getSharedPreferences(
                 getString(R.string.keys_shared_prefs),
                 Context.MODE_PRIVATE);
@@ -140,7 +138,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         }
 
         mMemberId = prefs.getInt(getString(R.string.keys_prefs_id), 0);
-
         Uri retrieve = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
@@ -168,7 +165,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
      *
      * author: Casey Anderson
      */
-
     private void populateChats(String res) {
         LinearLayout buttonContainer = getActivity().findViewById(R.id.HomeLinearLayoutButtonContainer);
 
@@ -180,7 +176,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
             JSONObject response = new JSONObject(res);
             if (response.getBoolean("success")) {
                 JSONArray chatList = response.getJSONArray("name");
-
                 for (int i = 0; i < chatList.length(); i++) {
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -198,7 +193,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                                 getString(R.string.keys_prefs_chatId),
                                 name.getInt("chatid"))
                                 .apply();
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -225,12 +219,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                         }});
 
                     container.addView(button, params);
-
                     // textView to display chatrooms last message
-
                     TextView textView = new TextView(this.getActivity());
                     textView.setId(R.id.chat_text_button_on);
-
                     // method to get messages for textView
                     try {
                         getLastMessage(textView);
@@ -240,13 +231,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
                     // adding textView to layout
                     container.addView(textView);
-
                     // adding layout to container
                     buttonContainer.addView(container, params);
                 }
-
             }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -299,7 +287,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     }
 
     private void populateChatText(String res) {
-
         String text = "";
         try {
             JSONObject response = new JSONObject(res);
@@ -322,10 +309,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     /*
      * Displays the delete button next to chats.
      */
-
     private boolean onDeleteChat(View v, String name, int chatid) {
         Log.d("onDeleteChat: ", name);
-
         ImageButton im = v.findViewById(R.id.chatImageButtonDelete);
         im.setVisibility(View.VISIBLE);
         im.setOnClickListener(view -> confirmDelete(chatid));
@@ -337,7 +322,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     * Prompts user for confirmation to delete the chat.
      */
     private void confirmDelete(int chatid) {
-
         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
             switch (which){
                 case DialogInterface.BUTTON_POSITIVE:
@@ -402,7 +386,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     private void handleErrorsInTask(String result) {
         Log.wtf("ASYNCT_TASK_ERROR", result);
     }
-
 
     private void setWeatherData() {
         Weather.RetrieveData asyncTask = new Weather.RetrieveData(getContext(), R.id.fragmentHome ,new Weather.AsyncResponse() {
