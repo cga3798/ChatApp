@@ -148,9 +148,7 @@ public class FriendFragment extends Fragment {
         mListener = null;
     }
 
-    public interface OnFriendFragmentInteractionListener {
-        void onAddNewFriend();
-    }
+
 
     private View getContactView(String nickname, String fullName, int friendID, int length) {
         View v = LayoutInflater.from(getContext())
@@ -161,14 +159,17 @@ public class FriendFragment extends Fragment {
         tvUsername.setText(nickname);
         TextView tv = v.findViewById(R.id.friendsTextViewFullName);
         tv.setText(fullName);
+        ImageButton im = v.findViewById(R.id.friendImageButtonDelete);
 
         if (length != 0) {
             fullname = tv.getText().toString();
-            // long click listener to delete contact
-            v.setOnLongClickListener(view -> onShowDeleteButton(v, tvUsername.getText().toString()));
+            // listener to the delete button.
+            im.setOnClickListener(view -> onDeleteFriend(tvUsername.getText().toString()));
 
             // clicklistenrr to start chat with contact
             v.setOnClickListener(view -> startChat(friendID, fullName) );
+        } else {
+            im.setVisibility(View.GONE);
         }
 
         return v;
@@ -182,25 +183,6 @@ public class FriendFragment extends Fragment {
         intent.putExtra(getString(R.string.keys_friend_id), theFriendId);
         intent.putExtra(getString(R.string.keys_friend_full_name), theFullName);
         startActivity(intent);
-    }
-
-    /**
-     * This method will show the delete button after a user long-presses
-     * on the connection name.
-     *
-     * @param v the current view.
-     * @param username_b the username of the connection that will be removed.
-     * @return true
-     */
-    private boolean onShowDeleteButton(View v, String username_b) {
-        Log.d("onShowDeleteButton: ", username_b);
-
-        ImageButton im = v.findViewById(R.id.friendImageButtonDelete);
-        im.setVisibility(View.VISIBLE);
-        // listener to the delete button.
-        im.setOnClickListener(view -> onDeleteFriend(username_b));
-
-        return true;
     }
 
     /**
@@ -298,5 +280,10 @@ public class FriendFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // TODO: change menu options
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
+    public interface OnFriendFragmentInteractionListener {
+        void onAddNewFriend();
     }
 }

@@ -117,10 +117,10 @@ public class ReceivedRequestsFragment extends Fragment {
         View v;
         if ( length == 0) {
             v = LayoutInflater.from(getContext())
-                    .inflate(R.layout.contact_row, null, false);
-            TextView tv = v.findViewById(R.id.friendsTextViewNickname);
+                    .inflate(R.layout.request_row, null, false);
+            TextView tv = v.findViewById(R.id.requestTextViewNickname);
             tv.setText(nickname);
-            tv = v.findViewById(R.id.friendsTextViewFullName);
+            tv = v.findViewById(R.id.requestTextViewFullName);
             tv.setText(fullName);
 
         } else {
