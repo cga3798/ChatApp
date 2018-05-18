@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,6 @@ import java.util.List;
  *
  */
 public class ConnectionTabsFragment extends Fragment {
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,9 +38,7 @@ public class ConnectionTabsFragment extends Fragment {
         // Set Tabs inside Toolbar
         TabLayout tabs = (TabLayout) view.findViewById(R.id.result_tabs);
         tabs.setupWithViewPager(viewPager);
-
         return view;
-
     }
 
     /**
@@ -49,6 +47,7 @@ public class ConnectionTabsFragment extends Fragment {
      */
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getChildFragmentManager());
+
         adapter.addFragment(new FriendFragment(), "Friends");
         adapter.addFragment(new SearchNewFriendFragment(), "Search");
         adapter.addFragment(new ReceivedRequestsFragment(), "Received Invites");
@@ -85,6 +84,7 @@ public class ConnectionTabsFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
+            Log.e("getPageTitle: ", "page");
             return mFragmentTitleList.get(position);
         }
     }
