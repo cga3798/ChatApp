@@ -220,6 +220,8 @@ public class NavigationActivity extends AppCompatActivity implements
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra(getString(R.string.keys_open_chat_source), R.id.fragmentHome);
         startActivity(intent);
+         Intent i = new Intent(this, TempActivity.class);
+         startActivity(i);
     }
 
     /*

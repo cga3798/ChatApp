@@ -95,6 +95,7 @@ public class ReceivedRequestsFragment extends Fragment {
                                 getReceivedView(request.getString("username"),
                                         request.getString("firstname")
                                                 + " " + request.getString("lastname"), length));
+
                     }
                 }
             }
@@ -122,6 +123,7 @@ public class ReceivedRequestsFragment extends Fragment {
             tv.setText(nickname);
             tv = v.findViewById(R.id.friendsTextViewFullName);
             tv.setText(fullName);
+
 
         } else {
             v = LayoutInflater.from(getContext())

@@ -132,13 +132,7 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnCh
         }
     }
 
-    public void onBackPressed() {
-        Log.e("Back: ", "yes");
-        Intent intent = new Intent(getBaseContext(), NavigationActivity.class);
-        intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
-        startActivity(intent);
 
-    }
 
     private void openChatFragment(int chatId) {
         // put chatid to open in prefs
