@@ -1,14 +1,15 @@
 package group1.tcss450.uw.edu.a450groupone;
 
+import android.Manifest;
 import android.content.Context;
-import android.content.res.Resources;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.text.Html;
-import android.text.Layout;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,20 +19,18 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.google.android.gms.location.LocationServices;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import java.sql.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.TimeZone;
 
-import group1.tcss450.uw.edu.a450groupone.utils.MyLocation;
 import group1.tcss450.uw.edu.a450groupone.utils.Weather;
 
 
@@ -50,8 +49,6 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
     private OnWeatherFragmentInteractionListener mListener;
 
     private Bundle data;
-    private MyLocation location;
-
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -63,7 +60,6 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_weather, container, false);
 
-        location = new MyLocation(getContext(), null);
         //Bundle args = new Bundle();
         Button b = v.findViewById(R.id.selectCityButton);
         b.setOnClickListener(this::onSelectCClicked);
@@ -74,15 +70,39 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
     }
 
     private void getWeatherData(View fragmentView) {
+
+        Location currentLocation = null;
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            currentLocation = LocationServices.FusedLocationApi.getLastLocation(
+                    ((NavigationActivity)getActivity()).getmGoogleApiClient());
+            if (currentLocation != null) {
+                // first log we should see
+                Log.i("HOME_CURRENT_LOCATION", currentLocation.toString());
+            }
+
+        }
+
         Weather.RetrieveData asyncTask = new Weather.RetrieveData(getContext(), R.id.fragmentWeather ,new Weather.AsyncResponse() {
             public void processFinish(Bundle args) {
                 data = args;
                 setWeatherData(fragmentView);
             }
         });
-        // TODO:_________ provide selected city coordinates
 
-        asyncTask.execute("47.25288","-122.44429");//location.getLatitude(), location.getLongitude());//
+        if(currentLocation == null) {
+            // use Tacoma as default
+            // TODO: change to default/preferred city later
+            asyncTask.execute("47.25288", "-122.44429");
+
+        } else {
+            // use current location
+            asyncTask.execute( String.valueOf(currentLocation.getLatitude()),
+                    String.valueOf(currentLocation.getLongitude()) );
+        }
     }
 
     private void setWeatherData(View v) {
