@@ -245,7 +245,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
      * @param responseName response chatname
      * @return parsed chat name
      */
-    private String parseChatName(String responseName) {
+    public String parseChatName(String responseName) {
         String result;
         // chat is a group
         if (responseName.charAt(0) == '_') {

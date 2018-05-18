@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void loadHomeFragment() {
         Intent intent = new Intent(getBaseContext(), NavigationActivity.class);
-        intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        //intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
     }
 
