@@ -265,7 +265,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         return result;
     }
 
-
     private void getLastMessage(View v) throws JSONException {
         Uri uri = new Uri.Builder()
                 .scheme("https")
@@ -448,7 +447,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
             }
         }
     }
-
 
     /**
      * listener interfaces for temp buttons
