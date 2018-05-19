@@ -27,9 +27,15 @@
     <string name="keys_fragment_navigation">navigationFragmentTag</string>
     <string name="recycler_fragment_chat">recyclerFragmentTag</string>
     <string name="keys_fragment_select_weather">selectWeatherFragmentTag</string>
+    <string name="keys_fragment_map">mapFragmentTag</string>
     <string name="keys_fragment_settings">settingsFragmentTag</string>
     <string name="keys_fragment_success">successFragmentTag</string>
     <string name="keys_fragment_weather">weatherFragmentTag</string>
+    <string name="keys_prefs_selected_city">fromSelectedCity</string>
+    <string name="keys_prefs_selected_zip">selectedZip</string>
+    <string name="keys_prefs_selected_city_lat">selectedCityLat</string>
+    <string name="keys_prefs_selected_city_lon">selectedCityLon</string>
+    <string name="keys_prefs_fave_cities">preferredCities</string>
 
     <string name="keys_json_message">message</string>
     <string name="keys_json_messages">messages</string>

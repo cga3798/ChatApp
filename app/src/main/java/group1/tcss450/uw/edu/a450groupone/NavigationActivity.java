@@ -256,6 +256,12 @@ public class NavigationActivity extends AppCompatActivity implements
                 getString(R.string.keys_fragment_select_weather));
     }
 
+    @Override
+    public void onMapButtonClicked() {
+        loadFragment(new MapFragment(),
+                getString(R.string.keys_fragment_map));
+    }
+
     /*
      * onNewChat is a handle for calling new chat calls. Calls the loadFrament method passing a new ChatFragment
      */

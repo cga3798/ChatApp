@@ -2,6 +2,7 @@ package group1.tcss450.uw.edu.a450groupone;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.Location;
@@ -50,6 +51,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
 
     private Bundle data;
 
+
     public WeatherFragment() {
         // Required empty public constructor
     }
@@ -57,6 +59,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d("WEATHER", "now in weather fragment");
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_weather, container, false);
 
@@ -64,7 +67,17 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
         Button b = v.findViewById(R.id.selectCityButton);
         b.setOnClickListener(this::onSelectCClicked);
 
-        getWeatherData(v);
+        SharedPreferences prefs = getActivity().getSharedPreferences(
+                            getString(R.string.keys_shared_prefs),
+                            Context.MODE_PRIVATE);
+
+        boolean wentToSelectCity = prefs.getBoolean(getString(R.string.keys_prefs_selected_city), false);
+        if (wentToSelectCity) {
+            prefs.edit().putBoolean(getString(R.string.keys_prefs_selected_city), false).apply();
+            getWeatherFromSelect(v);
+        } else { // came from home or side bar
+            getWeatherData(v);
+        }
 
         return v;
     }
@@ -94,14 +107,94 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
         });
 
         if(currentLocation == null) {
-            // use Tacoma as default
-            // TODO: change to default/preferred city later
-            asyncTask.execute("47.25288", "-122.44429");
+            SharedPreferences prefs = getActivity().getSharedPreferences(
+                    getString(R.string.keys_shared_prefs),
+                    Context.MODE_PRIVATE);
+
+            String lat = prefs.getString(getString(R.string.keys_prefs_selected_city_lat), "_");
+            String lon = prefs.getString(getString(R.string.keys_prefs_selected_city_lon), "_");
+
+            //
+            if (lat.charAt(0) == '_') {
+                // must be first time opening app
+                // use Tacoma as default
+                asyncTask.execute("47.25288", "-122.44429");
+            } else { // use last selected in prefs
+                asyncTask.execute(lat, lon);
+            }
 
         } else {
             // use current location
             asyncTask.execute( String.valueOf(currentLocation.getLatitude()),
                     String.valueOf(currentLocation.getLongitude()) );
+        }
+    }
+
+    private void getWeatherFromSelect(View fragmentView) {
+        Weather.RetrieveData asyncTask = new Weather.RetrieveData(getContext(), R.id.selectCityFragment ,new Weather.AsyncResponse() {
+            public void processFinish(Bundle args) {
+                data = args;
+                // TODO: save city in prefs
+                saveCity();
+                setWeatherData(fragmentView);
+            }
+        });
+        SharedPreferences prefs = getActivity().getSharedPreferences(
+                getString(R.string.keys_shared_prefs),
+                Context.MODE_PRIVATE);
+
+        String zip = prefs
+                .getString(getString(R.string.keys_prefs_selected_zip), "_");
+        String lat = prefs.getString(getString(R.string.keys_prefs_selected_city_lat), "_");
+        String lon = prefs.getString(getString(R.string.keys_prefs_selected_city_lon), "_");
+
+        if (zip.charAt(0) == '_') {
+            asyncTask.execute("_", zip);
+        } else {
+            asyncTask.execute(lat, lon);
+        }
+
+        // clear zip in prefs.. just replace by '_'
+        prefs.edit().putString(getString(R.string.keys_prefs_selected_zip), "_");
+
+    }
+
+    private void saveCity() {
+        SharedPreferences prefs = getActivity().getSharedPreferences(
+                getString(R.string.keys_shared_prefs),
+                Context.MODE_PRIVATE);
+        try {
+            JSONArray preferedCities = new JSONArray(
+                    prefs.getString(
+                            getString(R.string.keys_prefs_fave_cities), "[]"));
+
+            Log.d("ADDINgCITY", " current array = " + preferedCities.toString());
+            String cityToAddName = data.getString(Weather.K_CITY);
+
+            boolean found = false;
+            // search if city exits in array
+            for (int i = 0; i < preferedCities.length(); i++) {
+                if (preferedCities.getJSONObject(i).getString(Weather.K_CITY)
+                        .equals(cityToAddName)) {
+                    found = true;
+                }
+            }
+
+            if (!found) {
+                // make city object
+                JSONObject city = new JSONObject();
+                city.put(Weather.K_CITY, data.getString(Weather.K_CITY));
+                city.put(Weather.K_LAT, data.getString(Weather.K_LAT));
+                city.put(Weather.K_LON, data.getString(Weather.K_LON));
+                // add to array
+                preferedCities.put(city);
+                //save in prefs
+                prefs.edit().putString(getString(R.string.keys_prefs_fave_cities),
+                                    preferedCities.toString()).apply();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -387,5 +480,6 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
      */
     public interface OnWeatherFragmentInteractionListener {
         void onSelectCityButtonClicked();
+        void onMapButtonClicked();
     }
 }
