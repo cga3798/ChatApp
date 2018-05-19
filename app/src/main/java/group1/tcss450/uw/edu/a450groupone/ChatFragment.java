@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -57,19 +58,26 @@ public class ChatFragment extends Fragment {
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         Log.wtf("CHAT ROOM", "" + prefs.getInt("chatId", R.string.keys_prefs_chatId));
+        Button button = (Button) v.findViewById(R.id.view_member_list_button);
+        button.setOnClickListener(new View.OnClickListener() {
 
-        TextView chatName = (TextView) v.findViewById(R.id.chatNameOfChatRoomView);
-        chatName.setText(String.valueOf(prefs.getString(getString(R.string.keys_prefs_chatName), "Chat Room")));
-        chatName.setAllCaps(true);
-        chatName.setTextSize(20);
-        chatName.setTextColor(getResources().getColor(R.color.colorAccent));
+                        public void onClick(View view) {
 
-        // call to populate users chat rooms
-        try {
-            getMembers(v);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+                            TextView chatName = (TextView) v.findViewById(R.id.chatNameOfChatRoomView);
+                            chatName.setText(String.valueOf(prefs.getString(getString(R.string.keys_prefs_chatName), "Chat Room")));
+                            chatName.setAllCaps(true);
+                            chatName.setTextSize(20);
+                            chatName.setTextColor(getResources().getColor(R.color.colorAccent));
+
+                            // call to populate users chat rooms
+                            try {
+                                getMembers(v);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }});
+
+
         return v;
     }
 
