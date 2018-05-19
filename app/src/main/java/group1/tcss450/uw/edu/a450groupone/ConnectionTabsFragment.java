@@ -52,6 +52,7 @@ public class ConnectionTabsFragment extends Fragment {
         adapter.addFragment(new SearchNewFriendFragment(), "Search");
         adapter.addFragment(new ReceivedRequestsFragment(), "Received Invites");
         adapter.addFragment(new SentRequestsFragment(), "Sent Invites");
+
         viewPager.setAdapter(adapter);
     }
 
@@ -84,7 +85,6 @@ public class ConnectionTabsFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            Log.e("getPageTitle: ", "page");
             return mFragmentTitleList.get(position);
         }
     }

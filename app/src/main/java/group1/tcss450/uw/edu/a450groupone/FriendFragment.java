@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -54,6 +55,17 @@ public class FriendFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        Button newGroupButton = v.findViewById(R.id.friendButtonNewGroup);
+        newGroupButton.setOnClickListener(view -> {
+
+            FragmentTransaction transaction = this.getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.navigationFragmentContainer, new NewGroupFragment())
+                    .addToBackStack(null);
+            transaction.commit();
+        });
+
         return v;
     }
 
@@ -96,12 +108,22 @@ public class FriendFragment extends Fragment {
         LinearLayout contactsListContainer = getActivity().findViewById(R.id.friendsLinearLayoutContactsList);
         Log.d("GOTCONTACTS", res);
 
+
         try {
             JSONObject response = new JSONObject(res);
             if (response.getBoolean("success")) {
                 JSONArray friendsList = response.getJSONArray("friends");
-                int length = friendsList.length();
 
+                //store list of friends in shared preferences
+                SharedPreferences prefs =
+                        this.getActivity().getSharedPreferences(
+                                getString(R.string.keys_prefs_contacts),
+                                Context.MODE_PRIVATE);
+
+                prefs.edit().putString("contacts_list", friendsList.toString())
+                        .apply();
+
+                int length = friendsList.length();
                 if (length == 0) {
                     contactsListContainer.addView(
                             getContactView("", "There are no contacts to display", 0, length));
@@ -159,6 +181,7 @@ public class FriendFragment extends Fragment {
         TextView tv = v.findViewById(R.id.friendsTextViewFullName);
         tv.setText(fullName);
         ImageButton im = v.findViewById(R.id.friendImageButtonDelete);
+
 
         if (length != 0) {
             fullname = tv.getText().toString();

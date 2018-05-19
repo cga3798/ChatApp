@@ -63,9 +63,6 @@
     <string name="search_zip_hint">Enter zip code</string>
     <string name="search_new_hint"><font size="15">Type new friend name, email or username</font></string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="please_log_in_or_register_fragment">Please log in or register</string>
 
     <string name="username_fragment">Username</string>
@@ -76,5 +73,7 @@
     <string name="received">Received</string>
     <string name="cancel_invite">Cancel Invite</string>
     <string name="invite">Invite</string>
+    <string name="cancel">Cancel</string>
+    <string name="create_group">Create</string>
 
 </resources>
