@@ -1,21 +1,20 @@
 package group1.tcss450.uw.edu.a450groupone;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,18 +24,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.LocationServices;
+
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import es.dmoral.toasty.Toasty;
-import group1.tcss450.uw.edu.a450groupone.utils.MyLocation;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import group1.tcss450.uw.edu.a450groupone.utils.ListenManager;
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 import group1.tcss450.uw.edu.a450groupone.utils.Weather;
 
@@ -55,7 +53,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
     private TextView cityTv, tempTv, weatherDescTv, weatherIcon;
 
-    //private MyLocation location;
     private SharedPreferences prefs;
 
     public HomeFragment() {
@@ -98,20 +95,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         weatherIcon = v.findViewById(R.id.homeTextViewWeatherIcon);
         weatherIcon.setTypeface(weatherFont);
 
-
-//        Timer myTimer = new Timer();
-//        myTimer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                Log.d("TIMER_GPS_CHECK", "checking gps ready");
-//                if (location.isReady() ) {
-//                    Log.d("TIOMERCHECKGPS", "setting data");
-                    setWeatherData();
-//                    myTimer.cancel();
-//                }
-//            }
-//        }, 0, 500);
-
+        setWeatherData();
 
         // call to populate users chat rooms
         try {
@@ -245,7 +229,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
      * @param responseName response chatname
      * @return parsed chat name
      */
-    private String parseChatName(String responseName) {
+    public String parseChatName(String responseName) {
         String result;
         // chat is a group
         if (responseName.charAt(0) == '_') {
@@ -386,8 +370,23 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         Log.wtf("ASYNCT_TASK_ERROR", result);
     }
 
-    private void setWeatherData() {
-        Weather.RetrieveData asyncTask = new Weather.RetrieveData(getContext(), R.id.fragmentHome ,new Weather.AsyncResponse() {
+    public void setWeatherData() {
+        Location currentLocation = null;
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            currentLocation = LocationServices.FusedLocationApi.getLastLocation(
+                            ((NavigationActivity)getActivity()).getmGoogleApiClient());
+            if (currentLocation != null) {
+                // first log we should see
+                Log.i("HOME_CURRENT_LOCATION", currentLocation.toString());
+            }
+
+        }
+
+        Weather.RetrieveData asyncTask = new Weather.RetrieveData(getContext(), R.id.fragmentHome, new Weather.AsyncResponse() {
             public void processFinish(Bundle args) {
                 cityTv.setText(args.getString(Weather.K_CITY));
                 weatherDescTv.setText(args.getString(Weather.K_WEATHER_DESC));
@@ -395,9 +394,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 weatherIcon.setText(Html.fromHtml(args.getString(Weather.K_ICON)));
             }
         });
-        // get current location
-        asyncTask.execute( //location.getLatitude(), location.getLongitude());
-                     "47.25288","-122.44429");
+
+        if(currentLocation == null) {
+           // use Tacoma as default
+            // TODO: change to default/preferred city later
+            asyncTask.execute("47.25288", "-122.44429");
+
+        } else {
+            // use current location
+            asyncTask.execute( String.valueOf(currentLocation.getLatitude()),
+                    String.valueOf(currentLocation.getLongitude()) );
+        }
     }
 
     /**

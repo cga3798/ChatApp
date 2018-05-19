@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -63,13 +64,32 @@ public class ChatFragment extends Fragment {
         chatName.setAllCaps(true);
         chatName.setTextSize(20);
         chatName.setTextColor(getResources().getColor(R.color.colorAccent));
+        Button button = (Button) v.findViewById(R.id.view_member_list_button);
+        button.setOnClickListener(new View.OnClickListener() {
 
-        // call to populate users chat rooms
-        try {
-            getMembers(v);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+                        public void onClick(View view) {
+
+                            TextView membersView = getActivity().findViewById(R.id.chatRoomMembers);
+                            if (membersView.getVisibility() == View.VISIBLE){
+                                membersView.setVisibility(View.GONE);
+                            }
+                            else {
+                                // call to populate users chat rooms
+                                membersView.setVisibility(View.VISIBLE);
+                                if (membersView.getText().length() > 0 ){
+
+                                }
+                                else {
+                                    try {
+                                        getMembers(v);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }});
+
+
         return v;
     }
 

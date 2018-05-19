@@ -8,6 +8,8 @@
     <string name="ep_weather">weather</string>
     <string name="ep_weather_current">current</string>
     <string name="ep_weather_daily">dailyHourly</string>
+    <string name="ep_weather_zip">zip</string>
+
     <string name="ep_get_chatMembers">getChatMembers</string>
     <string name="ep_get_chatMembers_list">getChatMembersList</string>
     <string name="ep_chats">chats</string>

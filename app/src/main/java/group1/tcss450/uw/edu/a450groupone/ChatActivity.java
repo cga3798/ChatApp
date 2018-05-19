@@ -95,6 +95,7 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnCh
 
             if (res.getBoolean("success")) {
                 int chatId;
+                String chatName;
                 // we have chatid in response -> created new chat
                 /* example response
                 {
@@ -105,6 +106,7 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnCh
                  */
                 if (res.has("chatid")) {
                     chatId = res.getInt("chatid");
+                    chatName = res.getString("chatname");
 
                 } // look in chats -> found one chat
                 /* example response
@@ -122,9 +124,11 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnCh
                     // use the first match for now
                     chatId = res.getJSONArray("chats")
                             .getJSONObject(0).getInt("chatid");
+                    chatName = res.getJSONArray("chats")
+                            .getJSONObject(0).getString("name");
                 }
 
-                openChatFragment(chatId);
+                openChatFragment(chatId, parseChatName(chatName));
             }
 
         } catch (JSONException e) {
@@ -132,13 +136,20 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnCh
         }
     }
 
-    private void openChatFragment(int chatId) {
-        // put chatid to open in prefs
+    private void openChatFragment(int chatId, String chatName) {
+        // put chatid/chatname to open in prefs
         getSharedPreferences(
                 getString(R.string.keys_shared_prefs),
                 Context.MODE_PRIVATE)
                 .edit()
                 .putInt(getString(R.string.keys_prefs_chatId), chatId)
+                .apply();
+        getSharedPreferences(
+                getString(R.string.keys_shared_prefs),
+                Context.MODE_PRIVATE)
+                .edit().putString(
+                getString(R.string.keys_prefs_chatName),
+                chatName)
                 .apply();
         // open fragment
         getSupportFragmentManager().beginTransaction()
@@ -148,6 +159,35 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnCh
 
     private void handleError(final String msg) {
         Log.e("CHAT_ERROR", msg.toString());
+    }
+
+
+    /**
+     * Parses chat name from composed response chatname.
+     * @param responseName response chatname
+     * @return parsed chat name
+     */
+    public String parseChatName(String responseName) {
+        String result;
+        // chat is a group
+        if (responseName.charAt(0) == '_') {
+            // name of chat is whatever after "_" char
+            result = responseName.substring(1);
+        } else { // chat between two people
+            String userFullName = getSharedPreferences(getString(R.string.keys_shared_prefs),
+                    Context.MODE_PRIVATE).getString(getString(R.string.keys_prefs_first_name), "")
+                    + " "
+                    + getSharedPreferences(getString(R.string.keys_shared_prefs),
+                    Context.MODE_PRIVATE).getString(getString(R.string.keys_prefs_last_name), "");
+
+            String name1 = responseName.split("_")[0];
+            String name2 = responseName.split("_")[1];
+
+            // if name1 is current user -> friend name is name2
+            result = (name1.equals(userFullName)) ? name2 : name1;
+        }
+
+        return result;
     }
 
     @Override

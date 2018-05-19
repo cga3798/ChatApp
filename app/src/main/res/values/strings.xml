@@ -60,6 +60,7 @@
     <string name="humidity">Humidity</string>
 
     <string name="search_hint">Type friend name</string>
+    <string name="search_zip_hint">Enter zip code</string>
     <string name="search_new_hint"><font size="15">Type new friend name, email or username</font></string>
 
     <!-- TODO: Remove or change this placeholder text -->

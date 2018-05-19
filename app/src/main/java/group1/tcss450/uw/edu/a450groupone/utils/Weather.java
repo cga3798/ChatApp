@@ -45,6 +45,8 @@ public class Weather {
     public static final String K_WIND_DIR = "windDirection";
     public static final String K_HOURLY_DAILY_LIST = "hourlyDailyList";
     public static final String K_DAY_OF_WEEK = "dayOfWeek";
+    public static final String K_LAT = "latitude";
+    public static final String K_LON = "longitude";
 
     public static final String GMT_PACIFIC = "GMT-7";
 
@@ -96,6 +98,14 @@ public class Weather {
                 } else if (source == R.id.fragmentWeather) {
                     weatherBundle.setCurrentWeather(getCurrentWeatherJSON(params[0], params[1]));
                     weatherBundle.setHourlyDailyWeather(getHourlyDailyWeatherJSON(params[0], params[1]));
+                } else if (source == R.id.selectCityFragment) {
+                    if (params[0].charAt(0) == '_') {
+                        weatherBundle.setCurrentWeather(getCurrentByZip(params[1]));
+                        weatherBundle.setHourlyDailyWeather(getHourlyDailyByZip(params[1]));
+                    } else { // selected city
+                        weatherBundle.setCurrentWeather(getCurrentWeatherJSON(params[0], params[1]));
+                        weatherBundle.setHourlyDailyWeather(getHourlyDailyWeatherJSON(params[0], params[1]));
+                    }
                 } else {
                     Log.e("WEATHE_ASYNC", "THis shouldnt happen! Dont call Weather service from innapropiate fragment!!!");
                 }
@@ -119,7 +129,10 @@ public class Weather {
             } else if (source == R.id.fragmentHome) {
                 // get simple data
                 loadHomeFragmentData(weatherBundle.getCurrentWeather(), b);
-            } else {
+            } else if (source == R.id.selectCityFragment) {
+                loadWeatherFragmentData(weatherBundle, b);
+            }
+            else {
                 Log.e("WEATHER_ASYNC", "This shouldn't happen!");
             }
 
@@ -242,6 +255,106 @@ public class Weather {
                 return null;
             }
         }
+
+        public JSONObject getCurrentByZip(String zip) {
+            try {
+                // make url
+                URL url = new URL(new Uri.Builder()
+                        .scheme("https")
+                        .appendPath(context.getString(R.string.ep_base_url))
+                        .appendPath(context.getString(R.string.ep_weather))
+                        .appendPath(context.getString(R.string.ep_weather_zip))
+                        .appendPath(context.getString(R.string.ep_weather_current))
+                        .build().toString());
+
+                //Log.d("SHOW url____", url.toString());
+
+                JSONObject body = new JSONObject();
+                // provide current user id
+                body.put("zip", zip);
+
+                HttpURLConnection connection =
+                        (HttpURLConnection) url.openConnection();
+                connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                connection.setRequestMethod("POST");
+
+                OutputStreamWriter wr= new OutputStreamWriter(connection.getOutputStream());
+                wr.write(body.toString());
+                wr.flush();
+                wr.close();
+
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(connection.getInputStream()));
+
+                StringBuffer json = new StringBuffer(1024);
+                String tmp = "";
+                while ((tmp = reader.readLine()) != null)
+                    json.append(tmp).append("\n");
+                reader.close();
+
+                JSONObject data = new JSONObject(json.toString());
+
+                if (!data.getBoolean("success")) {
+                    Log.e("request weatherERRO", data.toString());
+                    return null;
+                }
+
+                return data;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        public JSONObject getHourlyDailyByZip(String zip) {
+            try {
+                // make url
+                URL url = new URL(new Uri.Builder()
+                        .scheme("https")
+                        .appendPath(context.getString(R.string.ep_base_url))
+                        .appendPath(context.getString(R.string.ep_weather))
+                        .appendPath(context.getString(R.string.ep_weather_zip))
+                        .appendPath(context.getString(R.string.ep_weather_daily))
+                        .build().toString());
+
+                //Log.d("SHOW url____", url.toString());
+
+                JSONObject body = new JSONObject();
+                // provide current user id
+                body.put("zip", zip);
+
+                HttpURLConnection connection =
+                        (HttpURLConnection) url.openConnection();
+                connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                connection.setRequestMethod("POST");
+
+                OutputStreamWriter wr= new OutputStreamWriter(connection.getOutputStream());
+                wr.write(body.toString());
+                wr.flush();
+                wr.close();
+
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(connection.getInputStream()));
+
+                StringBuffer json = new StringBuffer(1024);
+                String tmp = "";
+                while ((tmp = reader.readLine()) != null)
+                    json.append(tmp).append("\n");
+                reader.close();
+
+                JSONObject data = new JSONObject(json.toString());
+
+                if (!data.getBoolean("success")) {
+                    Log.e("request weatherERRO", data.toString());
+                    return null;
+                }
+
+                return data;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
     }
 
     private static void parseCurrentWeatherJSON(JSONObject res, Bundle b) {
@@ -249,6 +362,7 @@ public class Weather {
         try {
             if (res != null) {
                 JSONObject simpleWeatherJSON = res.getJSONObject("data");
+                JSONObject coords = simpleWeatherJSON.getJSONObject("coord");
                 JSONObject details = simpleWeatherJSON.getJSONArray("weather").getJSONObject(0);
                 JSONObject main = simpleWeatherJSON.getJSONObject("main");
                 JSONObject sys = simpleWeatherJSON.getJSONObject("sys");
@@ -280,6 +394,9 @@ public class Weather {
                     windDirection = getWindDirection(wind.getInt("deg"));
                 }
 
+                String lat = String.valueOf(coords.getDouble("lat"));
+                String lon = String.valueOf(coords.getDouble("lon"));
+
                 b.putString(K_CITY, city);
                 b.putString(K_WEATHER_DESC, description);
                 b.putString(K_CURRENT_TEMP, temperature);
@@ -295,6 +412,8 @@ public class Weather {
                 b.putString(K_WIND_SPEED, windSpeed);
                 b.putLong(K_SUNRISE_LONG, sunriseLong);
                 b.putLong(K_SUNSET_LONG, sunsetLong);
+                b.putString(K_LAT, lat);
+                b.putString(K_LON, lon);
             }
         } catch (JSONException e) {
             Log.e("WEATHER_ASYNC", "Cannot process JSON results", e);
