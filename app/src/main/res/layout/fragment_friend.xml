@@ -13,18 +13,27 @@
         android:id="@+id/friendButtonNewGroup"
         android:layout_width="138dp"
         android:layout_height="48dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="237dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="162dp"
         android:text="New Group"
-        tools:layout_editor_absoluteX="36dp"
-        tools:layout_editor_absoluteY="143dp" />
+        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="0dp"
         android:layout_height="448dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/friendButtonNewGroup">
 
 
         <LinearLayout

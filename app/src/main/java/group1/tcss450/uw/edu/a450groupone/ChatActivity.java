@@ -132,8 +132,6 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnCh
         }
     }
 
-
-
     private void openChatFragment(int chatId) {
         // put chatid to open in prefs
         getSharedPreferences(
