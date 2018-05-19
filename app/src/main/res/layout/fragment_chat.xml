@@ -44,12 +44,42 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/view_member_list_button"
+        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+        android:layout_width="128dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:text="View Members"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:id="@+id/scrollViewMembers"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:clipToPadding="true"
+        android:fillViewport="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_member_list_button">
+
+        <TextView
+            android:id="@+id/chatRoomMembers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:visibility="gone" />
+    </ScrollView>
+
     <ScrollView
         android:id="@+id/scrollViewChat"
-        android:layout_width="260dp"
-        android:layout_height="0dp"
+        android:layout_width="375dp"
+        android:layout_height="324dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="2dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:clipToPadding="true"
         android:fillViewport="true"
@@ -58,8 +88,10 @@
         android:gravity="bottom"
         app:layout_constraintBottom_toTopOf="@+id/chatInputEditText"
         app:layout_constraintEnd_toStartOf="@+id/scrollViewMembers"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chatNameOfChatRoomView">
+        app:layout_constraintTop_toBottomOf="@+id/chatNameOfChatRoomView"
+        app:layout_constraintVertical_bias="1.0">
 
         <TextView
             android:id="@+id/chatOutputTextView"
@@ -74,38 +106,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-    </ScrollView>
-
-    <Button
-        android:id="@+id/view_member_list_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="8dp"
-        android:text="View Members"
-        app:layout_constraintStart_toEndOf="@+id/scrollViewChat"
-        app:layout_constraintTop_toBottomOf="@+id/chatNameOfChatRoomView" />
-
-    <ScrollView
-        android:id="@+id/scrollViewMembers"
-        android:layout_width="110dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:clipToPadding="true"
-        android:fillViewport="true"
-        app:layout_constraintBottom_toTopOf="@+id/chatInputEditText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_member_list_button"
-        app:layout_constraintVertical_bias="0.0">
-
-        <TextView
-            android:id="@+id/chatRoomMembers"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Users in Chat" />
     </ScrollView>
 
 </android.support.constraint.ConstraintLayout>

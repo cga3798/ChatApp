@@ -58,22 +58,34 @@ public class ChatFragment extends Fragment {
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         Log.wtf("CHAT ROOM", "" + prefs.getInt("chatId", R.string.keys_prefs_chatId));
+
+        TextView chatName = (TextView) v.findViewById(R.id.chatNameOfChatRoomView);
+        chatName.setText(String.valueOf(prefs.getString(getString(R.string.keys_prefs_chatName), "Chat Room")));
+        chatName.setAllCaps(true);
+        chatName.setTextSize(20);
+        chatName.setTextColor(getResources().getColor(R.color.colorAccent));
         Button button = (Button) v.findViewById(R.id.view_member_list_button);
         button.setOnClickListener(new View.OnClickListener() {
 
                         public void onClick(View view) {
 
-                            TextView chatName = (TextView) v.findViewById(R.id.chatNameOfChatRoomView);
-                            chatName.setText(String.valueOf(prefs.getString(getString(R.string.keys_prefs_chatName), "Chat Room")));
-                            chatName.setAllCaps(true);
-                            chatName.setTextSize(20);
-                            chatName.setTextColor(getResources().getColor(R.color.colorAccent));
+                            TextView membersView = getActivity().findViewById(R.id.chatRoomMembers);
+                            if (membersView.getVisibility() == View.VISIBLE){
+                                membersView.setVisibility(View.GONE);
+                            }
+                            else {
+                                // call to populate users chat rooms
+                                membersView.setVisibility(View.VISIBLE);
+                                if (membersView.getText().length() > 0 ){
 
-                            // call to populate users chat rooms
-                            try {
-                                getMembers(v);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                }
+                                else {
+                                    try {
+                                        getMembers(v);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
                             }
                         }});
 
