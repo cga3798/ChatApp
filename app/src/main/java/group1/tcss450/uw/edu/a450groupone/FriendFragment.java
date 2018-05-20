@@ -60,9 +60,8 @@ public class FriendFragment extends Fragment {
             e.printStackTrace();
         }
 
-        Button newGroupButton = v.findViewById(R.id.friendButtonNewGroup);
-        newGroupButton.setOnClickListener(view -> {
-
+        FloatingActionButton floatingbutton = v.findViewById(R.id.friendButtonNewGroup);
+        floatingbutton.setOnClickListener(view -> {
             FragmentTransaction transaction = this.getActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.navigationFragmentContainer, new NewGroupFragment())
