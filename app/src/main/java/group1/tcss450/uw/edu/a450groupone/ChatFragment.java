@@ -5,7 +5,9 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Layout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -54,7 +57,6 @@ public class ChatFragment extends Fragment {
                         Context.MODE_PRIVATE);
         v.findViewById(R.id.chatSendButton).setOnClickListener(this::sendMessage);
 
-        mOutputTextView = v.findViewById(R.id.chatOutputTextView);
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         Log.wtf("CHAT ROOM", "" + prefs.getInt("chatId", R.string.keys_prefs_chatId));
@@ -88,7 +90,6 @@ public class ChatFragment extends Fragment {
                                 }
                             }
                         }});
-
 
         return v;
     }
@@ -255,11 +256,33 @@ public class ChatFragment extends Fragment {
                 e.printStackTrace();
                 return;
             }
-
+            LinearLayout chatContainer = getActivity().findViewById(R.id.chat_layout_to_hold_chat_messages);
             getActivity().runOnUiThread(() -> {
                 for (String msg : msgs) {
-                    mOutputTextView.append(msg);
-                    mOutputTextView.append(System.lineSeparator());
+                    LinearLayout.LayoutParams chatParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+
+
+                    LinearLayout container = new LinearLayout(this.getActivity());
+                    container.setOrientation(LinearLayout.HORIZONTAL);
+                    String temp = msg.substring(0, msg.indexOf(":"));
+                    TextView text = new TextView(this.getActivity());
+                    text.append(msg);
+                    text.append(System.lineSeparator());
+                    container.addView(text);
+                    if (temp.equals(mUsername)) {
+                        chatParams.gravity = Gravity.RIGHT;
+                        container.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    }
+                    else {
+                        chatParams.gravity = Gravity.LEFT;
+                        container.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                    }
+                    container.setLayoutParams(chatParams);
+                    chatContainer.addView(container);
+                    EditText typeText = ((EditText) getView().findViewById(R.id.chatInputEditText));
+                    typeText.requestFocus();
                 }
             });
 
@@ -316,6 +339,8 @@ public class ChatFragment extends Fragment {
                 });
             }
         });
+        EditText typeText = ((EditText) getView().findViewById(R.id.chatInputEditText));
+        typeText.requestFocus();
 
     }
 
