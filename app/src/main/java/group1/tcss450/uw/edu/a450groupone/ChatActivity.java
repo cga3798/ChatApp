@@ -9,7 +9,11 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
 
@@ -19,6 +23,7 @@ import org.json.JSONObject;
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
 public class ChatActivity extends AppCompatActivity implements ChatFragment.OnChatFragmentInteractionListener {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +47,10 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnCh
                 }
             }
         }
-
     }
+
+
+
 
     // check if user has existing chat with friend or makes new one in backend.
     private void checkFriendHasExistingChat() {
@@ -189,6 +196,8 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnCh
 
         return result;
     }
+
+
 
     @Override
     public void onNewChat() {
