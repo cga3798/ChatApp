@@ -22,6 +22,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import es.dmoral.toasty.Toasty;
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
@@ -32,6 +36,7 @@ import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 public class SentRequestsFragment extends Fragment {
 
     String memberidA;
+    LinearLayout sentInvitesContainer;
 
     public SentRequestsFragment() {
         // Required empty public constructor
@@ -70,7 +75,8 @@ public class SentRequestsFragment extends Fragment {
     }
 
     private void handleSentInviteOnPost(String result) {
-        LinearLayout sentInvitesContainer = getActivity().findViewById(R.id.sentRequestLinearLayout);
+        sentInvitesContainer = getActivity().findViewById(R.id.sentRequestLinearLayout);
+
         try {
             JSONObject response = new JSONObject(result);
             Boolean success = response.getBoolean("success");
@@ -104,10 +110,10 @@ public class SentRequestsFragment extends Fragment {
 
         if (length == 0 ) {
             v = LayoutInflater.from(getContext())
-                    .inflate(R.layout.contact_row, null, false);
-            TextView tv = v.findViewById(R.id.friendsTextViewNickname);
+                    .inflate(R.layout.request_row, null, false);
+            TextView tv = v.findViewById(R.id.requestTextViewNickname);
             tv.setText(nickname);
-            tv = v.findViewById(R.id.friendsTextViewFullName);
+            tv = v.findViewById(R.id.requestTextViewFullName);
             tv.setText(fullName);
         } else {
             v = LayoutInflater.from(getContext())
@@ -119,6 +125,7 @@ public class SentRequestsFragment extends Fragment {
             tv.setText(fullName);
 
             Button b  = (Button) v.findViewById(R.id.sentRequestCancelInvite);
+
             b.setOnClickListener(view -> onCancelInvite(v, tvUsername.getText().toString()));
         }
 
@@ -126,8 +133,6 @@ public class SentRequestsFragment extends Fragment {
     }
 
     private void onCancelInvite(View view, String username_b) {
-        //delete using username.
-        Log.e("onCancelInvite: ", username_b);
 
         Uri uri = new Uri.Builder()
                 .scheme("https")
@@ -139,19 +144,33 @@ public class SentRequestsFragment extends Fragment {
 
         new SendPostAsyncTask.Builder(uri.toString(), searchJSON)
                 .onPostExecute(this::handleCancelOnPost)
-                //TODO: add onCancelled handler.
                 .onCancelled(this::handleErrorsInTask)
                 .build().execute();
 
     }
 
+
     private void handleCancelOnPost(String result) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.detach(SentRequestsFragment.this).attach(SentRequestsFragment.this).commit();
+        try {
+            JSONObject response = new JSONObject(result);
+            String username = response.getString("names");
+            try {
+                View views;
+                for (int i = 0; i < sentInvitesContainer.getChildCount() - 1; i++) {
+                       views = sentInvitesContainer.getChildAt(i);
+                       TextView tv = views.findViewById(R.id.sentRequestLinearLayoutTextViewNickname);
+                       String tvUsername = tv.getText().toString();
+                       if (tvUsername.equals(username)) {
+                           sentInvitesContainer.removeView(views);
+                       }
+               }
+            } catch (NullPointerException e) {
+                Log.e("handleCancelOnPost: ", "NullPointerException");
+            }
 
-        Log.d("Cancel: ", result);
-        Toasty.info(getActivity(), "Invitation Canceled.", Toast.LENGTH_SHORT, true).show();
-
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void handleErrorsInTask(String result) {

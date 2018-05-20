@@ -31,17 +31,18 @@ import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 public class ReceivedRequestsFragment extends Fragment {
 
     String memberidA;
+    LinearLayout receivedInvitesContainer;
+
     public ReceivedRequestsFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_received_requests, container, false);
         receivedInvites();
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_received_requests, container, false);
+        return v;
     }
 
     /**
@@ -75,8 +76,7 @@ public class ReceivedRequestsFragment extends Fragment {
      * @param result response from server.
      */
     private void handleReceivedInviteOnPost(String result) {
-//        Log.e("Received invite: ", result);
-        LinearLayout receivedInvitesContainer = getActivity().findViewById(R.id.receivedRequestLinearLayout);
+        receivedInvitesContainer = getActivity().findViewById(R.id.receivedRequestLinearLayout);
 
         try {
             JSONObject response = new JSONObject(result);
@@ -118,10 +118,10 @@ public class ReceivedRequestsFragment extends Fragment {
         View v;
         if ( length == 0) {
             v = LayoutInflater.from(getContext())
-                    .inflate(R.layout.contact_row, null, false);
-            TextView tv = v.findViewById(R.id.friendsTextViewNickname);
+                    .inflate(R.layout.request_row, null, false);
+            TextView tv = v.findViewById(R.id.requestTextViewNickname);
             tv.setText(nickname);
-            tv = v.findViewById(R.id.friendsTextViewFullName);
+            tv = v.findViewById(R.id.requestTextViewFullName);
             tv.setText(fullName);
 
 
@@ -177,8 +177,10 @@ public class ReceivedRequestsFragment extends Fragment {
     private void handleAcceptOnPost(String result) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.detach(ReceivedRequestsFragment.this).attach(ReceivedRequestsFragment.this).commit();
+
         Log.d("accept: ", result);
         Toasty.info(getActivity(), "Invitation Accepted!.", Toast.LENGTH_SHORT, true).show();
+
 
     }
 
@@ -196,6 +198,7 @@ public class ReceivedRequestsFragment extends Fragment {
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_connections_ops))
+
                 .build();
 
         JSONObject searchJSON = asJSONObject(memberidA, username_b, "decline");

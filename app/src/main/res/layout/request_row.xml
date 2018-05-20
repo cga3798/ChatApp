@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,7 +8,7 @@
 
 
     <TextView
-        android:id="@+id/friendsTextViewNickname"
+        android:id="@+id/requestTextViewNickname"
         android:layout_width="322dp"
         android:layout_height="19dp"
         android:layout_marginBottom="1dp"
@@ -18,14 +17,14 @@
         android:layout_marginTop="4dp"
         android:text="nickname"
         android:textSize="10sp"
-        app:layout_constraintBottom_toTopOf="@+id/friendsTextViewFullName"
+        app:layout_constraintBottom_toTopOf="@+id/requestTextViewFullName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
-        android:id="@+id/friendsTextViewFullName"
+        android:id="@+id/requestTextViewFullName"
         android:layout_width="345dp"
         android:layout_height="26dp"
         android:layout_marginEnd="44dp"
@@ -34,21 +33,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/friendsTextViewNickname" />
-
-    <ImageButton
-        android:id="@+id/friendImageButtonDelete"
-        android:layout_width="44dp"
-        android:layout_height="41dp"
-        android:layout_marginEnd="4dp"
-        android:background="@color/medium_grey"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.571"
-        app:srcCompat="@drawable/ic_clear" />
-
+        app:layout_constraintTop_toBottomOf="@+id/requestTextViewNickname" />
 
 
 </android.support.constraint.ConstraintLayout>

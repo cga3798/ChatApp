@@ -111,8 +111,6 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
             JSONObject resultsJSON = new JSONObject(result);
             boolean success = resultsJSON.getBoolean("success");
 
-            Log.d("Name: ", result);
-
             if (success) {
                 list = (ListView) getActivity().findViewById(R.id.searchFriendListView);
 
@@ -145,8 +143,9 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
                     }
                 }
 
-                adapter = new ListViewAdapter(getActivity());
+                adapter = new ListViewAdapter(getActivity(), "search");
                 list.setAdapter(adapter);
+
                 list.setOnItemClickListener((parent, view, position, id) -> onClickOnSearchResult(position));
 
             } else {
@@ -166,18 +165,15 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
      *
      * @param position the position of the item that is being clicked.
      */
-    private void onClickOnSearchResult(int position) {
+    public void onClickOnSearchResult(int position) {
         if (showInvite) {
             DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
-                        Log.d("YES: ", "clicked");
                         onSearchResults(memberIds.get(position), fullnames.get(position));
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
-                        //No button clicked
-                        Log.d("NO: ", "clicked");
                         break;
                 }
             };
