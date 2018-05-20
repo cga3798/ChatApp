@@ -40,9 +40,9 @@ public class ReceivedRequestsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_received_requests, container, false);
         receivedInvites();
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_received_requests, container, false);
+        return v;
     }
 
     /**
@@ -76,7 +76,6 @@ public class ReceivedRequestsFragment extends Fragment {
      * @param result response from server.
      */
     private void handleReceivedInviteOnPost(String result) {
-//        Log.e("Received invite: ", result);
         receivedInvitesContainer = getActivity().findViewById(R.id.receivedRequestLinearLayout);
 
         try {
@@ -88,14 +87,14 @@ public class ReceivedRequestsFragment extends Fragment {
                 int length = requestsSent.length();
                 if (length == 0) {
                     receivedInvitesContainer.addView(
-                            getReceivedView("", "There are no received invites", length, -1));
+                            getReceivedView("", "There are no received invites", length));
                 } else {
                     for (int i = 0; i < requestsSent.length(); i++) {
                         JSONObject request = requestsSent.getJSONObject(i);
                         receivedInvitesContainer.addView(
                                 getReceivedView(request.getString("username"),
                                         request.getString("firstname")
-                                                + " " + request.getString("lastname \n"), length, i));
+                                                + " " + request.getString("lastname"), length));
 
                     }
                 }
@@ -115,7 +114,7 @@ public class ReceivedRequestsFragment extends Fragment {
      *
      * @return A view to display the list of received connections.
      */
-    private View getReceivedView(String nickname, String fullName, int length, int position) {
+    private View getReceivedView(String nickname, String fullName, int length) {
         View v;
         if ( length == 0) {
             v = LayoutInflater.from(getContext())
@@ -136,7 +135,7 @@ public class ReceivedRequestsFragment extends Fragment {
             tv.setText(fullName);
 
             ImageView im = (ImageView) v.findViewById(R.id.receivedRequestAccept);
-            im.setOnClickListener(view -> onAcceptInvite(v, tvUsername.getText().toString(), position));
+            im.setOnClickListener(view -> onAcceptInvite(v, tvUsername.getText().toString()));
 
             im = (ImageView) v.findViewById(R.id.receivedRequestDecline);
             im.setOnClickListener(view -> onDeclineInvite(v, tvUsername.getText().toString()));
@@ -151,7 +150,7 @@ public class ReceivedRequestsFragment extends Fragment {
      * @param v current view.
      * @param username_b username of the person who sent an invite.
      */
-    private void onAcceptInvite(View v, String username_b, int position) {
+    private void onAcceptInvite(View v, String username_b) {
         Log.e("onAcceptInvite: ", username_b);
 
         Uri uri = new Uri.Builder()
@@ -176,9 +175,8 @@ public class ReceivedRequestsFragment extends Fragment {
      * @param result
      */
     private void handleAcceptOnPost(String result) {
-//        FragmentTransaction ft = getFragmentManager().beginTransaction();
-//        ft.detach(ReceivedRequestsFragment.this).attach(ReceivedRequestsFragment.this).commit();
-        receivedInvitesContainer.removeViewAt(0);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(ReceivedRequestsFragment.this).attach(ReceivedRequestsFragment.this).commit();
 
         Log.d("accept: ", result);
         Toasty.info(getActivity(), "Invitation Accepted!.", Toast.LENGTH_SHORT, true).show();
