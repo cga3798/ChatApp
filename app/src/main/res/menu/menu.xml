@@ -1,4 +1,4 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/view_chat_members" android:title="View Members" />
+    <item android:id="@+id/chat_options" android:title="Options" />
     <item android:id="@+id/place_holder" android:title="PlaceHolder" />
 </menu>

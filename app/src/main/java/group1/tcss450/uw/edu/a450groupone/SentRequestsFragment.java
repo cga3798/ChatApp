@@ -75,8 +75,12 @@ public class SentRequestsFragment extends Fragment {
                 int length = requestsSent.length();
                 if (length == 0) {
                     sentInvitesContainer.addView(
+                            getSentView( "", "", length));
+                    sentInvitesContainer.addView(
                             getSentView( "", "There are no sent invites", length));
                 } else {
+                    sentInvitesContainer.addView(
+                            getSentView( "", "", length));
                     for (int i = 0; i < requestsSent.length(); i++) {
                         JSONObject request = requestsSent.getJSONObject(i);
                         sentInvitesContainer.addView(

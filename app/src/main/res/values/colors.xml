@@ -4,6 +4,7 @@
     <color name="grey">#BEBEBE</color>
     <color name="medium_grey">#ffffff</color>
     <color name="green_success">#4BB543</color>
+    <color name="chat_option_text_color">#4C4C4C</color>
 
     <color name="colorPrimaryDark">#7D4F50</color>
     <color name="colorPrimary">#D34F73</color>
