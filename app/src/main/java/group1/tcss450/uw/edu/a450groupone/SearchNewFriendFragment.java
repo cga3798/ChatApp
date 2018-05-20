@@ -218,7 +218,7 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
                     }
                 } else {
                     for (int i=0; i < 1; i++)
-                        Toasty.info(getActivity(), messages.get(msg), Toast.LENGTH_LONG, true).show();
+                        Toasty.normal(getActivity(), messages.get(msg), Toast.LENGTH_LONG).show();
                 }
             } else {
                 // Not success.

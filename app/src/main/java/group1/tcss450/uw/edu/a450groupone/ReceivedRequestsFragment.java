@@ -179,7 +179,7 @@ public class ReceivedRequestsFragment extends Fragment {
         ft.detach(ReceivedRequestsFragment.this).attach(ReceivedRequestsFragment.this).commit();
 
         Log.d("accept: ", result);
-        Toasty.info(getActivity(), "Invitation Accepted!.", Toast.LENGTH_SHORT, true).show();
+        Toasty.normal(getActivity(), "Invitation Accepted!.", Toast.LENGTH_SHORT).show();
 
 
     }
@@ -221,7 +221,7 @@ public class ReceivedRequestsFragment extends Fragment {
         ft.detach(ReceivedRequestsFragment.this).attach(ReceivedRequestsFragment.this).commit();
 
         Log.d("Decline: ", result);
-        Toasty.info(getActivity(), "Invitation Declined.", Toast.LENGTH_SHORT, true).show();
+        Toasty.normal(getActivity(), "Invitation Declined.", Toast.LENGTH_SHORT).show();
 
     }
 

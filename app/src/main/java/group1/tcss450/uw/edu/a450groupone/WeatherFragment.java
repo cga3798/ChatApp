@@ -68,7 +68,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
         fab.setVisibility(View.GONE);
 
         //Bundle args = new Bundle();
-        Button b = v.findViewById(R.id.selectCityButton);
+        FloatingActionButton b = v.findViewById(R.id.selectCityFloatingButton);
         b.setOnClickListener(this::onSelectCClicked);
 
         SharedPreferences prefs = getActivity().getSharedPreferences(

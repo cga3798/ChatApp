@@ -2,41 +2,31 @@
 <resources>
 
     <color name="grey">#BEBEBE</color>
-    <color name="medium_grey">#FFFFFF</color>
-    <color name="colorPrimaryDark">#054a91</color>
-    <color name="colorPrimary">#3E7CB1</color>
-    <color name="colorAccent">#81A4CD</color>
+    <color name="medium_grey">#ffffff</color>
     <color name="green_success">#4BB543</color>
+
+    <color name="colorPrimaryDark">#7D4F50</color>
+    <color name="colorPrimary">#D34F73</color>
+    <color name="colorAccent">#AA998F</color>
 </resources>
 
-<!--<?xml version="1.0" encoding="utf-8"?>-->
-<!--<resources>-->
-    <!--<color name="colorPrimaryDark">#306BAC</color>-->
-    <!--<color name="colorPrimary">#6F9CEB</color>-->
-    <!--<color name="colorAccent">#98B9F2</color>-->
-<!--</resources>-->
+<!--<color name="colorPrimaryDark">#054a91</color>-->
+<!--<color name="colorPrimary">#3E7CB1</color>-->
+<!--<color name="colorAccent">#81A4CD</color>-->
 
 
-<!--<?xml version="1.0" encoding="utf-8"?>-->
-<!--<resources>-->
-    <!--<color name="colorPrimaryDark">#054A91</color>-->
-    <!--<color name="colorPrimary">#3E7CB1</color>-->
-    <!--<color name="colorAccent">#81A4CD</color>-->
-<!--</resources>-->
+<!--<color name="colorPrimaryDark">#3F7CAC</color>-->
+<!--<color name="colorPrimary">#95AFBA</color>-->
+<!--<color name="colorAccent">#BDC4A7</color>-->
 
+<!--<color name="colorPrimaryDark">#FE7F2D</color>-->
+<!--<color name="colorPrimary">#FCCA46</color>-->
+<!--<color name="colorAccent">#A1C181</color>-->
 
-<!--<?xml version="1.0" encoding="utf-8"?>-->
-<!--<resources>-->
-    <!--<color name="colorPrimary">#3AA7A3</color>-->
-    <!--<color name="colorPrimaryDark">#2CA6A4</color>-->
-    <!--<color name="colorAccent">#9DD9D2</color>-->
-<!--</resources>-->
+<!--<color name="colorPrimaryDark">#8A4F7D</color>-->
+<!--<color name="colorPrimary">#887880</color>-->
+<!--<color name="colorAccent">#88A096</color>-->
 
-
-
-<!--<?xml version="1.0" encoding="utf-8"?>-->
-<!--<resources>-->
-    <!--<color name="colorPrimary">#E91E63</color>-->
-    <!--<color name="colorPrimaryDark">#C2185B</color>-->
-    <!--<color name="colorAccent">#536dfe</color>-->
-<!--</resources>-->
+<!--<color name="colorPrimaryDark">#7D4F50</color>-->
+<!--<color name="colorPrimary">#D1BE9C</color>-->
+<!--<color name="colorAccent">#AA998F</color>-->
