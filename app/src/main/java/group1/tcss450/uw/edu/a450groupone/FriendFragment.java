@@ -112,7 +112,6 @@ public class FriendFragment extends Fragment {
         LinearLayout contactsListContainer = getActivity().findViewById(R.id.friendsLinearLayoutContactsList);
         Log.d("GOTCONTACTS", res);
 
-
         try {
             JSONObject response = new JSONObject(res);
             if (response.getBoolean("success")) {
@@ -178,7 +177,6 @@ public class FriendFragment extends Fragment {
     private View getContactView(String nickname, String fullName, int friendID, int length) {
         View v = LayoutInflater.from(getContext())
                 .inflate(R.layout.contact_row, null, false);
-
 
         TextView tvUsername = v.findViewById(R.id.friendsTextViewNickname);
         tvUsername.setText(nickname);

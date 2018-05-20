@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Layout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,11 +15,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -28,6 +28,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
+import group1.tcss450.uw.edu.a450groupone.utils.ListViewAdapter;
 import group1.tcss450.uw.edu.a450groupone.utils.ListenManager;
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
@@ -50,6 +53,7 @@ public class ChatFragment extends Fragment {
     private Toolbar mTopToolbar;
 
 
+
     public ChatFragment() {
         // Required empty public constructor
     }
@@ -58,7 +62,8 @@ public class ChatFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_chat, container, false);
+        View v = inflater.inflate(R.layout.fragment_chat2, container, false);
+
         prefs =
                 getActivity().getSharedPreferences(
                         getString(R.string.keys_shared_prefs),
@@ -74,30 +79,30 @@ public class ChatFragment extends Fragment {
 //        chatName.setAllCaps(true);
 //        chatName.setTextSize(20);
 //        chatName.setTextColor(getResources().getColor(R.color.colorAccent));
-        Button button = (Button) v.findViewById(R.id.view_member_list_button);
-        button.setOnClickListener(new View.OnClickListener() {
-
-                        public void onClick(View view) {
-
-                            TextView membersView = getActivity().findViewById(R.id.chatRoomMembers);
-                            if (membersView.getVisibility() == View.VISIBLE){
-                                membersView.setVisibility(View.GONE);
-                            }
-                            else {
-                                // call to populate users chat rooms
-                                membersView.setVisibility(View.VISIBLE);
-                                if (membersView.getText().length() > 0 ){
-
-                                }
-                                else {
-                                    try {
-                                        getMembers(v);
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-                        }});
+//        Button button = (Button) v.findViewById(R.id.view_member_list_button);
+//        button.setOnClickListener(new View.OnClickListener() {
+//
+//                        public void onClick(View view) {
+//
+//                            TextView membersView = getActivity().findViewById(R.id.chatRoomMembers);
+//                            if (membersView.getVisibility() == View.VISIBLE){
+//                                membersView.setVisibility(View.GONE);
+//                            }
+//                            else {
+//                                // call to populate users chat rooms
+//                                membersView.setVisibility(View.VISIBLE);
+//                                if (membersView.getText().length() > 0 ){
+//
+//                                }
+//                                else {
+//                                    try {
+//                                        getMembers(v);
+//                                    } catch (JSONException e) {
+//                                        e.printStackTrace();
+//                                    }
+//                                }
+//                            }
+//                        }});
 
         mTopToolbar = (Toolbar) v.findViewById(R.id.toolbar_top);
         TextView mTitle = (TextView) mTopToolbar.findViewById(R.id.toolbar_title);
@@ -125,7 +130,6 @@ public class ChatFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Log.e("Back: ", "click");
                 getActivity().finish();
                 return true;
             case R.id.view_chat_members:
@@ -148,17 +152,11 @@ public class ChatFragment extends Fragment {
     private void getMembers ( View v ) throws JSONException {
 
         prefs = getActivity().getSharedPreferences(
-
                 getString(R.string.keys_shared_prefs),
-
                 Context.MODE_PRIVATE);
-
         if (!prefs.contains(getString(R.string.keys_prefs_chatId))) {
-
             throw new IllegalStateException("No chatId in prefs!");
-
         }
-
         mChatId = prefs.getInt(getString(R.string.keys_prefs_chatId), 0);
         Uri retrieve = new Uri.Builder()
                 .scheme("https")
@@ -286,39 +284,80 @@ public class ChatFragment extends Fragment {
             }
 
             LinearLayout chatContainer = getActivity().findViewById(R.id.chat_layout_to_hold_chat_messages);
-            getActivity().runOnUiThread(() -> {
 
+            getActivity().runOnUiThread(() -> {
                 for (String msg : msgs) {
                     Log.e("Message: ", msg);
-                    LinearLayout.LayoutParams chatParams = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT);
+                    String msgUsername = msg.substring(0, msg.indexOf(":"));
+                    if (msgUsername.equals(mUsername)) {
+                        String myMessage = msg.substring(msg.lastIndexOf(":") + 1);
+                        Log.e("myUsername: ", msgUsername);
+                        Log.e("myMessage: ", myMessage);
 
-                    LinearLayout container = new LinearLayout(this.getActivity());
-                    container.setOrientation(LinearLayout.HORIZONTAL);
-                    String temp = msg.substring(0, msg.indexOf(":"));
-                    TextView text = new TextView(this.getActivity());
-                    text.append(msg);
-                    text.append(System.lineSeparator());
-                    container.addView(text);
-                    if (temp.equals(mUsername)) {
-                        chatParams.gravity = Gravity.RIGHT;
-//                        container.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                        chatContainer.addView(getChatView ("myMessages", mUsername, myMessage));
+
+                    } else {
+                        String theirMessage = msg.substring(msg.lastIndexOf(":") + 1);
+                        Log.e("theirUsername: ", msgUsername);
+                        Log.e("theirMessage: ", theirMessage);
+                        chatContainer.addView(getChatView ("theirMessages", msgUsername, theirMessage));
                     }
-                    else {
-                        chatParams.gravity = Gravity.LEFT;
-//                        container.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                    }
-                    container.setLayoutParams(chatParams);
-                    chatContainer.addView(container);
-                    EditText typeText = ((EditText) getView().findViewById(R.id.chatInputEditText));
-                    typeText.requestFocus();
 
 
+
+
+//                    LinearLayout.LayoutParams chatParams = new LinearLayout.LayoutParams(
+//                            LinearLayout.LayoutParams.WRAP_CONTENT,
+//                            LinearLayout.LayoutParams.WRAP_CONTENT);
+//
+//                    LinearLayout container = new LinearLayout(this.getActivity());
+//                    container.setOrientation(LinearLayout.HORIZONTAL);
+//                    String temp = msg.substring(0, msg.indexOf(":"));
+//                    TextView text = new TextView(this.getActivity());
+//                    text.append(msg);
+//                    text.append(System.lineSeparator());
+//                    container.addView(text);
+//
+//                    if (temp.equals(mUsername)) {
+//                        chatParams.gravity = Gravity.RIGHT;
+////                        container.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+//                    }
+//                    else {
+//                        chatParams.gravity = Gravity.LEFT;
+////                        container.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+//                    }
+//                    container.setLayoutParams(chatParams);
+//                    chatContainer.addView(container);
+//                    EditText typeText = ((EditText) getView().findViewById(R.id.chatInputEditText));
+//                    typeText.requestFocus();
                 }
             });
         }
     }
+
+    private View getChatView(String msgSource, String msgUsername, String message) {
+        View v;
+
+        if (msgSource.equals("myMessages")) {
+
+            v = LayoutInflater.from(getContext())
+                    .inflate(R.layout.item_message_sent, null, false);
+
+            TextView tv = v.findViewById(R.id.text_message_body);
+            tv.setText(message);
+        } else {
+
+            v = LayoutInflater.from(getContext())
+                    .inflate(R.layout.item_message_received, null, false);
+
+            TextView tv = v.findViewById(R.id.text_message_body);
+            tv.setText(message);
+            tv = v.findViewById(R.id.text_message_name);
+            tv.setText(msgUsername);
+        }
+        return v;
+    }
+
 
     @Override
     public void onStart() {

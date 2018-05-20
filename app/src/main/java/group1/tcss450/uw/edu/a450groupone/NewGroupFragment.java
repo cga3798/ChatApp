@@ -64,17 +64,17 @@ public class NewGroupFragment extends Fragment {
 
     private void displayContacts(String contacts) {
         contactsListView = new ArrayList<>();
+
         try {
             contactsList = new JSONArray(contacts);
             for (int i = 0; i < contactsList.length(); i++) {
-
                 JSONObject friend = contactsList.getJSONObject(i);
                 String info = friend.getString("username") + "\n" +
                     friend.getString("firstname") + " "
                     + friend.getString("lastname");
                 contactsListView.add(info);
-
             }
+
             adapter = new ListViewAdapter(getActivity(), "newGroup");
             list.setAdapter(adapter);
 

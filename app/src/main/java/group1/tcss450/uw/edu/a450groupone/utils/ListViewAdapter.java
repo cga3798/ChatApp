@@ -38,12 +38,13 @@ public class ListViewAdapter extends BaseAdapter {
             this.arraylist.addAll(SearchNewFriendFragment.connectionResultList);
 
         } else if (fragment.equals("newGroup")) {
-            this.arraylist.addAll(NewGroupFragment.contactsListView);
 
+            this.arraylist.addAll(NewGroupFragment.contactsListView);
             positionArray = new ArrayList<Boolean>(arraylist.size());
             for ( int i =0; i<arraylist.size(); i++){
                 positionArray.add(false);
             }
+
         }
     }
 
