@@ -5,8 +5,13 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -39,6 +44,9 @@ public class ChatFragment extends Fragment {
     private TextView mOutputTextView;
     private ListenManager mListenManager;
     private SharedPreferences prefs;
+    private Toolbar mTopToolbar;
+
+
     public ChatFragment() {
         // Required empty public constructor
     }
@@ -59,11 +67,11 @@ public class ChatFragment extends Fragment {
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         Log.wtf("CHAT ROOM", "" + prefs.getInt("chatId", R.string.keys_prefs_chatId));
 
-        TextView chatName = (TextView) v.findViewById(R.id.chatNameOfChatRoomView);
-        chatName.setText(String.valueOf(prefs.getString(getString(R.string.keys_prefs_chatName), "Chat Room")));
-        chatName.setAllCaps(true);
-        chatName.setTextSize(20);
-        chatName.setTextColor(getResources().getColor(R.color.colorAccent));
+//        TextView chatName = (TextView) v.findViewById(R.id.chatNameOfChatRoomView);
+//        chatName.setText(String.valueOf(prefs.getString(getString(R.string.keys_prefs_chatName), "Chat Room")));
+//        chatName.setAllCaps(true);
+//        chatName.setTextSize(20);
+//        chatName.setTextColor(getResources().getColor(R.color.colorAccent));
         Button button = (Button) v.findViewById(R.id.view_member_list_button);
         button.setOnClickListener(new View.OnClickListener() {
 
@@ -89,8 +97,24 @@ public class ChatFragment extends Fragment {
                             }
                         }});
 
+        mTopToolbar = (Toolbar) v.findViewById(R.id.toolbar_top);
+        TextView mTitle = (TextView) mTopToolbar.findViewById(R.id.toolbar_title);
+        mTitle.setText(String.valueOf(prefs.getString(getString(R.string.keys_prefs_chatName), "Chat Room")));
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setSupportActionBar(mTopToolbar);
+        activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+
+        setHasOptionsMenu(true);
 
         return v;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     /**
@@ -262,10 +286,7 @@ public class ChatFragment extends Fragment {
                     mOutputTextView.append(System.lineSeparator());
                 }
             });
-
         }
-
-
     }
 
     @Override

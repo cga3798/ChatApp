@@ -3,30 +3,19 @@ package group1.tcss450.uw.edu.a450groupone;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import es.dmoral.toasty.Toasty;
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
 
@@ -125,7 +114,6 @@ public class SentRequestsFragment extends Fragment {
             tv.setText(fullName);
 
             Button b  = (Button) v.findViewById(R.id.sentRequestCancelInvite);
-
             b.setOnClickListener(view -> onCancelInvite(v, tvUsername.getText().toString()));
         }
 

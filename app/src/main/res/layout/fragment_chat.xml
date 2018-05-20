@@ -7,7 +7,51 @@
     android:layout_marginBottom="?attr/actionBarSize"
     tools:context=".ChatFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!--<android.support.v7.widget.Toolbar-->
+        <!--android:id="@+id/chat_toolbar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="?attr/actionBarSize"-->
+        <!--android:background="@color/colorPrimary"-->
+        <!--app:titleTextColor="@color/medium_grey"-->
+        <!--android:elevation="4dp">-->
+
+    <!--</android.support.v7.widget.Toolbar>-->
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_top"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:minHeight="?attr/actionBarSize"
+        android:background="@color/colorPrimary">
+
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Toolbar Title"
+            android:textColor="@color/medium_grey"
+            android:textSize="24sp"
+            tools:layout_editor_absoluteX="167dp"
+            tools:layout_editor_absoluteY="18dp" />
+
+    </android.support.v7.widget.Toolbar>
+
+
+    <!--<TextView-->
+        <!--android:id="@+id/chatNameOfChatRoomView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="84dp"-->
+        <!--android:text="text"-->
+        <!--android:textColor="@color/medium_grey"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintHorizontal_bias="0.498"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent" />-->
 
     <ImageButton
         android:id="@+id/chatSendButton"
@@ -32,26 +76,17 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/chatNameOfChatRoomView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="163dp"
-        android:layout_marginStart="163dp"
-        android:layout_marginTop="8dp"
-        android:text="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Button
         android:id="@+id/view_member_list_button"
         style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
         android:layout_width="128dp"
         android:layout_height="40dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="64dp"
         android:text="View Members"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
