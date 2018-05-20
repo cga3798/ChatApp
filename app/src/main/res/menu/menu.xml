@@ -1,5 +1,4 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/exit" android:title="Exit" android:icon="@drawable/ic_menu_person" />
-    <item android:id="@+id/refresh" android:title="Refresh" android:icon="@drawable/ic_check" />
-
+    <item android:id="@+id/view_chat_members" android:title="View Members" />
+    <item android:id="@+id/place_holder" android:title="PlaceHolder" />
 </menu>

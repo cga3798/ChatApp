@@ -22,7 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:minHeight="?attr/actionBarSize"
-        android:background="@color/colorPrimary">
+        android:background="@color/colorPrimary"
+        app:theme="@style/ToolbarStyle" >
 
 
         <TextView
@@ -128,8 +129,7 @@
         app:layout_constraintBottom_toTopOf="@+id/chatInputEditText"
         app:layout_constraintEnd_toStartOf="@+id/scrollViewMembers"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chatNameOfChatRoomView">
+        app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
             android:id="@+id/chat_layout_to_hold_chat_messages"

@@ -107,8 +107,11 @@ public class ChatFragment extends Fragment {
         activity.setSupportActionBar(mTopToolbar);
         activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         setHasOptionsMenu(true);
+
         return v;
     }
 
@@ -116,6 +119,25 @@ public class ChatFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Log.e("Back: ", "click");
+                getActivity().finish();
+                return true;
+            case R.id.view_chat_members:
+                Log.e("view members: ", "clicked");
+                return true;
+            case R.id.place_holder:
+                Log.e("place holder: ", "clicked");
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /**
@@ -138,39 +160,24 @@ public class ChatFragment extends Fragment {
         }
 
         mChatId = prefs.getInt(getString(R.string.keys_prefs_chatId), 0);
-
         Uri retrieve = new Uri.Builder()
-
                 .scheme("https")
-
                 .appendPath(getString(R.string.ep_base_url))
-
                 .appendPath(getString(R.string.ep_get_chatMembers_list))
-
                 .build();
 
         JSONObject body = new JSONObject();
-
-        // provide current user id
-
         try {
-
             body.put("chatId", mChatId);
 
         } catch (JSONException e) {
-
             e.printStackTrace();
 
         }
 
         new SendPostAsyncTask.Builder(retrieve.toString(), body)
-
                 .onPostExecute(this::populateMembers)
-
-                //TODO: add onCancelled handler.
-
                 .onCancelled(this::handleErrorsInTask)
-
                 .build().execute();
 
     }
@@ -189,9 +196,7 @@ public class ChatFragment extends Fragment {
                 for (int i = 0; i < memberList.length(); i++) {
                     JSONObject member = memberList.getJSONObject(i);
                     membersView.append("\n" + member.getString("name"));
-
                 }
-
             }
 
         } catch (JSONException e) {
@@ -263,11 +268,10 @@ public class ChatFragment extends Fragment {
 
     private void publishProgress(JSONObject messages) {
         final String[] msgs;
+
         if(messages.has(getString(R.string.keys_json_messages))) {
             try {
-
                 JSONArray jMessages = messages.getJSONArray(getString(R.string.keys_json_messages));
-
                 msgs = new String[jMessages.length()];
                 for (int i = 0; i < jMessages.length(); i++) {
 
@@ -280,13 +284,15 @@ public class ChatFragment extends Fragment {
                 e.printStackTrace();
                 return;
             }
+
             LinearLayout chatContainer = getActivity().findViewById(R.id.chat_layout_to_hold_chat_messages);
             getActivity().runOnUiThread(() -> {
+
                 for (String msg : msgs) {
+                    Log.e("Message: ", msg);
                     LinearLayout.LayoutParams chatParams = new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT);
-
 
                     LinearLayout container = new LinearLayout(this.getActivity());
                     container.setOrientation(LinearLayout.HORIZONTAL);
@@ -297,16 +303,18 @@ public class ChatFragment extends Fragment {
                     container.addView(text);
                     if (temp.equals(mUsername)) {
                         chatParams.gravity = Gravity.RIGHT;
-                        container.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+//                        container.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                     }
                     else {
                         chatParams.gravity = Gravity.LEFT;
-                        container.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+//                        container.setBackgroundColor(getResources().getColor(R.color.colorAccent));
                     }
                     container.setLayoutParams(chatParams);
                     chatContainer.addView(container);
                     EditText typeText = ((EditText) getView().findViewById(R.id.chatInputEditText));
                     typeText.requestFocus();
+
+
                 }
             });
         }

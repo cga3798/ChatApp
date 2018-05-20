@@ -2,6 +2,7 @@ package group1.tcss450.uw.edu.a450groupone;
 
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -22,6 +23,7 @@ import java.util.List;
  *
  */
 public class ConnectionTabsFragment extends Fragment {
+    View view;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +33,7 @@ public class ConnectionTabsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_connection_tabs,container, false);
+        view = inflater.inflate(R.layout.fragment_connection_tabs,container, false);
         // Setting ViewPager for each Tabs
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         setupViewPager(viewPager);
@@ -52,6 +54,36 @@ public class ConnectionTabsFragment extends Fragment {
         adapter.addFragment(new SearchNewFriendFragment(), "Search");
         adapter.addFragment(new ReceivedRequestsFragment(), "Received Invites");
         adapter.addFragment(new SentRequestsFragment(), "Sent Invites");
+//        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            FloatingActionButton fab = view.findViewById(R.id.fab);
+//
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//            }
+//            @Override
+//            public void onPageSelected(int position) {
+//                switch (position) {
+//                    case 0:
+//                        fab.hide();
+//                        break;
+//                    case 1:
+//                        fab.hide();
+//                        break;
+//                    case 3:
+//                        fab.hide();
+//                        break;
+//                    default:
+//                        fab.hide();
+//                        break;
+//                }
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//
+//            }
+//        });
 
         viewPager.setAdapter(adapter);
     }

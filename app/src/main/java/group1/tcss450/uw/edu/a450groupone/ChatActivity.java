@@ -50,8 +50,6 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnCh
     }
 
 
-
-
     // check if user has existing chat with friend or makes new one in backend.
     private void checkFriendHasExistingChat() {
         int friendId = getIntent().getIntExtra(getString(R.string.keys_friend_id), 0);
