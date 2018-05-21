@@ -15,6 +15,7 @@
 
     <string name="keys_friend_id">friendId</string>
     <string name="keys_friend_full_name">friendFullName</string>
+    <string name="keys_friend_nickname">friendNickname</string>
 
 
     <string name="keys_prefs_stay_logged_in">loggedIn</string>
@@ -56,6 +57,8 @@
     <string name="keys_fragment_connection_tab">ConnectionTabFragmentTag</string>
     <string name="keys_open_chat_source">sourceFragment</string>
     <string name="keys_sp_on">true</string>
+    <string name="keys_group_chat_name">groupchatName</string>
+    <string name="keys_group_chat_member_ids">groupchatMembers</string>
 
 
 
