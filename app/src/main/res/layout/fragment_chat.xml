@@ -124,7 +124,6 @@
         android:clipToPadding="true"
         android:fillViewport="true"
         android:focusableInTouchMode="true"
-        android:focusedByDefault="true"
         android:gravity="bottom"
         app:layout_constraintBottom_toTopOf="@+id/chatInputEditText"
         app:layout_constraintEnd_toStartOf="@+id/scrollViewMembers"

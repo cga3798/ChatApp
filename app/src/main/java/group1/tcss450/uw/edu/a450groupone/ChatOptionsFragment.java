@@ -46,12 +46,12 @@ public class ChatOptionsFragment extends Fragment {
         this.inflater = inflater;
         v = inflater.inflate(R.layout.fragment_chat_options, container, false);
 
-        Button button = v.findViewById(R.id.chatOptionLeaveGroup);
+        Button button = (Button) v.findViewById(R.id.chatOptionLeaveGroup);
         button.setOnClickListener(view -> {
 
         });
 
-        button = v.findViewById(R.id.chatOptionViewMembers);
+        button = (Button) v.findViewById(R.id.chatOptionViewMembers);
         button.setOnClickListener(view -> {
             try {
                 getMembers(v);
@@ -107,10 +107,10 @@ public class ChatOptionsFragment extends Fragment {
                 }
             }
 
-            Button button = v.findViewById(R.id.chatOptionLeaveGroup);
+            Button button = (Button) v.findViewById(R.id.chatOptionLeaveGroup);
             button.setVisibility(View.GONE);
-            LinearLayout linearLayout = v.findViewById(R.id.chatOptionLinearLayout);
-            button = v.findViewById(R.id.chatOptionViewMembers);
+            LinearLayout linearLayout = (LinearLayout) v.findViewById(R.id.chatOptionLinearLayout);
+            button = (Button) v.findViewById(R.id.chatOptionViewMembers);
             button.setText("Group members ");
             button.setClickable(false);
             for (int i = 0; i < members.size(); i++) {

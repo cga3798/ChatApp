@@ -53,7 +53,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         ViewHolder(View itemView) {
             super(itemView);
-            myTextView = itemView.findViewById(R.id.cityName);
+            myTextView = (TextView) itemView.findViewById(R.id.cityName);
             itemView.setOnClickListener(this);
         }
 

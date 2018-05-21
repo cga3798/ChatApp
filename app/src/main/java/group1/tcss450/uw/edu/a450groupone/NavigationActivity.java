@@ -95,16 +95,30 @@ public class NavigationActivity extends AppCompatActivity implements
         homeFragment = new HomeFragment();
         if(savedInstanceState == null) {
             if (findViewById(R.id.navigationFragmentContainer) != null) {
-                getSupportFragmentManager().beginTransaction().add(R.id.navigationFragmentContainer,
-                       homeFragment
+
+                String friendFragment = getIntent().getStringExtra("friendFragment");
+
+                // If friendFragment is defined, then this activity was launched with a fragment selection
+                if (friendFragment != null) {
+                    Log.d("NavigationActivity", "load friend fragment");
+                    // Here we can decide what do to -- perhaps load other parameters from the intent extras such as IDs, etc
+                    if (friendFragment.equals("FriendFragment")) {
+                        loadFragment(new ReceivedRequestsFragment(), getString(R.string.keys_fragment_received));
+                    }
+                }
+                else {
+                    getSupportFragmentManager().beginTransaction().add(R.id.navigationFragmentContainer,
+                            homeFragment
                     ).commit();
+                }
+
             }
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
             loadFragment(new FriendFragment(), getString(R.string.keys_fragment_friends));
         });
@@ -124,13 +138,13 @@ public class NavigationActivity extends AppCompatActivity implements
         SharedPreferences prefs = getSharedPreferences(
                 getString(R.string.keys_shared_prefs),
                 Context.MODE_PRIVATE);
-        TextView tv = navHeader.findViewById(R.id.navHeaderFullName);
+        TextView tv = (TextView) navHeader.findViewById(R.id.navHeaderFullName);
         tv.setText(prefs.getString(getString(R.string.keys_prefs_first_name), "")
                 .concat(" ")
                 .concat(prefs.getString(getString(R.string.keys_prefs_last_name), "")));
-        tv = navHeader.findViewById(R.id.navHeaderUsername);
+        tv = (TextView) navHeader.findViewById(R.id.navHeaderUsername);
         tv.setText(prefs.getString(getString(R.string.keys_prefs_username), ""));
-        tv = navHeader.findViewById(R.id.navHeaderEmail);
+        tv = (TextView) navHeader.findViewById(R.id.navHeaderEmail);
         tv.setText(prefs.getString(getString(R.string.keys_prefs_email), ""));
 
 
@@ -145,6 +159,43 @@ public class NavigationActivity extends AppCompatActivity implements
                             , Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_LOCATIONS);
         }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("NavigationActivity", "onPause()");
+        SharedPreferences sharedPreferences =
+                getSharedPreferences(getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        //if (sharedPreferences.getBoolean(getString(R.string.keys_sp_on), false)) {
+        //stop the service from the foreground
+        MyIntentService.stopServiceAlarm(this);
+        Log.d("NavigationActivity", "onPause() - service stopped.");
+
+        //restart but in the background
+        MyIntentService.startServiceAlarm(this, false);
+        Log.d("NavigationActivity", "onPause() - service restarted, check notification.");
+
+        //}
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("NavigationActivity", "onResume()");
+        SharedPreferences sharedPreferences =
+                getSharedPreferences(getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        // Check to see if the service should aleardy be running
+        //if (sharedPreferences.getBoolean(getString(R.string.keys_sp_on), false)) {
+        //stop the service from the background
+        MyIntentService.stopServiceAlarm(this);
+        //restart but in the foreground
+        MyIntentService.startServiceAlarm(this, true);
+        //}
 
     }
 

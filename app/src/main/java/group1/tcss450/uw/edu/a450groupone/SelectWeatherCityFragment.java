@@ -66,17 +66,17 @@ public class SelectWeatherCityFragment extends Fragment implements RecyclerViewA
             }
 
             // set up the RecyclerView
-            RecyclerView recyclerView = v.findViewById(R.id.rvCities);
+            RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.rvCities);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             adapter = new RecyclerViewAdapter(getContext(), cityNames);
             adapter.setClickListener(this::onItemClick);
             recyclerView.setAdapter(adapter);
 
-            searchView = v.findViewById(R.id.searchBox);
+            searchView = (SearchView) v.findViewById(R.id.searchBox);
             searchView.setActivated(true);
             searchView.setOnQueryTextListener(this);
 
-            ImageButton b = v.findViewById(R.id.mapButton);
+            ImageButton b = (ImageButton) v.findViewById(R.id.mapButton);
             b.setOnClickListener(this::openMap);
 
 

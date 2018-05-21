@@ -33,7 +33,7 @@ public class RegisterFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v =  inflater.inflate(R.layout.fragment_register, container, false);
 
-        Button b = v.findViewById(R.id.registerButtonRegister);
+        Button b = (Button) v.findViewById(R.id.registerButtonRegister);
         b.setOnClickListener(view -> {verifyFieldsInfoAndSend(v);});
 
         return v;
@@ -47,12 +47,12 @@ public class RegisterFragment extends Fragment {
      */
     public void verifyFieldsInfoAndSend(View v) {
 
-        EditText firstEt = v.findViewById(R.id.registerEditTextFirst);
-        EditText lastEt = v.findViewById(R.id.registerEditTextLast);
-        EditText emailEt = v.findViewById(R.id.registerEditTextEmail);
-        EditText usernameET = v.findViewById(R.id.registerEditTextNickname);
-        EditText passEt = v.findViewById(R.id.registerEditTextPassword);
-        EditText confirmPassEt = v.findViewById(R.id.registerEditTextConfirmPass);
+        EditText firstEt = (EditText) v.findViewById(R.id.registerEditTextFirst);
+        EditText lastEt = (EditText) v.findViewById(R.id.registerEditTextLast);
+        EditText emailEt = (EditText) v.findViewById(R.id.registerEditTextEmail);
+        EditText usernameET = (EditText) v.findViewById(R.id.registerEditTextNickname);
+        EditText passEt = (EditText) v.findViewById(R.id.registerEditTextPassword);
+        EditText confirmPassEt = (EditText) v.findViewById(R.id.registerEditTextConfirmPass);
 
 
         // Check empty fields, matching, length reqs. TODO: verify email doesn't have account already

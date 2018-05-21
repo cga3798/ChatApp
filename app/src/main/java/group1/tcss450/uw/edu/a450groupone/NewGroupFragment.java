@@ -45,7 +45,7 @@ public class NewGroupFragment extends Fragment {
                              Bundle savedInstanceState) {
         this.inflater = inflater;
         View v = inflater.inflate(R.layout.fragment_new_group, container, false);
-        list = v.findViewById(R.id.newGroupListView);
+        list = (ListView) v.findViewById(R.id.newGroupListView);
         //store list of friends in shared preferences
         SharedPreferences prefs =
                 this.getActivity().getSharedPreferences(
@@ -54,10 +54,10 @@ public class NewGroupFragment extends Fragment {
         String contacts = prefs.getString("contacts_list", "");
         displayContacts(contacts);
 
-        Button button = v.findViewById(R.id.newGroupButtonDone);
+        Button button = (Button) v.findViewById(R.id.newGroupButtonDone);
         button.setOnClickListener(view -> onCreateGroup());
 
-        button = v.findViewById(R.id.newGroupButtonCancel);
+        button = (Button) v.findViewById(R.id.newGroupButtonCancel);
         button.setOnClickListener(view -> onCancelCreateGroup());
         return v;
     }

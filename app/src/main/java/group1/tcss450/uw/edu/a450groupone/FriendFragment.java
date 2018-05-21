@@ -49,7 +49,7 @@ public class FriendFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_friend, container, false);
 
-        FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
 
         // make request for contacts
@@ -60,7 +60,7 @@ public class FriendFragment extends Fragment {
             e.printStackTrace();
         }
 
-        FloatingActionButton floatingbutton = v.findViewById(R.id.friendButtonNewGroup);
+        FloatingActionButton floatingbutton = (FloatingActionButton) v.findViewById(R.id.friendButtonNewGroup);
         floatingbutton.setOnClickListener(view -> {
             FragmentTransaction transaction = this.getActivity().getSupportFragmentManager()
                     .beginTransaction()
@@ -108,7 +108,7 @@ public class FriendFragment extends Fragment {
      * @param res
      */
     private void populateContacts(String res) {
-        LinearLayout contactsListContainer = getActivity().findViewById(R.id.friendsLinearLayoutContactsList);
+        LinearLayout contactsListContainer = (LinearLayout) getActivity().findViewById(R.id.friendsLinearLayoutContactsList);
         Log.d("GOTCONTACTS", res);
 
         try {
@@ -183,11 +183,11 @@ public class FriendFragment extends Fragment {
         View v = LayoutInflater.from(getContext())
                 .inflate(R.layout.contact_row, null, false);
 
-        TextView tvUsername = v.findViewById(R.id.friendsTextViewNickname);
+        TextView tvUsername = (TextView) v.findViewById(R.id.friendsTextViewNickname);
         tvUsername.setText(nickname);
-        TextView tv = v.findViewById(R.id.friendsTextViewFullName);
+        TextView tv = (TextView) v.findViewById(R.id.friendsTextViewFullName);
         tv.setText(fullName);
-        ImageButton im = v.findViewById(R.id.friendImageButtonDelete);
+        ImageButton im = (ImageButton) v.findViewById(R.id.friendImageButtonDelete);
 
 
         if (length != 0) {

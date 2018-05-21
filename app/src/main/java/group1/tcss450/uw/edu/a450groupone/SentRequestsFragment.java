@@ -64,7 +64,7 @@ public class SentRequestsFragment extends Fragment {
     }
 
     private void handleSentInviteOnPost(String result) {
-        sentInvitesContainer = getActivity().findViewById(R.id.sentRequestLinearLayout);
+        sentInvitesContainer = (LinearLayout) getActivity().findViewById(R.id.sentRequestLinearLayout);
 
         try {
             JSONObject response = new JSONObject(result);
@@ -104,17 +104,17 @@ public class SentRequestsFragment extends Fragment {
         if (length == 0 ) {
             v = LayoutInflater.from(getContext())
                     .inflate(R.layout.request_row, null, false);
-            TextView tv = v.findViewById(R.id.requestTextViewNickname);
+            TextView tv = (TextView) v.findViewById(R.id.requestTextViewNickname);
             tv.setText(nickname);
-            tv = v.findViewById(R.id.requestTextViewFullName);
+            tv = (TextView) v.findViewById(R.id.requestTextViewFullName);
             tv.setText(fullName);
         } else {
             v = LayoutInflater.from(getContext())
                     .inflate(R.layout.sent_request_row, null, false);
 
-            TextView tvUsername = v.findViewById(R.id.sentRequestLinearLayoutTextViewNickname);
+            TextView tvUsername = (TextView) v.findViewById(R.id.sentRequestLinearLayoutTextViewNickname);
             tvUsername.setText(nickname);
-            TextView tv = v.findViewById(R.id.sentRequestLinearLayoutTextViewFullName);
+            TextView tv = (TextView) v.findViewById(R.id.sentRequestLinearLayoutTextViewFullName);
             tv.setText(fullName);
 
             Button b  = (Button) v.findViewById(R.id.sentRequestCancelInvite);
@@ -150,7 +150,7 @@ public class SentRequestsFragment extends Fragment {
                 View views;
                 for (int i = 0; i < sentInvitesContainer.getChildCount() - 1; i++) {
                        views = sentInvitesContainer.getChildAt(i);
-                       TextView tv = views.findViewById(R.id.sentRequestLinearLayoutTextViewNickname);
+                       TextView tv = (TextView) views.findViewById(R.id.sentRequestLinearLayoutTextViewNickname);
                        String tvUsername = tv.getText().toString();
                        if (tvUsername.equals(username)) {
                            sentInvitesContainer.removeView(views);

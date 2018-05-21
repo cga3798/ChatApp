@@ -51,7 +51,7 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
                         Context.MODE_PRIVATE);
         memberidA =  String.valueOf(prefs.getInt(getString(R.string.keys_prefs_id), -1));
 
-        searchView = v.findViewById(R.id.searchFriendSearchView);
+        searchView = (SearchView) v.findViewById(R.id.searchFriendSearchView);
         searchView.setActivated(true);
         searchView.setOnQueryTextListener(this);
 

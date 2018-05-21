@@ -26,6 +26,7 @@
     <string name="keys_current_temp">currentTemp</string>
     <string name="keys_fragment_chat">chatFragmentTag</string>
     <string name="keys_fragment_friends">friendsFragmentTag</string>
+    <string name="keys_fragment_received">friendsFragmentreceived</string>
     <string name="keys_fragment_home">homeFragmentTag</string>
     <string name="keys_fragment_navigation">navigationFragmentTag</string>
     <string name="recycler_fragment_chat">recyclerFragmentTag</string>
@@ -59,7 +60,8 @@
     <string name="keys_sp_on">true</string>
     <string name="keys_group_chat_name">groupchatName</string>
     <string name="keys_group_chat_member_ids">groupchatMembers</string>
-
+    <string name="keys_extra_results">results</string>
+    <string name="keys_is_foreground">FOREGROUND</string>
 
 
 

@@ -210,7 +210,7 @@ public class ChatFragment extends Fragment {
                 return;
             }
 
-            LinearLayout chatContainer = getActivity().findViewById(R.id.chat_layout_to_hold_chat_messages);
+            LinearLayout chatContainer = (LinearLayout) getActivity().findViewById(R.id.chat_layout_to_hold_chat_messages);
 
             getActivity().runOnUiThread(() -> {
                 for (String msg : msgs) {
@@ -263,14 +263,14 @@ public class ChatFragment extends Fragment {
             v = LayoutInflater.from(getContext())
                     .inflate(R.layout.item_message_sent, null, false);
 
-            TextView tv = v.findViewById(R.id.text_message_body);
+            TextView tv = (TextView) v.findViewById(R.id.text_message_body);
             tv.setText(message);
         } else {
 
             v = LayoutInflater.from(getContext())
                     .inflate(R.layout.item_message_received, null, false);
 
-            TextView tv = v.findViewById(R.id.text_message_body);
+            TextView tv = (TextView) v.findViewById(R.id.text_message_body);
             tv.setText(message);
 //            tv = v.findViewById(R.id.text_message_name);
 //            tv.setText(msgUsername);

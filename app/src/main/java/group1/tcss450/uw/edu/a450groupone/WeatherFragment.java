@@ -64,11 +64,11 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_weather, container, false);
 
-        FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
 
         //Bundle args = new Bundle();
-        FloatingActionButton b = v.findViewById(R.id.selectCityFloatingButton);
+        FloatingActionButton b = (FloatingActionButton) v.findViewById(R.id.selectCityFloatingButton);
         b.setOnClickListener(this::onSelectCClicked);
 
         SharedPreferences prefs = getActivity().getSharedPreferences(
@@ -213,13 +213,13 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
     private void makeTopWeatherData(View v) {
         Typeface weatherFont = Typeface.createFromAsset(getContext().getAssets(), Weather.FONT_PATH);
 
-        TextView city = v.findViewById(R.id.weatherCityTextview);
-        TextView weather = v.findViewById(R.id.weatherDesc);
-        TextView currentTemp = v.findViewById(R.id.weatherTemp);
-        TextView weatherIcon = v.findViewById(R.id.weatherIcon);
+        TextView city = (TextView) v.findViewById(R.id.weatherCityTextview);
+        TextView weather = (TextView) v.findViewById(R.id.weatherDesc);
+        TextView currentTemp = (TextView) v.findViewById(R.id.weatherTemp);
+        TextView weatherIcon = (TextView) v.findViewById(R.id.weatherIcon);
         weatherIcon.setTypeface(weatherFont);
-        TextView today = v.findViewById(R.id.weatherToday);
-        TextView maxmin = v.findViewById(R.id.weatherTodayMaxMinTemp);
+        TextView today = (TextView) v.findViewById(R.id.weatherToday);
+        TextView maxmin = (TextView) v.findViewById(R.id.weatherTodayMaxMinTemp);
 
         city.setText(data.getString(Weather.K_CITY));
         weather.setText(data.getString(Weather.K_WEATHER_DESC));
@@ -232,7 +232,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
     }
 
     private void makeHourlyScrollView(View v) {
-        LinearLayout hourlyBar = v.findViewById(R.id.weatherHourlyBar);
+        LinearLayout hourlyBar = (LinearLayout) v.findViewById(R.id.weatherHourlyBar);
         JSONArray hourlyList = null;
         try {
             hourlyList = new JSONArray(data.getString(Weather.K_HOURLY_DAILY_LIST));
@@ -264,10 +264,10 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
         Typeface weatherFont = Typeface.createFromAsset(getContext().getAssets(), Weather.FONT_PATH);
 
         // fill data
-        TextView tv = v.findViewById(R.id.weatherTextViewTime);
+        TextView tv = (TextView) v.findViewById(R.id.weatherTextViewTime);
 
         tv.setText(sdf.format(new Date(hourJson.getLong("dt") * 1000)));
-        tv = v.findViewById(R.id.weatherTextViewIcon);
+        tv = (TextView) v.findViewById(R.id.weatherTextViewIcon);
         tv.setTypeface(weatherFont);
         tv.setText(Html.fromHtml(
                 Weather.setWeatherIcon(
@@ -275,14 +275,14 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
                         data.getLong(Weather.K_SUNRISE_LONG),
                         data.getLong(Weather.K_SUNSET_LONG))
         ));
-        tv = v.findViewById(R.id.weatherTextViewTemp);
+        tv = (TextView) v.findViewById(R.id.weatherTextViewTemp);
         tv.setText(String.valueOf(main.getInt("temp")));
 
         return v;
     }
 
     private void makeDailyScrollView(View v) {
-        TableLayout table = v.findViewById(R.id.weatherDailyTable);
+        TableLayout table = (TableLayout) v.findViewById(R.id.weatherDailyTable);
         ArrayList<Bundle> days = new ArrayList<>();
 
         try {
@@ -369,25 +369,25 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
         Typeface weatherFont = Typeface.createFromAsset(getContext().getAssets(), Weather.FONT_PATH);
 
         // fill values
-        TextView cell = v.findViewById(R.id.weatherTextViewRowDay);
+        TextView cell = (TextView) v.findViewById(R.id.weatherTextViewRowDay);
         cell.setText(b.getString(Weather.K_DAY_OF_WEEK));
-        cell = v.findViewById(R.id.weatherTextViewRowIcon);
+        cell = (TextView) v.findViewById(R.id.weatherTextViewRowIcon);
         cell.setTypeface(weatherFont);
         cell.setText(Html.fromHtml(
                 Weather.setWeatherIcon(
                         b.getInt(Weather.K_ICON),0,0)
 
         ));
-        cell = v.findViewById(R.id.weatherTextViewRowMaxTemp);
+        cell = (TextView) v.findViewById(R.id.weatherTextViewRowMaxTemp);
         cell.setText(b.getString(Weather.K_MAX_TEMP));
-        cell = v.findViewById(R.id.weatherTextViewRowMinTemp);
+        cell = (TextView) v.findViewById(R.id.weatherTextViewRowMinTemp);
         cell.setText(b.getString(Weather.K_MIN_TEMP));
         return v;
     }
 
 
     private void makeBottomWeatherData(View v) {
-        TableLayout table = v.findViewById(R.id.weatherDailyTable);
+        TableLayout table = (TableLayout) v.findViewById(R.id.weatherDailyTable);
         // header
         TableRow aRow = getRowWithStyle();
         aRow.addView(makeTextView(getString(R.string.sunrise), true));
