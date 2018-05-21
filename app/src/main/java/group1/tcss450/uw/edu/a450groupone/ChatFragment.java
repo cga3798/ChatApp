@@ -211,7 +211,8 @@ public class ChatFragment extends Fragment {
             }
 
             LinearLayout chatContainer = (LinearLayout) getActivity().findViewById(R.id.chat_layout_to_hold_chat_messages);
-
+            ScrollView scrollView = (ScrollView) getActivity().findViewById(R.id.scrollViewChat);
+            scrollView.fullScroll(View.FOCUS_DOWN);
             getActivity().runOnUiThread(() -> {
                 for (String msg : msgs) {
                     String msgUsername = msg.substring(0, msg.indexOf(":"));
@@ -222,10 +223,6 @@ public class ChatFragment extends Fragment {
                         String theirMessage = msg.substring(msg.lastIndexOf(":") + 1);
                         chatContainer.addView(getChatView ("theirMessages", msgUsername, theirMessage));
                     }
-
-
-
-
 //                    LinearLayout.LayoutParams chatParams = new LinearLayout.LayoutParams(
 //                            LinearLayout.LayoutParams.WRAP_CONTENT,
 //                            LinearLayout.LayoutParams.WRAP_CONTENT);

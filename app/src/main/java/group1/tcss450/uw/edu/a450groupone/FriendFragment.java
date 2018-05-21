@@ -130,12 +130,8 @@ public class FriendFragment extends Fragment {
 
                 if (length == 0) {
                     contactsListContainer.addView(
-                            getContactView("", "", 0, length));
-                    contactsListContainer.addView(
                             getContactView("", "There are no contacts to display", 0, length));
                 } else {
-//                    contactsListContainer.addView(
-//                            getContactView("", "", 0, length));
                     for (int i = 0; i < friendsList.length(); i++) {
                         JSONObject friend = friendsList.getJSONObject(i);
                         contactsListContainer.addView(
