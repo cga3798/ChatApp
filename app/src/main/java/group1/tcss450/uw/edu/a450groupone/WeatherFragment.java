@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -63,8 +64,11 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_weather, container, false);
 
+        FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        fab.setVisibility(View.GONE);
+
         //Bundle args = new Bundle();
-        Button b = v.findViewById(R.id.selectCityButton);
+        FloatingActionButton b = v.findViewById(R.id.selectCityFloatingButton);
         b.setOnClickListener(this::onSelectCClicked);
 
         SharedPreferences prefs = getActivity().getSharedPreferences(

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -48,6 +49,9 @@ public class FriendFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_friend, container, false);
 
+        FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        fab.setVisibility(View.GONE);
+
         // make request for contacts
         // TODO: save in shared prefs
         try {
@@ -56,9 +60,8 @@ public class FriendFragment extends Fragment {
             e.printStackTrace();
         }
 
-        Button newGroupButton = v.findViewById(R.id.friendButtonNewGroup);
-        newGroupButton.setOnClickListener(view -> {
-
+        FloatingActionButton floatingbutton = v.findViewById(R.id.friendButtonNewGroup);
+        floatingbutton.setOnClickListener(view -> {
             FragmentTransaction transaction = this.getActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.navigationFragmentContainer, new NewGroupFragment())
@@ -108,7 +111,6 @@ public class FriendFragment extends Fragment {
         LinearLayout contactsListContainer = getActivity().findViewById(R.id.friendsLinearLayoutContactsList);
         Log.d("GOTCONTACTS", res);
 
-
         try {
             JSONObject response = new JSONObject(res);
             if (response.getBoolean("success")) {
@@ -124,10 +126,16 @@ public class FriendFragment extends Fragment {
                         .apply();
 
                 int length = friendsList.length();
+
+
                 if (length == 0) {
+                    contactsListContainer.addView(
+                            getContactView("", "", 0, length));
                     contactsListContainer.addView(
                             getContactView("", "There are no contacts to display", 0, length));
                 } else {
+//                    contactsListContainer.addView(
+//                            getContactView("", "", 0, length));
                     for (int i = 0; i < friendsList.length(); i++) {
                         JSONObject friend = friendsList.getJSONObject(i);
                         contactsListContainer.addView(
@@ -174,7 +182,6 @@ public class FriendFragment extends Fragment {
     private View getContactView(String nickname, String fullName, int friendID, int length) {
         View v = LayoutInflater.from(getContext())
                 .inflate(R.layout.contact_row, null, false);
-
 
         TextView tvUsername = v.findViewById(R.id.friendsTextViewNickname);
         tvUsername.setText(nickname);

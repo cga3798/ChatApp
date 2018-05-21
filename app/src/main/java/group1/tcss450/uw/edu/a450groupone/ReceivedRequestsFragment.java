@@ -87,8 +87,12 @@ public class ReceivedRequestsFragment extends Fragment {
                 int length = requestsSent.length();
                 if (length == 0) {
                     receivedInvitesContainer.addView(
+                            getReceivedView("", "", length));
+                    receivedInvitesContainer.addView(
                             getReceivedView("", "There are no received invites", length));
                 } else {
+                    receivedInvitesContainer.addView(
+                            getReceivedView("", "", length));
                     for (int i = 0; i < requestsSent.length(); i++) {
                         JSONObject request = requestsSent.getJSONObject(i);
                         receivedInvitesContainer.addView(
@@ -179,7 +183,7 @@ public class ReceivedRequestsFragment extends Fragment {
         ft.detach(ReceivedRequestsFragment.this).attach(ReceivedRequestsFragment.this).commit();
 
         Log.d("accept: ", result);
-        Toasty.info(getActivity(), "Invitation Accepted!.", Toast.LENGTH_SHORT, true).show();
+        Toasty.normal(getActivity(), "Invitation Accepted!.", Toast.LENGTH_SHORT).show();
 
 
     }
@@ -221,7 +225,7 @@ public class ReceivedRequestsFragment extends Fragment {
         ft.detach(ReceivedRequestsFragment.this).attach(ReceivedRequestsFragment.this).commit();
 
         Log.d("Decline: ", result);
-        Toasty.info(getActivity(), "Invitation Declined.", Toast.LENGTH_SHORT, true).show();
+        Toasty.normal(getActivity(), "Invitation Declined.", Toast.LENGTH_SHORT).show();
 
     }
 

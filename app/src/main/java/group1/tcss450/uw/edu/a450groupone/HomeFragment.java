@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -73,9 +74,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
         //location = new MyLocation(getContext(), null);
 
-        // these are temporary buttons
-        Button b = (Button) v.findViewById(R.id.HomeButtonNewChat);
-        b.setOnClickListener(this);
+        FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        fab.setVisibility(View.VISIBLE);
 
         // set click listener on weather view
         v.findViewById(R.id.homeCurrentWeatherDisplay).setOnClickListener(this);
@@ -443,9 +443,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         if (mListener != null) {
             switch (view.getId()) {
-                case R.id.HomeButtonNewChat:
-                    mListener.onNewChat();
-                    break;
                 case R.id.homeCurrentWeatherDisplay:
                     mListener.NewWeather(); // temp weather button for navigation
                     break;

@@ -5,29 +5,24 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Layout;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import group1.tcss450.uw.edu.a450groupone.utils.ListenManager;
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
@@ -50,6 +45,7 @@ public class ChatFragment extends Fragment {
     private Toolbar mTopToolbar;
 
 
+
     public ChatFragment() {
         // Required empty public constructor
     }
@@ -58,7 +54,8 @@ public class ChatFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_chat, container, false);
+        View v = inflater.inflate(R.layout.fragment_chat2, container, false);
+
         prefs =
                 getActivity().getSharedPreferences(
                         getString(R.string.keys_shared_prefs),
@@ -74,30 +71,30 @@ public class ChatFragment extends Fragment {
 //        chatName.setAllCaps(true);
 //        chatName.setTextSize(20);
 //        chatName.setTextColor(getResources().getColor(R.color.colorAccent));
-        Button button = (Button) v.findViewById(R.id.view_member_list_button);
-        button.setOnClickListener(new View.OnClickListener() {
-
-                        public void onClick(View view) {
-
-                            TextView membersView = getActivity().findViewById(R.id.chatRoomMembers);
-                            if (membersView.getVisibility() == View.VISIBLE){
-                                membersView.setVisibility(View.GONE);
-                            }
-                            else {
-                                // call to populate users chat rooms
-                                membersView.setVisibility(View.VISIBLE);
-                                if (membersView.getText().length() > 0 ){
-
-                                }
-                                else {
-                                    try {
-                                        getMembers(v);
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-                        }});
+//        Button button = (Button) v.findViewById(R.id.view_member_list_button);
+//        button.setOnClickListener(new View.OnClickListener() {
+//
+//                        public void onClick(View view) {
+//
+//                            TextView membersView = getActivity().findViewById(R.id.chatRoomMembers);
+//                            if (membersView.getVisibility() == View.VISIBLE){
+//                                membersView.setVisibility(View.GONE);
+//                            }
+//                            else {
+//                                // call to populate users chat rooms
+//                                membersView.setVisibility(View.VISIBLE);
+//                                if (membersView.getText().length() > 0 ){
+//
+//                                }
+//                                else {
+//                                    try {
+//                                        getMembers(v);
+//                                    } catch (JSONException e) {
+//                                        e.printStackTrace();
+//                                    }
+//                                }
+//                            }
+//                        }});
 
         mTopToolbar = (Toolbar) v.findViewById(R.id.toolbar_top);
         TextView mTitle = (TextView) mTopToolbar.findViewById(R.id.toolbar_title);
@@ -107,8 +104,11 @@ public class ChatFragment extends Fragment {
         activity.setSupportActionBar(mTopToolbar);
         activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         setHasOptionsMenu(true);
+
         return v;
     }
 
@@ -118,96 +118,26 @@ public class ChatFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    /**
-     * method to get all members that are in chatroom
-     *
-     * author: Casey Anderson
-     */
-    private void getMembers ( View v ) throws JSONException {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
 
-        prefs = getActivity().getSharedPreferences(
-
-                getString(R.string.keys_shared_prefs),
-
-                Context.MODE_PRIVATE);
-
-        if (!prefs.contains(getString(R.string.keys_prefs_chatId))) {
-
-            throw new IllegalStateException("No chatId in prefs!");
-
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.chat_options) {
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.chatContainer, new ChatOptionsFragment())
+                    .addToBackStack(null);
+            // Commit the transaction
+            transaction.commit();
+            return true;
+        } else if (id == android.R.id.home) {
+            getActivity().finish();
+        } else if (id == R.id.place_holder) {
+            Log.d("Place Holder: ", "clicked");
         }
 
-        mChatId = prefs.getInt(getString(R.string.keys_prefs_chatId), 0);
-
-        Uri retrieve = new Uri.Builder()
-
-                .scheme("https")
-
-                .appendPath(getString(R.string.ep_base_url))
-
-                .appendPath(getString(R.string.ep_get_chatMembers_list))
-
-                .build();
-
-        JSONObject body = new JSONObject();
-
-        // provide current user id
-
-        try {
-
-            body.put("chatId", mChatId);
-
-        } catch (JSONException e) {
-
-            e.printStackTrace();
-
-        }
-
-        new SendPostAsyncTask.Builder(retrieve.toString(), body)
-
-                .onPostExecute(this::populateMembers)
-
-                //TODO: add onCancelled handler.
-
-                .onCancelled(this::handleErrorsInTask)
-
-                .build().execute();
-
-    }
-
-    private void populateMembers(String res) {
-        TextView membersView = getActivity().findViewById(R.id.chatRoomMembers);
-        membersView.setSingleLine(false);
-        try {
-
-            JSONObject response = new JSONObject(res);
-
-            if (response.getBoolean("success")) {
-
-                JSONArray memberList = response.getJSONArray("name");
-
-                for (int i = 0; i < memberList.length(); i++) {
-                    JSONObject member = memberList.getJSONObject(i);
-                    membersView.append("\n" + member.getString("name"));
-
-                }
-
-            }
-
-        } catch (JSONException e) {
-
-            e.printStackTrace();
-
-        }
-
-    }
-
-    /**
-     * Handle errors that may occur during the AsyncTask.
-     * @param result the error message provide from the AsyncTask
-     */
-    private void handleErrorsInTask(String result) {
-        Log.wtf("ASYNCT_TASK_ERROR", result);
+        return super.onOptionsItemSelected(item);
     }
 
     private void sendMessage(final View theButton) {
@@ -263,11 +193,10 @@ public class ChatFragment extends Fragment {
 
     private void publishProgress(JSONObject messages) {
         final String[] msgs;
+
         if(messages.has(getString(R.string.keys_json_messages))) {
             try {
-
                 JSONArray jMessages = messages.getJSONArray(getString(R.string.keys_json_messages));
-
                 msgs = new String[jMessages.length()];
                 for (int i = 0; i < jMessages.length(); i++) {
 
@@ -280,37 +209,75 @@ public class ChatFragment extends Fragment {
                 e.printStackTrace();
                 return;
             }
+
             LinearLayout chatContainer = getActivity().findViewById(R.id.chat_layout_to_hold_chat_messages);
+
             getActivity().runOnUiThread(() -> {
                 for (String msg : msgs) {
-                    LinearLayout.LayoutParams chatParams = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT);
+                    String msgUsername = msg.substring(0, msg.indexOf(":"));
+                    if (msgUsername.equals(mUsername)) {
+                        String myMessage = msg.substring(msg.lastIndexOf(":") + 1);
+                        chatContainer.addView(getChatView ("myMessages", mUsername, myMessage));
+                    } else {
+                        String theirMessage = msg.substring(msg.lastIndexOf(":") + 1);
+                        chatContainer.addView(getChatView ("theirMessages", msgUsername, theirMessage));
+                    }
 
 
-                    LinearLayout container = new LinearLayout(this.getActivity());
-                    container.setOrientation(LinearLayout.HORIZONTAL);
-                    String temp = msg.substring(0, msg.indexOf(":"));
-                    TextView text = new TextView(this.getActivity());
-                    text.append(msg);
-                    text.append(System.lineSeparator());
-                    container.addView(text);
-                    if (temp.equals(mUsername)) {
-                        chatParams.gravity = Gravity.RIGHT;
-                        container.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                    }
-                    else {
-                        chatParams.gravity = Gravity.LEFT;
-                        container.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                    }
-                    container.setLayoutParams(chatParams);
-                    chatContainer.addView(container);
-                    EditText typeText = ((EditText) getView().findViewById(R.id.chatInputEditText));
-                    typeText.requestFocus();
+
+
+//                    LinearLayout.LayoutParams chatParams = new LinearLayout.LayoutParams(
+//                            LinearLayout.LayoutParams.WRAP_CONTENT,
+//                            LinearLayout.LayoutParams.WRAP_CONTENT);
+//
+//                    LinearLayout container = new LinearLayout(this.getActivity());
+//                    container.setOrientation(LinearLayout.HORIZONTAL);
+//                    String temp = msg.substring(0, msg.indexOf(":"));
+//                    TextView text = new TextView(this.getActivity());
+//                    text.append(msg);
+//                    text.append(System.lineSeparator());
+//                    container.addView(text);
+//
+//                    if (temp.equals(mUsername)) {
+//                        chatParams.gravity = Gravity.RIGHT;
+////                        container.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+//                    }
+//                    else {
+//                        chatParams.gravity = Gravity.LEFT;
+////                        container.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+//                    }
+//                    container.setLayoutParams(chatParams);
+//                    chatContainer.addView(container);
+//                    EditText typeText = ((EditText) getView().findViewById(R.id.chatInputEditText));
+//                    typeText.requestFocus();
                 }
             });
         }
     }
+
+    private View getChatView(String msgSource, String msgUsername, String message) {
+        View v;
+
+        if (msgSource.equals("myMessages")) {
+
+            v = LayoutInflater.from(getContext())
+                    .inflate(R.layout.item_message_sent, null, false);
+
+            TextView tv = v.findViewById(R.id.text_message_body);
+            tv.setText(message);
+        } else {
+
+            v = LayoutInflater.from(getContext())
+                    .inflate(R.layout.item_message_received, null, false);
+
+            TextView tv = v.findViewById(R.id.text_message_body);
+            tv.setText(message);
+//            tv = v.findViewById(R.id.text_message_name);
+//            tv.setText(msgUsername);
+        }
+        return v;
+    }
+
 
     @Override
     public void onStart() {
