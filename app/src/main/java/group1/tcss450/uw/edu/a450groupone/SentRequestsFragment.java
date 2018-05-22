@@ -75,12 +75,8 @@ public class SentRequestsFragment extends Fragment {
                 int length = requestsSent.length();
                 if (length == 0) {
                     sentInvitesContainer.addView(
-                            getSentView( "", "", length));
-                    sentInvitesContainer.addView(
                             getSentView( "", "There are no sent invites", length));
                 } else {
-                    sentInvitesContainer.addView(
-                            getSentView( "", "", length));
                     for (int i = 0; i < requestsSent.length(); i++) {
                         JSONObject request = requestsSent.getJSONObject(i);
                         sentInvitesContainer.addView(
@@ -101,7 +97,7 @@ public class SentRequestsFragment extends Fragment {
     private View getSentView(String nickname, String fullName, int length) {
         View v;
 
-        if (length == 0 ) {
+        if (length == 0) {
             v = LayoutInflater.from(getContext())
                     .inflate(R.layout.request_row, null, false);
             TextView tv = (TextView) v.findViewById(R.id.requestTextViewNickname);
