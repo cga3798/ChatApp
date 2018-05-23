@@ -168,7 +168,7 @@ public class MyIntentService extends IntentService {
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(this)
                             .setSmallIcon(R.drawable.ic_cloud_black_24dp)
-                            .setContentTitle("New Request")
+                            .setContentTitle("Connection Request")
                             .setContentText(userToDisplay + " sent you a request.");
 
             // Creates an Intent for the Activity
