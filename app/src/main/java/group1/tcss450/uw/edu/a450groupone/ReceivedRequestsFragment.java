@@ -203,10 +203,7 @@ public class ReceivedRequestsFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_hamburger);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        setHamburgerIconNoDot();
     }
 
     /**
@@ -269,8 +266,8 @@ public class ReceivedRequestsFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_hamburger);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        setHamburgerIconNoDot();
     }
 
     /**
@@ -327,12 +324,11 @@ public class ReceivedRequestsFragment extends Fragment {
         return msg;
     }
 
-    private void setHamburgerIcon() {
-        //toggle.setHomeAsUpIndicator(R.drawable.ic_menu_hamburger);
-
+    private void setHamburgerIconNoDot() {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_hamburger);
-
-
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        NavigationActivity navigationActivity = (NavigationActivity) getActivity();
+        navigationActivity.navigationView.getMenu().getItem(1).setActionView(R.layout.menu_item_no_dot);
     }
 
 }
