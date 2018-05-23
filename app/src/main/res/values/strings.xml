@@ -64,6 +64,7 @@
     <string name="search_new_hint"><font size="15">Type new friend name, email or username</font></string>
 
     <string name="please_log_in_or_register_fragment">Please log in or register</string>
+    <string name="home_chat_delete">Delete</string>
 
     <string name="username_fragment">Username</string>
     <string name="password_fragment">Password</string>
