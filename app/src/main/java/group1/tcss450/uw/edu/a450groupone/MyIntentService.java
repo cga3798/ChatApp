@@ -144,7 +144,7 @@ public class MyIntentService extends IntentService {
         }
 
         // this needs to be here because we need to wait until we've received user data
-        buildNotification("inForeground");
+        buildNotification();
 
     }
 
@@ -160,9 +160,9 @@ public class MyIntentService extends IntentService {
         return msg;
     }
 
-    private void buildNotification(String s) {
+    private void buildNotification() {
         // only build notification if something request in background was received
-        if (initialState == currentlState) {
+        if (initialState != currentlState) {
             Log.d(TAG, "buildNotification() - " + userToDisplay);
             //IMPORT V4 not V7
             NotificationCompat.Builder mBuilder =
@@ -175,8 +175,6 @@ public class MyIntentService extends IntentService {
             Intent notifyIntent =
                     new Intent(this, NavigationActivity.class);
             notifyIntent.putExtra("friendFragment", "FriendFragment");
-            Bundle bundle = new Bundle();
-            notifyIntent.putExtra(getString(R.string.keys_extra_results), s);
 
             // Sets the Activity to start in a new, empty task
             notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
