@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +14,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import es.dmoral.toasty.Toasty;
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
 
@@ -120,6 +125,7 @@ public class SentRequestsFragment extends Fragment {
         return v;
     }
 
+
     private void onCancelInvite(View view, String username_b) {
 
         Uri uri = new Uri.Builder()
@@ -139,26 +145,32 @@ public class SentRequestsFragment extends Fragment {
 
 
     private void handleCancelOnPost(String result) {
-        try {
-            JSONObject response = new JSONObject(result);
-            String username = response.getString("names");
-            try {
-                View views;
-                for (int i = 0; i < sentInvitesContainer.getChildCount() - 1; i++) {
-                       views = sentInvitesContainer.getChildAt(i);
-                       TextView tv = (TextView) views.findViewById(R.id.sentRequestLinearLayoutTextViewNickname);
-                       String tvUsername = tv.getText().toString();
-                       if (tvUsername.equals(username)) {
-                           sentInvitesContainer.removeView(views);
-                       }
-               }
-            } catch (NullPointerException e) {
-                Log.e("handleCancelOnPost: ", "NullPointerException");
-            }
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(SentRequestsFragment.this).attach(SentRequestsFragment.this).commit();
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        Toasty.normal(getActivity(), "Invitation Canceled.", Toast.LENGTH_SHORT).show();
+
+
+//        try {
+//            JSONObject response = new JSONObject(result);
+//            String username = response.getString("names");
+//            try {
+//                View views;
+//                for (int i = 0; i < sentInvitesContainer.getChildCount() - 1; i++) {
+//                       views = sentInvitesContainer.getChildAt(i);
+//                       TextView tv = (TextView) views.findViewById(R.id.sentRequestLinearLayoutTextViewNickname);
+//                       String tvUsername = tv.getText().toString();
+//                       if (tvUsername.equals(username)) {
+//                           sentInvitesContainer.removeView(views);
+//                       }
+//               }
+//            } catch (NullPointerException e) {
+//                Log.e("handleCancelOnPost: ", "NullPointerException");
+//            }
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void handleErrorsInTask(String result) {
