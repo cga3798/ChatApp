@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -203,6 +204,9 @@ public class ReceivedRequestsFragment extends Fragment {
             e.printStackTrace();
         }
 
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_hamburger);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
     /**
@@ -265,7 +269,8 @@ public class ReceivedRequestsFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_hamburger);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     /**
@@ -320,6 +325,14 @@ public class ReceivedRequestsFragment extends Fragment {
             Log.wtf("QUERY ", "Error creating JSON: " + e.getMessage());
         }
         return msg;
+    }
+
+    private void setHamburgerIcon() {
+        //toggle.setHomeAsUpIndicator(R.drawable.ic_menu_hamburger);
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_hamburger);
+
+
     }
 
 }

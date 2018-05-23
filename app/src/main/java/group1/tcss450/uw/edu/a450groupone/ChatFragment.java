@@ -123,7 +123,11 @@ public class ChatFragment extends Fragment {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.chat_options) {
+        if (id == android.R.id.home) {
+            getActivity().finish();
+            return true;
+        } else if (id == R.id.options) {
+            Log.d("Options: ", "clicked");
             FragmentTransaction transaction = getActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.chatContainer, new ChatOptionsFragment())
@@ -131,10 +135,10 @@ public class ChatFragment extends Fragment {
             // Commit the transaction
             transaction.commit();
             return true;
-        } else if (id == android.R.id.home) {
-            getActivity().finish();
         } else if (id == R.id.place_holder) {
             Log.d("Place Holder: ", "clicked");
+
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

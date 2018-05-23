@@ -1,8 +1,10 @@
 package group1.tcss450.uw.edu.a450groupone;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -14,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -30,6 +33,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+
+import group1.tcss450.uw.edu.a450groupone.utils.BadgeDrawerArrowDrawable;
 
 /*
  * Navigation fragment holds the currently displayed
@@ -60,8 +65,11 @@ public class NavigationActivity extends AppCompatActivity implements
     private static final int MY_PERMISSIONS_LOCATIONS = 814;
     private LocationRequest mLocationRequest;
     private Location mCurrentLocation;
-
+    private MyIntentService myIntentService;
     private HomeFragment homeFragment;
+    ActionBarDrawerToggle toggle;
+    BadgeDrawerArrowDrawable badgeDrawable;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +123,11 @@ public class NavigationActivity extends AppCompatActivity implements
             }
         }
 
+        bManager = LocalBroadcastManager.getInstance(this);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(RECEIVE_JSON);
+        bManager.registerReceiver(bReceiver, intentFilter);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -125,12 +138,12 @@ public class NavigationActivity extends AppCompatActivity implements
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         View navHeader = navigationView.getHeaderView(0);
@@ -147,22 +160,19 @@ public class NavigationActivity extends AppCompatActivity implements
         tv = (TextView) navHeader.findViewById(R.id.navHeaderEmail);
         tv.setText(prefs.getString(getString(R.string.keys_prefs_email), ""));
 
-
         // ask for location permissions
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions( this,
+            ActivityCompat.requestPermissions( this,
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION
                             , Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_LOCATIONS);
         }
 
-        //MyIntentService.startServiceAlarm(this, false);
-
-
+        MyIntentService.startServiceAlarm(this, false);
     }
 
     @Override
@@ -188,6 +198,7 @@ public class NavigationActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+
         Log.d("NavigationActivity", "onResume()");
         SharedPreferences sharedPreferences =
                 getSharedPreferences(getString(R.string.keys_shared_prefs),
@@ -199,7 +210,12 @@ public class NavigationActivity extends AppCompatActivity implements
             //restart but in the foreground
             MyIntentService.startServiceAlarm(this, false);
         }
-        MyIntentService.startServiceAlarm(this, false);
+        //if (sharedPreferences.getBoolean(getString(R.string.keys_sp_on), false)) {
+        //stop the service from the background
+        //MyIntentService.stopServiceAlarm(this);
+        //restart but in the foreground
+        MyIntentService.startServiceAlarm(this, true);
+        //}
     }
 
     @Override
@@ -230,7 +246,7 @@ public class NavigationActivity extends AppCompatActivity implements
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             loadFragment(new SettingsFragment(),
-                     getString(R.string.keys_fragment_settings));
+                    getString(R.string.keys_fragment_settings));
             return true;
         }
 
@@ -321,7 +337,7 @@ public class NavigationActivity extends AppCompatActivity implements
                 getString(R.string.keys_fragment_connection_tab));
     }
 
-     @Override
+    @Override
     public void onOpenChat() {
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra(getString(R.string.keys_open_chat_source), R.id.fragmentHome);
@@ -352,7 +368,7 @@ public class NavigationActivity extends AppCompatActivity implements
                 if (mCurrentLocation != null) {
                     // first log we should see
                     Log.i("CURRENT_LOCATION", mCurrentLocation.toString());
-                    homeFragment.setWeatherData();
+//                    homeFragment.setWeatherData();
                 }
                 //startLocationUpdates();
             }
@@ -401,7 +417,6 @@ public class NavigationActivity extends AppCompatActivity implements
             // other 'case' lines to check for other
             // permissions this app might request
         }
-
     }
 
     /**
@@ -436,6 +451,7 @@ public class NavigationActivity extends AppCompatActivity implements
     public void onDestroy() {
         super.onDestroy();
         stopLocationUpdates();
+        bManager.unregisterReceiver(bReceiver);
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected())
             mGoogleApiClient.disconnect();
     }
@@ -457,4 +473,22 @@ public class NavigationActivity extends AppCompatActivity implements
     public GoogleApiClient getmGoogleApiClient() {
         return mGoogleApiClient;
     }
+
+    public static final String RECEIVE_JSON = "new";
+
+    private BroadcastReceiver bReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if(intent.getAction().equals(RECEIVE_JSON)) {
+                String serviceJsonString = intent.getStringExtra("json");
+                Log.e("onReceive: ", "new notification");
+                badgeDrawable = new BadgeDrawerArrowDrawable(getSupportActionBar().getThemedContext());
+                toggle.setDrawerArrowDrawable(badgeDrawable);
+                navigationView.getMenu().getItem(1).setActionView(R.layout.menu_dot);
+            }
+            //toggle.setHomeAsUpIndicator(R.drawable.ic_menu_hamburger);
+        }
+    };
+    LocalBroadcastManager bManager;
 }
