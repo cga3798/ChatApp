@@ -18,7 +18,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.format.ResolverStyle;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;

@@ -76,7 +76,7 @@ public class ReceivedRequestsFragment extends Fragment {
      * @param result response from server.
      */
     private void handleReceivedInviteOnPost(String result) {
-        receivedInvitesContainer = getActivity().findViewById(R.id.receivedRequestLinearLayout);
+        receivedInvitesContainer = (LinearLayout) getActivity().findViewById(R.id.receivedRequestLinearLayout);
 
         try {
             JSONObject response = new JSONObject(result);
@@ -119,9 +119,9 @@ public class ReceivedRequestsFragment extends Fragment {
         if ( length == 0) {
             v = LayoutInflater.from(getContext())
                     .inflate(R.layout.request_row, null, false);
-            TextView tv = v.findViewById(R.id.requestTextViewNickname);
+            TextView tv = (TextView) v.findViewById(R.id.requestTextViewNickname);
             tv.setText(nickname);
-            tv = v.findViewById(R.id.requestTextViewFullName);
+            tv = (TextView) v.findViewById(R.id.requestTextViewFullName);
             tv.setText(fullName);
 
 
@@ -129,9 +129,9 @@ public class ReceivedRequestsFragment extends Fragment {
             v = LayoutInflater.from(getContext())
                     .inflate(R.layout.received_request_row, null, false);
 
-            TextView tvUsername = v.findViewById(R.id.receivedRequestLinearLayoutTextViewNickname);
+            TextView tvUsername = (TextView) v.findViewById(R.id.receivedRequestLinearLayoutTextViewNickname);
             tvUsername.setText(nickname);
-            TextView tv = v.findViewById(R.id.receivedRequestLinearLayoutTextViewFullName);
+            TextView tv = (TextView) v.findViewById(R.id.receivedRequestLinearLayoutTextViewFullName);
             tv.setText(fullName);
 
             ImageView im = (ImageView) v.findViewById(R.id.receivedRequestAccept);
@@ -179,7 +179,7 @@ public class ReceivedRequestsFragment extends Fragment {
         ft.detach(ReceivedRequestsFragment.this).attach(ReceivedRequestsFragment.this).commit();
 
         Log.d("accept: ", result);
-        Toasty.info(getActivity(), "Invitation Accepted!.", Toast.LENGTH_SHORT, true).show();
+        Toasty.normal(getActivity(), "Invitation Accepted!.", Toast.LENGTH_SHORT).show();
 
 
     }
@@ -221,7 +221,7 @@ public class ReceivedRequestsFragment extends Fragment {
         ft.detach(ReceivedRequestsFragment.this).attach(ReceivedRequestsFragment.this).commit();
 
         Log.d("Decline: ", result);
-        Toasty.info(getActivity(), "Invitation Declined.", Toast.LENGTH_SHORT, true).show();
+        Toasty.normal(getActivity(), "Invitation Declined.", Toast.LENGTH_SHORT).show();
 
     }
 

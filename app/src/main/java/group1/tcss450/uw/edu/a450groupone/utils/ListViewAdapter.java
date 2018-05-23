@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 import group1.tcss450.uw.edu.a450groupone.NewGroupFragment;
@@ -81,13 +84,11 @@ public class ListViewAdapter extends BaseAdapter {
                 view = inflater.inflate(R.layout.listview_item, null);
                 // Locate the TextViews in listview_item.xml
                 holder.name = (TextView) view.findViewById(R.id.name);
-                holder.button = (Button) view.findViewById(R.id.searchButtonInvite);
-
+                holder.invite = (TextView) view.findViewById(R.id.inviteTextView);
                 view.setTag(holder);
+
             } else if (fragment.equals("newGroup")) {
-
                 view = inflater.inflate(R.layout.new_group_item, null);
-
                 // Locate the TextViews in listview_item.xml
                 holder.name = (TextView) view.findViewById(R.id.newGroupItemName);
                 holder.checkBox = (CheckBox) view.findViewById(R.id.newGroupCheckBox);
@@ -101,14 +102,14 @@ public class ListViewAdapter extends BaseAdapter {
 
         // Set the results into TextViews
         if (fragment.equals("search")) {
-            holder.name.setText(SearchNewFriendFragment.connectionResultList.get(position));
 
-            holder.button.setFocusable(false);
-            holder.button.setOnClickListener((View v) -> {
-                Log.e("Invite; ", "invite button clikced");
-//                SearchNewFriendFragment.onClickOnSearchResult(position);
+            if (SearchNewFriendFragment.connectionResultList.get(position).contains("No results")) {
+                holder.invite.setVisibility(View.GONE);
+                holder.name.setText(SearchNewFriendFragment.connectionResultList.get(position));
+            } else {
+                holder.name.setText(SearchNewFriendFragment.connectionResultList.get(position));
+            }
 
-            });
 
         } else if (fragment.equals("newGroup")) {
             holder.name.setText(NewGroupFragment.contactsListView.get(position));
@@ -133,7 +134,7 @@ public class ListViewAdapter extends BaseAdapter {
     public class ViewHolder {
         TextView name;
         CheckBox checkBox;
-        Button button;
+        TextView invite;
     }
 
 }

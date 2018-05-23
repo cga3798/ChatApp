@@ -49,7 +49,7 @@ public class FriendFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_friend, container, false);
 
-        FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
 
         // make request for contacts
@@ -60,7 +60,7 @@ public class FriendFragment extends Fragment {
             e.printStackTrace();
         }
 
-        FloatingActionButton floatingbutton = v.findViewById(R.id.friendButtonNewGroup);
+        FloatingActionButton floatingbutton = (FloatingActionButton) v.findViewById(R.id.friendButtonNewGroup);
         floatingbutton.setOnClickListener(view -> {
             FragmentTransaction transaction = this.getActivity().getSupportFragmentManager()
                     .beginTransaction()
@@ -108,7 +108,7 @@ public class FriendFragment extends Fragment {
      * @param res
      */
     private void populateContacts(String res) {
-        LinearLayout contactsListContainer = getActivity().findViewById(R.id.friendsLinearLayoutContactsList);
+        LinearLayout contactsListContainer = (LinearLayout) getActivity().findViewById(R.id.friendsLinearLayoutContactsList);
         Log.d("GOTCONTACTS", res);
 
         try {
@@ -126,6 +126,8 @@ public class FriendFragment extends Fragment {
                         .apply();
 
                 int length = friendsList.length();
+
+
                 if (length == 0) {
                     contactsListContainer.addView(
                             getContactView("", "There are no contacts to display", 0, length));
@@ -177,11 +179,11 @@ public class FriendFragment extends Fragment {
         View v = LayoutInflater.from(getContext())
                 .inflate(R.layout.contact_row, null, false);
 
-        TextView tvUsername = v.findViewById(R.id.friendsTextViewNickname);
+        TextView tvUsername = (TextView) v.findViewById(R.id.friendsTextViewNickname);
         tvUsername.setText(nickname);
-        TextView tv = v.findViewById(R.id.friendsTextViewFullName);
+        TextView tv = (TextView) v.findViewById(R.id.friendsTextViewFullName);
         tv.setText(fullName);
-        ImageButton im = v.findViewById(R.id.friendImageButtonDelete);
+        ImageButton im = (ImageButton) v.findViewById(R.id.friendImageButtonDelete);
 
 
         if (length != 0) {
@@ -190,7 +192,7 @@ public class FriendFragment extends Fragment {
             im.setOnClickListener(view -> onDeleteFriend(tvUsername.getText().toString()));
 
             // clicklistenrr to start chat with contact
-            v.setOnClickListener(view -> startChat(friendID, fullName) );
+            v.setOnClickListener(view -> startChat(friendID, fullName, nickname) );
         } else {
             im.setVisibility(View.GONE);
         }
@@ -199,12 +201,13 @@ public class FriendFragment extends Fragment {
     }
 
     // TODO: we can change to use fragment listener
-    private void startChat(int theFriendId, String theFullName) {
+    private void startChat(int theFriendId, String theFullName, String friendNickname) {
         Intent intent = new Intent(getContext(), ChatActivity.class);
         //send friend id to chat activity
         intent.putExtra(getString(R.string.keys_open_chat_source), R.id.fragmentFriend);
         intent.putExtra(getString(R.string.keys_friend_id), theFriendId);
         intent.putExtra(getString(R.string.keys_friend_full_name), theFullName);
+        intent.putExtra(getString(R.string.keys_friend_nickname), friendNickname);
         startActivity(intent);
     }
 

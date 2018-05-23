@@ -51,7 +51,7 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
                         Context.MODE_PRIVATE);
         memberidA =  String.valueOf(prefs.getInt(getString(R.string.keys_prefs_id), -1));
 
-        searchView = v.findViewById(R.id.searchFriendSearchView);
+        searchView = (SearchView) v.findViewById(R.id.searchFriendSearchView);
         searchView.setActivated(true);
         searchView.setOnQueryTextListener(this);
 
@@ -167,21 +167,7 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
      */
     public void onClickOnSearchResult(int position) {
         if (showInvite) {
-            DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
-                        onSearchResults(memberIds.get(position), fullnames.get(position));
-                        break;
-
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        break;
-                }
-            };
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Would you like to send an invitation to " + fullnames.get(position) + "?" )
-                    .setPositiveButton("Yes", dialogClickListener)
-                    .setNegativeButton("No", dialogClickListener).show();
+            onSearchResults(memberIds.get(position), fullnames.get(position));
         }
     }
 
@@ -232,7 +218,7 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
                     }
                 } else {
                     for (int i=0; i < 1; i++)
-                        Toasty.info(getActivity(), messages.get(msg), Toast.LENGTH_LONG, true).show();
+                        Toasty.normal(getActivity(), messages.get(msg), Toast.LENGTH_LONG).show();
                 }
             } else {
                 // Not success.

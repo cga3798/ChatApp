@@ -74,7 +74,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
         //location = new MyLocation(getContext(), null);
 
-        FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
 
         // set click listener on weather view
@@ -87,12 +87,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         String dateString = sdf.format(date);
         tv.setText(dateString);
 
-        cityTv = v.findViewById(R.id.HomeTextViewCity);
-        tempTv = v.findViewById(R.id.HomeTextViewTemperature);
-        weatherDescTv = v.findViewById(R.id.HomeTextViewWeatherDesc);
+        cityTv = (TextView) v.findViewById(R.id.HomeTextViewCity);
+        tempTv = (TextView) v.findViewById(R.id.HomeTextViewTemperature);
+        weatherDescTv = (TextView) v.findViewById(R.id.HomeTextViewWeatherDesc);
 
         Typeface weatherFont = Typeface.createFromAsset(getContext().getAssets(), Weather.FONT_PATH);
-        weatherIcon = v.findViewById(R.id.homeTextViewWeatherIcon);
+        weatherIcon = (TextView) v.findViewById(R.id.homeTextViewWeatherIcon);
         weatherIcon.setTypeface(weatherFont);
 
         setWeatherData();
@@ -150,7 +150,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
      * author: Casey Anderson
      */
     private void populateChats(String res) {
-        LinearLayout buttonContainer = getActivity().findViewById(R.id.HomeLinearLayoutButtonContainer);
+        LinearLayout buttonContainer = (LinearLayout) getActivity().findViewById(R.id.HomeLinearLayoutButtonContainer);
 
         if (!prefs.contains(getString(R.string.keys_prefs_username))) {
             throw new IllegalStateException("No username in prefs!");
@@ -282,7 +282,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         }
 
         // set id for text view
-        TextView textView = getActivity().findViewById(R.id.chat_text_button_on);
+        TextView textView = (TextView) getActivity().findViewById(R.id.chat_text_button_on);
         textView.setId(R.id.chat_text_button_off);
 
         // turns off prior id
@@ -294,7 +294,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
      */
     private boolean onDeleteChat(View v, String name, int chatid) {
         Log.d("onDeleteChat: ", name);
-        ImageButton im = v.findViewById(R.id.chatImageButtonDelete);
+        ImageButton im = (ImageButton) v.findViewById(R.id.chatImageButtonDelete);
         im.setVisibility(View.VISIBLE);
         im.setOnClickListener(view -> confirmDelete(chatid));
 

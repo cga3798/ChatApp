@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +14,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import es.dmoral.toasty.Toasty;
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
 
@@ -64,7 +69,7 @@ public class SentRequestsFragment extends Fragment {
     }
 
     private void handleSentInviteOnPost(String result) {
-        sentInvitesContainer = getActivity().findViewById(R.id.sentRequestLinearLayout);
+        sentInvitesContainer = (LinearLayout) getActivity().findViewById(R.id.sentRequestLinearLayout);
 
         try {
             JSONObject response = new JSONObject(result);
@@ -97,20 +102,20 @@ public class SentRequestsFragment extends Fragment {
     private View getSentView(String nickname, String fullName, int length) {
         View v;
 
-        if (length == 0 ) {
+        if (length == 0) {
             v = LayoutInflater.from(getContext())
                     .inflate(R.layout.request_row, null, false);
-            TextView tv = v.findViewById(R.id.requestTextViewNickname);
+            TextView tv = (TextView) v.findViewById(R.id.requestTextViewNickname);
             tv.setText(nickname);
-            tv = v.findViewById(R.id.requestTextViewFullName);
+            tv = (TextView) v.findViewById(R.id.requestTextViewFullName);
             tv.setText(fullName);
         } else {
             v = LayoutInflater.from(getContext())
                     .inflate(R.layout.sent_request_row, null, false);
 
-            TextView tvUsername = v.findViewById(R.id.sentRequestLinearLayoutTextViewNickname);
+            TextView tvUsername = (TextView) v.findViewById(R.id.sentRequestLinearLayoutTextViewNickname);
             tvUsername.setText(nickname);
-            TextView tv = v.findViewById(R.id.sentRequestLinearLayoutTextViewFullName);
+            TextView tv = (TextView) v.findViewById(R.id.sentRequestLinearLayoutTextViewFullName);
             tv.setText(fullName);
 
             Button b  = (Button) v.findViewById(R.id.sentRequestCancelInvite);
@@ -119,6 +124,7 @@ public class SentRequestsFragment extends Fragment {
 
         return v;
     }
+
 
     private void onCancelInvite(View view, String username_b) {
 
@@ -139,26 +145,32 @@ public class SentRequestsFragment extends Fragment {
 
 
     private void handleCancelOnPost(String result) {
-        try {
-            JSONObject response = new JSONObject(result);
-            String username = response.getString("names");
-            try {
-                View views;
-                for (int i = 0; i < sentInvitesContainer.getChildCount() - 1; i++) {
-                       views = sentInvitesContainer.getChildAt(i);
-                       TextView tv = views.findViewById(R.id.sentRequestLinearLayoutTextViewNickname);
-                       String tvUsername = tv.getText().toString();
-                       if (tvUsername.equals(username)) {
-                           sentInvitesContainer.removeView(views);
-                       }
-               }
-            } catch (NullPointerException e) {
-                Log.e("handleCancelOnPost: ", "NullPointerException");
-            }
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(SentRequestsFragment.this).attach(SentRequestsFragment.this).commit();
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        Toasty.normal(getActivity(), "Invitation Canceled.", Toast.LENGTH_SHORT).show();
+
+
+//        try {
+//            JSONObject response = new JSONObject(result);
+//            String username = response.getString("names");
+//            try {
+//                View views;
+//                for (int i = 0; i < sentInvitesContainer.getChildCount() - 1; i++) {
+//                       views = sentInvitesContainer.getChildAt(i);
+//                       TextView tv = (TextView) views.findViewById(R.id.sentRequestLinearLayoutTextViewNickname);
+//                       String tvUsername = tv.getText().toString();
+//                       if (tvUsername.equals(username)) {
+//                           sentInvitesContainer.removeView(views);
+//                       }
+//               }
+//            } catch (NullPointerException e) {
+//                Log.e("handleCancelOnPost: ", "NullPointerException");
+//            }
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void handleErrorsInTask(String result) {

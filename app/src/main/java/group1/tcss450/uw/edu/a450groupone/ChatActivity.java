@@ -17,8 +17,11 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
@@ -42,6 +45,8 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnCh
                     getSupportFragmentManager().beginTransaction()
                             .add(R.id.chatContainer, new ChatFragment())
                             .commit();
+                } else if (sourceFragment == R.id.makeGroupChatFragment) {
+                    checkGroupHasExistingChat();
                 } else {
                     throw new IllegalArgumentException("Invalid chat access! Should not happen");
                 }
@@ -54,6 +59,7 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnCh
     private void checkFriendHasExistingChat() {
         int friendId = getIntent().getIntExtra(getString(R.string.keys_friend_id), 0);
         String friendFullName = getIntent().getStringExtra(getString(R.string.keys_friend_full_name));
+        String friendNickname = getIntent().getStringExtra(getString(R.string.keys_friend_nickname));
 
         SharedPreferences prefs = getSharedPreferences(
                 getString(R.string.keys_shared_prefs),
@@ -61,6 +67,7 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnCh
         int myId = prefs.getInt(getString(R.string.keys_prefs_id), 0);
         String myFullName = prefs.getString(getString(R.string.keys_prefs_first_name), "")
                     + " " + prefs.getString(getString(R.string.keys_prefs_last_name), "");
+        String myNickname = prefs.getString(getString(R.string.keys_prefs_username), "");
 
         if (friendId > 0) { // valid id
             // make async task to get chats
@@ -76,8 +83,10 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnCh
             try {
                 body.put("friendid", friendId);
                 body.put("friendfullname", friendFullName);
+                body.put("friendnickname", friendNickname);
                 body.put("myid", myId);
                 body.put("myfullname", myFullName);
+                body.put("mynickname", myNickname);
             } catch (JSONException e){
                 e.printStackTrace();
             }
@@ -132,6 +141,70 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnCh
                     chatName = res.getJSONArray("chats")
                             .getJSONObject(0).getString("name");
                 }
+
+                openChatFragment(chatId, parseChatName(chatName));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void checkGroupHasExistingChat() {
+        ArrayList<Integer> memberIds = getIntent().getIntegerArrayListExtra(getString(R.string.keys_group_chat_member_ids));
+        String groupName = getIntent().getStringExtra(getString(R.string.keys_group_chat_name));
+
+//        SharedPreferences prefs = getSharedPreferences(
+//                getString(R.string.keys_shared_prefs),
+//                Context.MODE_PRIVATE);
+//        int myId = prefs.getInt(getString(R.string.keys_prefs_id), 0);
+//        String myFullName = prefs.getString(getString(R.string.keys_prefs_first_name), "")
+//                + " " + prefs.getString(getString(R.string.keys_prefs_last_name), "");
+
+        if (groupName.length() > 0) { // valid name
+            // make async task to get chats
+            Uri uri = new Uri.Builder()
+                    .scheme("https")
+                    .appendPath(getString(R.string.ep_base_url))
+                    .appendPath(getString(R.string.ep_chats))
+                    .appendPath(getString(R.string.ep_chats_get_group_chat))
+                    .build();
+
+            JSONObject body = new JSONObject();
+
+            // provide member ids and group name
+            try {
+                JSONArray ids = new JSONArray(memberIds);
+//                for (int i = 0; i < memberIds.length; i++) {
+//                    ids.put(memberIds[i]);
+//                }
+
+                body.put("groupname", groupName);
+                body.put("ids", ids);
+            } catch (JSONException e){
+                e.printStackTrace();
+            }
+
+            new SendPostAsyncTask.Builder(uri.toString(), body)
+                    .onPostExecute(this::openGroupChat)
+                    .onCancelled(this::handleError)
+                    .build().execute();
+
+        } else {
+            throw new IllegalArgumentException("Expecting group name to start chat!");
+        }
+
+    }
+
+    // retrieve existing chat
+    private void openGroupChat(String response) {
+        try {
+            JSONObject res = new JSONObject(response);
+
+            if (res.getBoolean("success")) {
+                int chatId = res.getInt("chatid");
+                String chatName = res.getString("chatname");
 
                 openChatFragment(chatId, parseChatName(chatName));
             }
