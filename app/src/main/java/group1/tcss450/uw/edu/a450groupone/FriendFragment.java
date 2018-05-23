@@ -236,7 +236,7 @@ public class FriendFragment extends Fragment {
 
         // display an alert dialog to confirm deleting a connection.
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Are you sure you wnt to delete your friend?" )
+        builder.setMessage("Are you sure you want to delete your friend?" )
                 .setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
     }
