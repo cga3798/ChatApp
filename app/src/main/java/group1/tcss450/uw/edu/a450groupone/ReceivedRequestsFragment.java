@@ -175,12 +175,33 @@ public class ReceivedRequestsFragment extends Fragment {
      * @param result
      */
     private void handleAcceptOnPost(String result) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.detach(ReceivedRequestsFragment.this).attach(ReceivedRequestsFragment.this).commit();
+//        FragmentTransaction ft = getFragmentManager().beginTransaction();
+//        ft.detach(ReceivedRequestsFragment.this).attach(ReceivedRequestsFragment.this).commit();
+        try {
+            JSONObject response = new JSONObject(result);
+            String username = response.getString("names");
+            try {
+                View views;
+                for (int i = 0; i < receivedInvitesContainer.getChildCount(); i++) {
+                    views = receivedInvitesContainer.getChildAt(i);
+                    if (views instanceof android.support.constraint.ConstraintLayout) {
+                        android.support.constraint.ConstraintLayout cl =
+                                (android.support.constraint.ConstraintLayout) views.findViewById(R.id.receivedRequestRow);
+                        TextView tv = (TextView) cl.findViewById(R.id.receivedRequestLinearLayoutTextViewNickname);
+                        if (tv.getText().toString().equals(username)) {
+                            Log.e("ELSE ", "IN IT " + i);
+                            receivedInvitesContainer.removeView(views);
+                            Toasty.normal(getActivity(), "Invitation Accepted.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            } catch (NullPointerException e) {
+                Log.e("handleCancelOnPost: ", "NullPointerException");
+            }
 
-        Log.d("accept: ", result);
-        Toasty.normal(getActivity(), "Invitation Accepted!.", Toast.LENGTH_SHORT).show();
-
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -217,11 +238,33 @@ public class ReceivedRequestsFragment extends Fragment {
      * @param result the response from the server.
      */
     private void handleDeclineOnPost(String result) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.detach(ReceivedRequestsFragment.this).attach(ReceivedRequestsFragment.this).commit();
+//        FragmentTransaction ft = getFragmentManager().beginTransaction();
+//        ft.detach(ReceivedRequestsFragment.this).attach(ReceivedRequestsFragment.this).commit();
+        try {
+            JSONObject response = new JSONObject(result);
+            String username = response.getString("names");
+            try {
+                View views;
+                for (int i = 0; i < receivedInvitesContainer.getChildCount(); i++) {
+                    views = receivedInvitesContainer.getChildAt(i);
+                    if (views instanceof android.support.constraint.ConstraintLayout) {
+                        android.support.constraint.ConstraintLayout cl =
+                                (android.support.constraint.ConstraintLayout) views.findViewById(R.id.receivedRequestRow);
+                        TextView tv = (TextView) cl.findViewById(R.id.receivedRequestLinearLayoutTextViewNickname);
+                        if (tv.getText().toString().equals(username)) {
+                            Log.e("ELSE ", "IN IT " + i);
+                            receivedInvitesContainer.removeView(views);
+                            Toasty.normal(getActivity(), "Invitation Declined.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            } catch (NullPointerException e) {
+                Log.e("handleCancelOnPost: ", "NullPointerException");
+            }
 
-        Log.d("Decline: ", result);
-        Toasty.normal(getActivity(), "Invitation Declined.", Toast.LENGTH_SHORT).show();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 

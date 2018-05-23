@@ -1,12 +1,20 @@
 package group1.tcss450.uw.edu.a450groupone;
 
 
+import android.Manifest;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -18,6 +26,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONException;
+
+import group1.tcss450.uw.edu.a450groupone.utils.Weather;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +39,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMapClickListene
     MapView mMapView;
     private GoogleMap googleMap;
     private double mLat, mLng;
+    Marker mapMarker;
 
     public MapFragment() {
         // Required empty public constructor
@@ -46,6 +59,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMapClickListene
         mMapView = (MapView) v.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
+
         mMapView.onResume(); // needed to get the map to display immediately
 
         try {
@@ -57,39 +71,81 @@ public class MapFragment extends Fragment implements GoogleMap.OnMapClickListene
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap mMap) {
+                Location currentLocation = null;
+                LatLng mapLatLng = null;
+
                 googleMap = mMap;
+                googleMap.getUiSettings().setZoomControlsEnabled(true);
+                googleMap.getUiSettings().setAllGesturesEnabled(true);
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
 
-//                LatLng latLng = new LatLng(mLat, mLng);
-//                mGoogleMap.addMarker(new MarkerOptions().
-//                        position(latLng).
-//                        title("Marker in Tacoma"));
-//                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
-//                mGoogleMap.setOnMapClickListener(this);
+                    googleMap.setMyLocationEnabled(true);
 
-                // For showing a move to my location button
-                //googleMap.setMyLocationEnabled(true);
+                    currentLocation = LocationServices.FusedLocationApi.getLastLocation(
+                            ((NavigationActivity)getActivity()).getmGoogleApiClient());
+                    if (currentLocation != null) {
+                        mapLatLng = new LatLng(currentLocation.getLatitude(),
+                                currentLocation.getLongitude());
+                        Log.i("MAP_CURRENT_LOCATION", currentLocation.toString());
+                    }
+
+                }
 
                 // For dropping a marker at a point on the Map
-                LatLng sydney = new LatLng(-34, 151);
-                googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+                if (mapLatLng != null) {
+                    mapMarker = googleMap.addMarker(new MarkerOptions().position(mapLatLng).title("Show weather of this location"));//.snippet("Marker Description"));
+                    // For zooming automatically to the location of the marker
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(mapLatLng).zoom(12).build();
+                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-                // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                }
 
                 googleMap.setOnMapClickListener(thisFrag);
             }
         });
+
+        // done button listener
+        v.findViewById(R.id.doneButton).setOnClickListener(this::goToWeather);
 
         return v;
     }
 
     @Override
     public void onMapClick(LatLng latLng) {
-        Marker marker = googleMap.addMarker(new MarkerOptions()
-                .position(latLng)
-                .title("New Marker"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18.0f));
+        mapMarker.setPosition(latLng);
+//                = googleMap.addMarker(new MarkerOptions()
+//                .position(latLng)
+//                .title(""));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12.0f));
+
+        setCoordsInPrefs(latLng);
+    }
+
+    private void setCoordsInPrefs(LatLng latLng) {
+        SharedPreferences prefs = getActivity().getSharedPreferences(
+                getString(R.string.keys_shared_prefs),
+                Context.MODE_PRIVATE);
+
+        // load coordinates in prefs
+        prefs.edit().putString(getString(R.string.keys_prefs_selected_city_lat),
+               String.valueOf(latLng.latitude) ).apply();
+
+        prefs.edit().putString(getString(R.string.keys_prefs_selected_city_lon),
+               String.valueOf(latLng.longitude) ).apply();
+        prefs.edit().putString(getString(R.string.keys_prefs_selected_zip),
+                "_").apply();
+
+        // let fragment know we just selkected the city
+        prefs.edit().putBoolean(getString(R.string.keys_prefs_selected_city),
+                true).apply();
+    }
+
+    private void goToWeather(View v) {
+        getActivity().getSupportFragmentManager().popBackStack();
+        getActivity().getSupportFragmentManager().popBackStack();
     }
 
     @Override

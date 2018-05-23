@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import es.dmoral.toasty.Toasty;
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
@@ -145,32 +147,34 @@ public class SentRequestsFragment extends Fragment {
 
 
     private void handleCancelOnPost(String result) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.detach(SentRequestsFragment.this).attach(SentRequestsFragment.this).commit();
+//        FragmentTransaction ft = getFragmentManager().beginTransaction();
+//        ft.detach(SentRequestsFragment.this).attach(SentRequestsFragment.this).commit();
 
-        Toasty.normal(getActivity(), "Invitation Canceled.", Toast.LENGTH_SHORT).show();
+        try {
+            JSONObject response = new JSONObject(result);
+            String username = response.getString("names");
+            try {
+                View views;
+                for (int i = 0; i < sentInvitesContainer.getChildCount(); i++) {
+                       views = sentInvitesContainer.getChildAt(i);
+                        if (views instanceof android.support.constraint.ConstraintLayout) {
+                            android.support.constraint.ConstraintLayout cl =
+                                    (android.support.constraint.ConstraintLayout) views.findViewById(R.id.sentRequestRow);
+                            TextView tv = (TextView) cl.findViewById(R.id.sentRequestLinearLayoutTextViewNickname);
+                            if (tv.getText().toString().equals(username)) {
+                                Log.e("ELSE ", "IN IT " + i);
+                                sentInvitesContainer.removeView(views);
+                                Toasty.normal(getActivity(), "Invitation Canceled.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+               }
+            } catch (NullPointerException e) {
+                Log.e("handleCancelOnPost: ", "NullPointerException");
+            }
 
-
-//        try {
-//            JSONObject response = new JSONObject(result);
-//            String username = response.getString("names");
-//            try {
-//                View views;
-//                for (int i = 0; i < sentInvitesContainer.getChildCount() - 1; i++) {
-//                       views = sentInvitesContainer.getChildAt(i);
-//                       TextView tv = (TextView) views.findViewById(R.id.sentRequestLinearLayoutTextViewNickname);
-//                       String tvUsername = tv.getText().toString();
-//                       if (tvUsername.equals(username)) {
-//                           sentInvitesContainer.removeView(views);
-//                       }
-//               }
-//            } catch (NullPointerException e) {
-//                Log.e("handleCancelOnPost: ", "NullPointerException");
-//            }
-//
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void handleErrorsInTask(String result) {
