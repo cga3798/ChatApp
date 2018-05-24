@@ -171,7 +171,7 @@ public class MyIntentService extends IntentService {
         // only build notification if something request in background was received
 
 
-        if (initialState == currentlState) {
+        if (initialState == currentlState && !userToDisplay.equals("empty")) {
 
             Log.d(TAG, "buildNotification() - " + userToDisplay);
             //IMPORT V4 not V7
