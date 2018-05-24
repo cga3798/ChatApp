@@ -289,7 +289,8 @@ public class NavigationActivity extends AppCompatActivity implements
                     false)
                     .apply();
             //the way to close an app programmaticaly
-            finishAndRemoveTask();
+            Intent intent = new Intent(NavigationActivity.this, MainActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
