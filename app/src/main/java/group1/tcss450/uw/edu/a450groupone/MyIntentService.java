@@ -10,12 +10,15 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import group1.tcss450.uw.edu.a450groupone.utils.BadgeDrawerArrowDrawable;
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
 
@@ -38,6 +41,7 @@ public class MyIntentService extends IntentService {
     private int currentlState = 0;
     private int count = 0;
     private String userToDisplay = "empty";
+    public boolean newRequest = false;
 
     public MyIntentService() {
         super("MyIntentService");
@@ -137,6 +141,9 @@ public class MyIntentService extends IntentService {
 //                        userToDisplay = request.getString("username");
 //                    }
                 }
+
+            } else {
+                newRequest = false;
             }
 
         } catch (JSONException e) {
@@ -144,7 +151,7 @@ public class MyIntentService extends IntentService {
         }
 
         // this needs to be here because we need to wait until we've received user data
-        buildNotification("inForeground");
+        buildNotification();
 
     }
 
@@ -160,14 +167,19 @@ public class MyIntentService extends IntentService {
         return msg;
     }
 
-    private void buildNotification(String s) {
+    private void buildNotification() {
         // only build notification if something request in background was received
-        if (initialState == currentlState) {
+
+        if (initialState != currentlState) {
+
+
             Log.d(TAG, "buildNotification() - " + userToDisplay);
             //IMPORT V4 not V7
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(this)
-                            .setSmallIcon(R.drawable.ic_cloud_black_24dp)
+                            .setContentTitle("Connection Request")
+//                            .setSmallIcon(R.drawable.ic_cloud_black_24dp)
+                            .setSmallIcon(R.mipmap.logomaker_app_icon)
                             .setContentTitle("New Request")
                             .setContentText(userToDisplay + " sent you a request.");
 
@@ -175,12 +187,11 @@ public class MyIntentService extends IntentService {
             Intent notifyIntent =
                     new Intent(this, NavigationActivity.class);
             notifyIntent.putExtra("friendFragment", "FriendFragment");
-            Bundle bundle = new Bundle();
-            notifyIntent.putExtra(getString(R.string.keys_extra_results), s);
 
             // Sets the Activity to start in a new, empty task
             notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
             // Creates the PendingIntent
             PendingIntent notifyPendingIntent =
                     PendingIntent.getActivity(
@@ -198,8 +209,19 @@ public class MyIntentService extends IntentService {
                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             // mId allows you to update the notification later on.
             mNotificationManager.notify(1, mBuilder.build());
+
+            System.out.println("intent Received");
+            Intent RTReturn = new Intent(NavigationActivity.RECEIVE_JSON);
+            RTReturn.putExtra("json", "jsonString");
+            LocalBroadcastManager.getInstance(this).sendBroadcast(RTReturn);
+
         } else {
             Log.d(TAG, "buildNotification() - nothing new");
+
         }
+    }
+
+    public boolean isThereNewRequest() {
+        return newRequest;
     }
 }

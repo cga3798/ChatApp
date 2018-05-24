@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 /**
@@ -12,29 +13,22 @@ import android.util.Log;
  * configuring a receiver to listen to rebooting and to start the service
  * automatically on restart.
  */
-public class BootUpReceiver extends BroadcastReceiver {
+public class NotificationReceiver extends BroadcastReceiver {
 
-    private static final String TAG = "BootUpReceiver";
+    private static final String TAG = "NotificationReceiver";
+
+
+    public NotificationReceiver() {
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "onReceive");
 
-        SharedPreferences sharedPreferences =
-                context.getSharedPreferences(
-                        context.getString(R.string.keys_shared_prefs),
-                        Context.MODE_PRIVATE);
-        if (sharedPreferences.getBoolean(context.getString(
-                R.string.keys_sp_on), false)) {
-            Log.d(TAG, "starting service");
-        }
-        else {
-            Log.d(TAG, "Did NOT start the service");
+        if (intent.getAction().equals("new")) {
+            Log.e("onReceive: ", "new notification");
+        } else {
+            Log.e("onReceive: ", "no new notification");
         }
     }
-
-
-    public BootUpReceiver() {
-    }
-
 }

@@ -153,11 +153,10 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
         String lon = prefs.getString(getString(R.string.keys_prefs_selected_city_lon), "_");
 
         if (zip.charAt(0) == '_') {
-            asyncTask.execute("_", zip);
-        } else {
             asyncTask.execute(lat, lon);
+        } else { // entered zip
+            asyncTask.execute("_", zip);
         }
-
         // clear zip in prefs.. just replace by '_'
         prefs.edit().putString(getString(R.string.keys_prefs_selected_zip), "_");
 
@@ -174,6 +173,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
 
             Log.d("ADDINgCITY", " current array = " + preferedCities.toString());
             String cityToAddName = data.getString(Weather.K_CITY);
+            Log.d("CHECKING city ", "city is  " + cityToAddName);
 
             boolean found = false;
             // search if city exits in array

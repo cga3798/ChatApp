@@ -38,6 +38,7 @@ public class FriendFragment extends Fragment {
 
     private OnFriendFragmentInteractionListener mListener;
     private String fullname;
+    private LinearLayout contactsListContainer;
 
     public FriendFragment() {
         // Required empty public constructor
@@ -108,7 +109,7 @@ public class FriendFragment extends Fragment {
      * @param res
      */
     private void populateContacts(String res) {
-        LinearLayout contactsListContainer = (LinearLayout) getActivity().findViewById(R.id.friendsLinearLayoutContactsList);
+        contactsListContainer = (LinearLayout) getActivity().findViewById(R.id.friendsLinearLayoutContactsList);
         Log.d("GOTCONTACTS", res);
 
         try {
@@ -235,7 +236,7 @@ public class FriendFragment extends Fragment {
 
         // display an alert dialog to confirm deleting a connection.
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Are you sure you wnt to delete your friend?" )
+        builder.setMessage("Are you sure you want to delete your friend?" )
                 .setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
     }
@@ -273,10 +274,35 @@ public class FriendFragment extends Fragment {
      * @param result response from server.
      */
     private void handleDeleteOnPost(String result) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.detach(FriendFragment.this).attach(FriendFragment.this).commit();
+//        FragmentTransaction ft = getFragmentManager().beginTransaction();
+//        ft.detach(FriendFragment.this).attach(FriendFragment.this).commit();
+//        Toasty.normal(getActivity(), fullname + " has been successfully deleted.", Toast.LENGTH_SHORT).show();
 
-        Toasty.info(getActivity(), fullname + " has been successfully deleted.", Toast.LENGTH_SHORT, true).show();
+        try {
+            JSONObject response = new JSONObject(result);
+            String username = response.getString("names");
+            try {
+                View views;
+                for (int i = 0; i < contactsListContainer.getChildCount(); i++) {
+                    views = contactsListContainer.getChildAt(i);
+                    if (views instanceof android.support.constraint.ConstraintLayout) {
+                        android.support.constraint.ConstraintLayout cl =
+                                (android.support.constraint.ConstraintLayout) views.findViewById(R.id.contactRow);
+                        TextView tv = (TextView) cl.findViewById(R.id.friendsTextViewNickname);
+                        if (tv.getText().toString().equals(username)) {
+                            contactsListContainer.removeView(views);
+                            Toasty.normal(getActivity(), fullname + " has been successfully deleted.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            } catch (NullPointerException e) {
+                Log.e("handleCancelOnPost: ", "NullPointerException");
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 

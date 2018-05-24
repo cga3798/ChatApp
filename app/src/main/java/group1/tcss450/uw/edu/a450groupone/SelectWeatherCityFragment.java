@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -79,12 +80,24 @@ public class SelectWeatherCityFragment extends Fragment implements RecyclerViewA
             ImageButton b = (ImageButton) v.findViewById(R.id.mapButton);
             b.setOnClickListener(this::openMap);
 
+            // clear history button set listener
+            v.findViewById(R.id.clearHistoryButton)
+                .setOnClickListener(this::clearCityHistory);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         return v;
+    }
+
+    private void clearCityHistory(View v) {
+        SharedPreferences prefs = getActivity().getSharedPreferences(
+                getString(R.string.keys_shared_prefs),
+                Context.MODE_PRIVATE);
+
+        prefs.edit().putString(
+                getString(R.string.keys_prefs_fave_cities), "[]").apply();
     }
 
     @Override
@@ -97,10 +110,11 @@ public class SelectWeatherCityFragment extends Fragment implements RecyclerViewA
     @Override
     public boolean onQueryTextSubmit(String zip) {
         // check it's valid input
-
-
-        getWeatherByZip(zip);
-        return false;
+        zip = zip.trim();
+        if (zip.length() == 5) {
+            getWeatherByZip(zip);
+        }
+        return true;
     }
 
     @Override
