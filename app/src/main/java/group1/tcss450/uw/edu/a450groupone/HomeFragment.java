@@ -16,7 +16,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -153,7 +152,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     private void populateChats(String res) {
         LinearLayout buttonContainer = (LinearLayout) getActivity().findViewById(R.id.HomeLinearLayoutButtonContainer);
 
-
         if (!prefs.contains(getString(R.string.keys_prefs_username))) {
             throw new IllegalStateException("No username in prefs!");
         }
@@ -165,12 +163,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 for (int i = 0; i < chatList.length(); i++) {
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.MATCH_PARENT);
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
 
                     // layout to hold chatroom buttons and textviews
                     LinearLayout container = new LinearLayout(this.getActivity());
                     container.setOrientation(LinearLayout.HORIZONTAL);
-                    container.setLayoutParams(params);
+
                     // button for chatrooms
                     Button button = new Button(this.getActivity(), null, android.R.attr.buttonBarButtonStyle);
                     JSONObject name = chatList.getJSONObject(i);
@@ -217,25 +215,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
                     // adding textView to layout
                     container.addView(textView);
-                    Button deleteButton = new Button(this.getActivity(), null, android.R.attr.buttonBarButtonStyle);
-                    deleteButton.setText("DELETE");
-                    deleteButton.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View view) {
-                            try {
-                                confirmDelete(name.getInt("chatid"));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                        }});
-                    LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT);
-                    params1.gravity = Gravity.RIGHT;
-
-                    container.addView(deleteButton, params1);
                     // adding layout to container
-                    buttonContainer.addView(container,params);
+                    buttonContainer.addView(container, params);
                 }
             }
         } catch (JSONException e) {
@@ -256,7 +237,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
             result = responseName.substring(1);
         } else { // chat between two people
             String userFullName = prefs.getString(getString(R.string.keys_prefs_first_name), "")
-                                + " " + prefs.getString(getString(R.string.keys_prefs_last_name), "");
+                    + " " + prefs.getString(getString(R.string.keys_prefs_last_name), "");
 
             String name1 = responseName.split("_")[0];
             String name2 = responseName.split("_")[1];
@@ -397,7 +378,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             currentLocation = LocationServices.FusedLocationApi.getLastLocation(
-                            ((NavigationActivity)getActivity()).getmGoogleApiClient());
+                    ((NavigationActivity)getActivity()).getmGoogleApiClient());
             if (currentLocation != null) {
                 // first log we should see
                 Log.i("HOME_CURRENT_LOCATION", currentLocation.toString());
@@ -415,7 +396,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         });
 
         if(currentLocation == null) {
-           // use Tacoma as default
+            // use Tacoma as default
             // TODO: change to default/preferred city later
             asyncTask.execute("47.25288", "-122.44429");
 
@@ -475,7 +456,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
      * listener interfaces for temp buttons
      *
      * author: Casey Anderson
-      */
+     */
     public interface OnHomeFragmentInteractionListener {
         void onNewChat();
         void onOpenChat();
