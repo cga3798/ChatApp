@@ -403,7 +403,7 @@ public class NavigationActivity extends AppCompatActivity implements
                     // permission was granted, yay! Do the
                     // locations-related task you need to do.
                     //startLocationUpdates();
-                    homeFragment.setWeatherData();
+                    //homeFragment.setWeatherData();
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.

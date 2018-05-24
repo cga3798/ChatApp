@@ -135,6 +135,7 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnCh
                   }
                  */
                 else {
+
                     // use the first match for now
                     chatId = res.getJSONArray("chats")
                             .getJSONObject(0).getInt("chatid");
@@ -149,7 +150,6 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnCh
             e.printStackTrace();
         }
     }
-
 
     private void checkGroupHasExistingChat() {
         ArrayList<Integer> memberIds = getIntent().getIntegerArrayListExtra(getString(R.string.keys_group_chat_member_ids));
