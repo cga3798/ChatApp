@@ -239,7 +239,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
             result = responseName.substring(1);
         } else { // chat between two people
             String userFullName = prefs.getString(getString(R.string.keys_prefs_first_name), "")
-                                + " " + prefs.getString(getString(R.string.keys_prefs_last_name), "");
+                    + " " + prefs.getString(getString(R.string.keys_prefs_last_name), "");
 
             String name1 = responseName.split("_")[0];
             String name2 = responseName.split("_")[1];
@@ -478,7 +478,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
      * listener interfaces for temp buttons
      *
      * author: Casey Anderson
-      */
+     */
     public interface OnHomeFragmentInteractionListener {
         void onNewChat();
         void onOpenChat();

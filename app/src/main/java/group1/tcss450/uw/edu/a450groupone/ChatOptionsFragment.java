@@ -2,11 +2,15 @@ package group1.tcss450.uw.edu.a450groupone;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +27,7 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
+import es.dmoral.toasty.Toasty;
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
 
@@ -33,6 +39,9 @@ public class ChatOptionsFragment extends Fragment {
     private SharedPreferences prefs;
     private View v;
     private LayoutInflater inflater;
+    private int mMemberId;
+    int chatId;
+
 
     public ChatOptionsFragment() {
         // Required empty public constructor
@@ -46,9 +55,16 @@ public class ChatOptionsFragment extends Fragment {
         this.inflater = inflater;
         v = inflater.inflate(R.layout.fragment_chat_options, container, false);
 
+        prefs = getActivity().getSharedPreferences(
+                getString(R.string.keys_shared_prefs),
+                Context.MODE_PRIVATE);
+
+        mMemberId = prefs.getInt(getString(R.string.keys_prefs_id), 0);
+        chatId = prefs.getInt(getString(R.string.keys_prefs_chatId), 0);
+
         Button button = (Button) v.findViewById(R.id.chatOptionLeaveGroup);
         button.setOnClickListener(view -> {
-
+                confirmDelete(chatId);
         });
 
         button = (Button) v.findViewById(R.id.chatOptionViewMembers);
@@ -59,6 +75,7 @@ public class ChatOptionsFragment extends Fragment {
                 e.printStackTrace();
             }
         });
+
         return v;
     }
 
@@ -68,15 +85,13 @@ public class ChatOptionsFragment extends Fragment {
      * author: Casey Anderson
      */
     private void getMembers ( View v ) throws JSONException {
-        int chatId;
 
-        prefs = getActivity().getSharedPreferences(
-                getString(R.string.keys_shared_prefs),
-                Context.MODE_PRIVATE);
+
         if (!prefs.contains(getString(R.string.keys_prefs_chatId))) {
             throw new IllegalStateException("No chatId in prefs!");
         }
-        chatId = prefs.getInt(getString(R.string.keys_prefs_chatId), 0);
+
+
         Uri retrieve = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
@@ -128,6 +143,64 @@ public class ChatOptionsFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+
+    /*
+* Prompts user for confirmation to delete the chat.
+ */
+    private void confirmDelete(int chatid) {
+        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    Log.d("YES: ", "clicked");
+                    deleteChat(chatid);
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //No button clicked
+                    Log.d("NO: ", "clicked");
+                    break;
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Are you sure you wnt to delete your chat?" )
+                .setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+    }
+
+    /*
+     * Sends the delete chat json to the server.
+     */
+    private void deleteChat(int chatid){
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_delete_chat))
+                .build();
+
+        JSONObject msg = new JSONObject();
+
+        try {
+            msg.put("chatid", chatid);
+            msg.put("memberid", mMemberId);
+        } catch (JSONException e) {
+            Log.e("DELETECHAT", "Error creating JSON: " + e.getMessage());
+        }
+
+        new SendPostAsyncTask.Builder(uri.toString(), msg)
+                .onPostExecute(this::handleDeleteOnPost)
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
+    }
+
+    /*
+    *   Reloads home and displays a confirmation that chat was deleted.
+     */
+    private void handleDeleteOnPost(String result) {
+        Intent intent = new Intent(getActivity(), NavigationActivity.class);
+        startActivity(intent);
     }
 
     /**
