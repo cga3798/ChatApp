@@ -62,6 +62,7 @@
     <string name="keys_group_chat_member_ids">groupchatMembers</string>
     <string name="keys_extra_results">results</string>
     <string name="keys_is_foreground">FOREGROUND</string>
+    <string name="keys_current_chatid">currentChatId</string>
 
 
 
