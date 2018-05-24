@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -23,10 +25,8 @@ import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsFragment extends Fragment implements View.OnClickListener{
+public class SettingsFragment extends Fragment{
 
-    String str_testDeleteChat_chatid = "";
-    private String memberid;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -42,68 +42,47 @@ public class SettingsFragment extends Fragment implements View.OnClickListener{
         SharedPreferences prefs =
                 this.getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),
                         Context.MODE_PRIVATE);
+        String.valueOf(prefs.getInt(getString(R.string.keys_prefs_id), -1));
+        CheckBox c = (CheckBox) v.findViewById(R.id.settingsCheckBoxStayLog);
+        c.setChecked(prefs.getBoolean(getString(R.string.keys_prefs_stay_logged_in), false));
 
-        memberid =  String.valueOf(prefs.getInt(getString(R.string.keys_prefs_id), -1));
+        Button save = (Button) v.findViewById(R.id.settingsButtonSave);
+        Button cancel = (Button) v.findViewById(R.id.settingsButtonCancel);
+        save.setEnabled(false);
+        cancel.setEnabled(false);
 
-        Button b = (Button) v.findViewById(R.id.settingsBTNDelete);
-        b.setOnClickListener(this);
-        /*
-        * this was code for passing the chatname on creation
-         */
-//        if (getArguments() != null) {
-//            if (getArguments().getBoolean("chatname"))  {
-//                str_testDeleteChat_chatname = getArguments().getString("chatname");
-//            }
-//        } else {
-//            Log.e("getArguments: ", "NULL");
-//        }
+        c.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                save.setEnabled(true);
+                cancel.setEnabled(true);
+            }
+        });
+
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                prefs.edit().putBoolean(
+                        getString(R.string.keys_prefs_stay_logged_in),
+                        c.isChecked())
+                        .apply();
+                save.setEnabled(false);
+                cancel.setEnabled(false);
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                c.setChecked(prefs.getBoolean(getString(R.string.keys_prefs_stay_logged_in), false));
+                save.setEnabled(false);
+                cancel.setEnabled(false);
+            }
+        });
+
+
 
         return v;
-    }
-
-    //when clicked
-    void sendDelete() {
-
-        Uri uri = new Uri.Builder()
-                .scheme("https")
-                .appendPath(getString(R.string.ep_base_url))
-                .appendPath(getString(R.string.ep_delete_chat))
-                .build();
-
-        JSONObject msg = new JSONObject();
-
-        try {
-            msg.put("chatid", str_testDeleteChat_chatid);
-            msg.put("memberid", memberid);
-        } catch (JSONException e) {
-            Log.e("DELETECHAT", "Error creating JSON: " + e.getMessage());
-        }
-
-        new SendPostAsyncTask.Builder(uri.toString(), msg)
-                .onPostExecute(this::handleDeleteOnPost)
-                .onCancelled(this::handleErrorsInTask)
-                .build().execute();
-    }
-
-    void handleDeleteOnPost(String result){
-        ((EditText) getView().findViewById(R.id.settingsETChatID)).setText("");
-    }
-
-    void handleErrorsInTask(String result){
-
-        ((EditText) getView().findViewById(R.id.settingsETChatID)).setError("Error");
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.settingsBTNDelete:
-                Log.e("Settings", "onClick: ");
-                str_testDeleteChat_chatid = ((EditText) getView().findViewById(R.id.settingsETChatID)).getText().toString();
-                sendDelete();
-                break;
-            default:
-                break;
-        }
     }
 }
