@@ -172,7 +172,6 @@ public class MyIntentService extends IntentService {
 
         if (initialState == currentlState && !userToDisplay.equals("empty")) {
 
-
             Log.d(TAG, "buildNotification() - " + userToDisplay);
             //IMPORT V4 not V7
             NotificationCompat.Builder mBuilder =

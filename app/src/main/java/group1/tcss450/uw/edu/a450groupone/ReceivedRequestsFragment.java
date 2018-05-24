@@ -330,5 +330,4 @@ public class ReceivedRequestsFragment extends Fragment {
         NavigationActivity navigationActivity = (NavigationActivity) getActivity();
         navigationActivity.navigationView.getMenu().getItem(1).setActionView(R.layout.menu_item_no_dot);
     }
-
 }
