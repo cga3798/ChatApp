@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -73,6 +74,12 @@ public class MapFragment extends Fragment implements GoogleMap.OnMapClickListene
             public void onMapReady(GoogleMap mMap) {
                 Location currentLocation = null;
                 LatLng mapLatLng = null;
+                SharedPreferences prefs = getActivity().getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+
+                String lat = prefs.getString(getString(R.string.keys_prefs_selected_city_lat), "_");
+                String lon = prefs.getString(getString(R.string.keys_prefs_selected_city_lon), "_");
 
                 googleMap = mMap;
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
@@ -86,23 +93,24 @@ public class MapFragment extends Fragment implements GoogleMap.OnMapClickListene
 
                     currentLocation = LocationServices.FusedLocationApi.getLastLocation(
                             ((NavigationActivity)getActivity()).getmGoogleApiClient());
-                    if (currentLocation != null) {
-                        mapLatLng = new LatLng(currentLocation.getLatitude(),
-                                currentLocation.getLongitude());
-                        Log.i("MAP_CURRENT_LOCATION", currentLocation.toString());
-                    }
 
                 }
 
+                if (currentLocation != null) {
+                    mapLatLng = new LatLng(currentLocation.getLatitude(),
+                            currentLocation.getLongitude());
+                    Log.i("MAP_CURRENT_LOCATION", currentLocation.toString());
+                } else {
+                    mapLatLng = new LatLng(Double.valueOf(lat), Double.valueOf(lon));
+                }
+
                 // For dropping a marker at a point on the Map
-                if (mapLatLng != null) {
+                if (mapLatLng != null) { // location was obtained
                     mapMarker = googleMap.addMarker(new MarkerOptions().position(mapLatLng).title("Show weather of this location"));//.snippet("Marker Description"));
                     // For zooming automatically to the location of the marker
                     CameraPosition cameraPosition = new CameraPosition.Builder().target(mapLatLng).zoom(12).build();
                     googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
                 }
-
                 googleMap.setOnMapClickListener(thisFrag);
             }
         });

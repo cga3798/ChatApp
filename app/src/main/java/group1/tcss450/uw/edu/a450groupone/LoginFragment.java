@@ -1,6 +1,7 @@
 package group1.tcss450.uw.edu.a450groupone;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +31,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         // Required empty public constructor
     }
 
+
+
     /**
      * setting up fragment
      *
@@ -45,6 +49,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         b = (Button) v.findViewById(R.id.LoginButtonRegister);
         b.setOnClickListener(this);
         return v;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        SharedPreferences prefs =
+                this.getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        String.valueOf(prefs.getInt(getString(R.string.keys_prefs_id), -1));
+        CheckBox c = (CheckBox) getActivity().findViewById(R.id.LoginCheckBoxStayLoggedIn);
+        c.setChecked(prefs.getBoolean(getString(R.string.keys_prefs_stay_logged_in), false));
     }
 
     /**
