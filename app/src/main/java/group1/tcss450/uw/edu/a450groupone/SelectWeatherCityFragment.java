@@ -40,6 +40,7 @@ public class SelectWeatherCityFragment extends Fragment implements RecyclerViewA
     RecyclerViewAdapter adapter;
     SearchView searchView;
     JSONArray preferedCities;
+    RecyclerView recyclerView;
 
 
     public SelectWeatherCityFragment() {
@@ -67,7 +68,7 @@ public class SelectWeatherCityFragment extends Fragment implements RecyclerViewA
             }
 
             // set up the RecyclerView
-            RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.rvCities);
+            recyclerView = (RecyclerView) v.findViewById(R.id.rvCities);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             adapter = new RecyclerViewAdapter(getContext(), cityNames);
             adapter.setClickListener(this::onItemClick);
@@ -98,11 +99,14 @@ public class SelectWeatherCityFragment extends Fragment implements RecyclerViewA
 
         prefs.edit().putString(
                 getString(R.string.keys_prefs_fave_cities), "[]").apply();
+
+        recyclerView.setAdapter(null);
+
     }
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(getActivity(), "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
         getWeatherBySelection(position);
     }
 

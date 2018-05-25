@@ -22,11 +22,10 @@
                 android:id="@+id/result_tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorAccent"
                 android:elevation="0dp"
                 app:tabIndicatorColor="@color/colorPrimary"
                 app:tabMode="scrollable"
-                app:tabSelectedTextColor="@color/colorPrimary"
+                app:tabSelectedTextColor="@color/medium_grey"
                 app:tabTextColor="@color/medium_grey" />
 
 

@@ -75,7 +75,7 @@
     <string name="invite">Invite</string>
     <string name="cancel">Cancel</string>
     <string name="create_group">Create</string>
-    <string name="leave_group">Leave Group</string>
+    <string name="leave_group">Delete Chat</string>
     <string name="view_members">View Group Members</string>
 
 </resources>

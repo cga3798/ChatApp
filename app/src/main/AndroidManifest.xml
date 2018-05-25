@@ -8,9 +8,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/logomaker_app_icon"
+        android:icon="@mipmap/chatapplogo"
         android:label="@string/App_name_fragment"
-        android:roundIcon="@mipmap/logomaker_app_icon"
+        android:roundIcon="@mipmap/chatapplogo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity

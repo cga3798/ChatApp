@@ -100,11 +100,11 @@ public class MessageIntentService extends IntentService {
             e.printStackTrace();
         }
 
-        new SendPostAsyncTask.Builder(retrieve.toString(), body)
-                .onPostExecute(this::populateChats)
-                //TODO: add onCancelled handler.
-                .onCancelled(this::handleErrorsInTask)
-                .build().execute();
+//        new SendPostAsyncTask.Builder(retrieve.toString(), body)
+//                .onPostExecute(this::populateChats)
+//                //TODO: add onCancelled handler.
+//                .onCancelled(this::handleErrorsInTask)
+//                .build().execute();
     }
 
 }

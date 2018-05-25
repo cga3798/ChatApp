@@ -1,6 +1,8 @@
 package group1.tcss450.uw.edu.a450groupone.utils;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -511,6 +513,7 @@ public class Weather {
         }
         return icon;
     }
+
 
     private static void handleErrorsInTask(String result) {
         Log.e("ASYNCT_WEATHER_TASK_ERROR", result);

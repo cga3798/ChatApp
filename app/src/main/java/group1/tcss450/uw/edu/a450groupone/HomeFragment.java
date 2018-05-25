@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -72,7 +73,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
-        //location = new MyLocation(getContext(), null);
+        prefs = getActivity().getSharedPreferences(
+                getString(R.string.keys_shared_prefs),
+                Context.MODE_PRIVATE);
 
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
@@ -95,7 +98,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         weatherIcon = (TextView) v.findViewById(R.id.homeTextViewWeatherIcon);
         weatherIcon.setTypeface(weatherFont);
 
-        setWeatherData();
+        // listener of current location button
+        v.findViewById(R.id.homeCurrentLocationButton).setOnClickListener(this::setCurrentLocationWeather);
+
+        setWeatherData(false);
 
         // call to populate users chat rooms
         try {
@@ -113,9 +119,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
      * author: Casey Anderson
      */
     private void getChats ( View v ) throws JSONException {
-        prefs = getActivity().getSharedPreferences(
-                getString(R.string.keys_shared_prefs),
-                Context.MODE_PRIVATE);
 
         if (!prefs.contains(getString(R.string.keys_prefs_username))) {
             throw new IllegalStateException("No username in prefs!");
@@ -200,7 +203,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                                 e.printStackTrace();
                             }
                             mListener.onOpenChat();
-                        }});
+                        }
+                    });
 
                     container.addView(button, params);
                     // textView to display chatrooms last message
@@ -237,7 +241,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
             result = responseName.substring(1);
         } else { // chat between two people
             String userFullName = prefs.getString(getString(R.string.keys_prefs_first_name), "")
-                                + " " + prefs.getString(getString(R.string.keys_prefs_last_name), "");
+                    + " " + prefs.getString(getString(R.string.keys_prefs_last_name), "");
 
             String name1 = responseName.split("_")[0];
             String name2 = responseName.split("_")[1];
@@ -370,21 +374,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         Log.wtf("ASYNCT_TASK_ERROR", result);
     }
 
-    public void setWeatherData() {
-        Location currentLocation = null;
+    private void setCurrentLocationWeather( View v ){
+        setWeatherData(true);
+    }
 
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            currentLocation = LocationServices.FusedLocationApi.getLastLocation(
-                            ((NavigationActivity)getActivity()).getmGoogleApiClient());
-            if (currentLocation != null) {
-                // first log we should see
-                Log.i("HOME_CURRENT_LOCATION", currentLocation.toString());
-            }
-
-        }
+    public void setWeatherData(boolean wantCurrentLocation) {
 
         Weather.RetrieveData asyncTask = new Weather.RetrieveData(getContext(), R.id.fragmentHome, new Weather.AsyncResponse() {
             public void processFinish(Bundle args) {
@@ -395,16 +389,50 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
             }
         });
 
-        if(currentLocation == null) {
-           // use Tacoma as default
-            // TODO: change to default/preferred city later
-            asyncTask.execute("47.25288", "-122.44429");
+        String lat = prefs.getString(getString(R.string.keys_prefs_selected_city_lat), "_");
+        String lon = prefs.getString(getString(R.string.keys_prefs_selected_city_lon), "_");
+
+
+        if (wantCurrentLocation) {
+            Location currentLocation = null;
+
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+
+                currentLocation = LocationServices.FusedLocationApi.getLastLocation(
+                        ((NavigationActivity)getActivity()).getmGoogleApiClient());
+
+            }
+
+            if (currentLocation != null) {
+                // use current location
+                Log.i("HOME_CURRENT_LOCATION", currentLocation.toString());
+                asyncTask.execute(String.valueOf(currentLocation.getLatitude()),
+                        String.valueOf(currentLocation.getLongitude()));
+
+                prefs.edit().putString(getString(R.string.keys_prefs_selected_city_lat),
+                                String.valueOf(currentLocation.getLatitude())).apply();
+                prefs.edit().putString(getString(R.string.keys_prefs_selected_city_lon),
+                                String.valueOf(currentLocation.getLongitude())).apply();
+
+            }
 
         } else {
-            // use current location
-            asyncTask.execute( String.valueOf(currentLocation.getLatitude()),
-                    String.valueOf(currentLocation.getLongitude()) );
+            // we dont have a saved location
+            if (lat.charAt(0) == '_') {
+                // use Tacoma as default
+                asyncTask.execute("47.25288", "-122.44429");
+                prefs.edit().putString(getString(R.string.keys_prefs_selected_city_lat),
+                        "47.25288").apply();
+                prefs.edit().putString(getString(R.string.keys_prefs_selected_city_lon),
+                        "-122.44429").apply();
+            } else {
+                asyncTask.execute(lat, lon);
+            }
         }
+
     }
 
     /**
@@ -456,7 +484,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
      * listener interfaces for temp buttons
      *
      * author: Casey Anderson
-      */
+     */
     public interface OnHomeFragmentInteractionListener {
         void onNewChat();
         void onOpenChat();

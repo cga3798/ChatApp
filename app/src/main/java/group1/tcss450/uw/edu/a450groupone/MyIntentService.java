@@ -170,7 +170,6 @@ public class MyIntentService extends IntentService {
         // only build notification if something request in background was received
 
         if (initialState == currentlState && !userToDisplay.equals("empty")) {
-            initialState = currentlState;
 
             Log.d(TAG, "buildNotification() - " + userToDisplay);
             //IMPORT V4 not V7
@@ -178,7 +177,7 @@ public class MyIntentService extends IntentService {
                     new NotificationCompat.Builder(this)
                             .setContentTitle("Connection Request")
 //                            .setSmallIcon(R.drawable.ic_cloud_black_24dp)
-                            .setSmallIcon(R.mipmap.logomaker_app_icon)
+                            .setSmallIcon(R.mipmap.chatapplogo)
                             .setContentTitle("New Request")
                             .setContentText(userToDisplay + " sent you a request.");
 

@@ -71,6 +71,9 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
         FloatingActionButton b = (FloatingActionButton) v.findViewById(R.id.selectCityFloatingButton);
         b.setOnClickListener(this::onSelectCClicked);
 
+        // listener of current5 location
+        v.findViewById(R.id.weatherCurrentLocationButton).setOnClickListener(view -> getWeatherData(v, true));
+
         SharedPreferences prefs = getActivity().getSharedPreferences(
                             getString(R.string.keys_shared_prefs),
                             Context.MODE_PRIVATE);
@@ -80,28 +83,13 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
             prefs.edit().putBoolean(getString(R.string.keys_prefs_selected_city), false).apply();
             getWeatherFromSelect(v);
         } else { // came from home or side bar
-            getWeatherData(v);
+            getWeatherData(v, false);
         }
 
         return v;
     }
 
-    private void getWeatherData(View fragmentView) {
-
-        Location currentLocation = null;
-
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            currentLocation = LocationServices.FusedLocationApi.getLastLocation(
-                    ((NavigationActivity)getActivity()).getmGoogleApiClient());
-            if (currentLocation != null) {
-                // first log we should see
-                Log.i("HOME_CURRENT_LOCATION", currentLocation.toString());
-            }
-
-        }
+    private void getWeatherData(View fragmentView, boolean wantCurrentLocation) {
 
         Weather.RetrieveData asyncTask = new Weather.RetrieveData(getContext(), R.id.fragmentWeather ,new Weather.AsyncResponse() {
             public void processFinish(Bundle args) {
@@ -110,27 +98,48 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        if(currentLocation == null) {
-            SharedPreferences prefs = getActivity().getSharedPreferences(
-                    getString(R.string.keys_shared_prefs),
-                    Context.MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getSharedPreferences(
+                getString(R.string.keys_shared_prefs),
+                Context.MODE_PRIVATE);
+
+        if(wantCurrentLocation) {
+            Location currentLocation = null;
+
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                currentLocation = LocationServices.FusedLocationApi.getLastLocation(
+                        ((NavigationActivity) getActivity()).getmGoogleApiClient());
+            }
+
+            if (currentLocation != null) {
+                // use current location
+                asyncTask.execute(String.valueOf(currentLocation.getLatitude()),
+                        String.valueOf(currentLocation.getLongitude()));
+                prefs.edit().putString(getString(R.string.keys_prefs_selected_city_lat),
+                        String.valueOf(currentLocation.getLatitude())).apply();
+                prefs.edit().putString(getString(R.string.keys_prefs_selected_city_lon),
+                        String.valueOf(currentLocation.getLongitude())).apply();
+            }
+
+        } else {
 
             String lat = prefs.getString(getString(R.string.keys_prefs_selected_city_lat), "_");
             String lon = prefs.getString(getString(R.string.keys_prefs_selected_city_lon), "_");
 
-            //
             if (lat.charAt(0) == '_') {
                 // must be first time opening app
                 // use Tacoma as default
                 asyncTask.execute("47.25288", "-122.44429");
+                prefs.edit().putString(getString(R.string.keys_prefs_selected_city_lat),
+                                    "47.25288").apply();
+                prefs.edit().putString(getString(R.string.keys_prefs_selected_city_lon),
+                                    "-122.44429").apply();
+
             } else { // use last selected in prefs
                 asyncTask.execute(lat, lon);
             }
-
-        } else {
-            // use current location
-            asyncTask.execute( String.valueOf(currentLocation.getLatitude()),
-                    String.valueOf(currentLocation.getLongitude()) );
         }
     }
 
