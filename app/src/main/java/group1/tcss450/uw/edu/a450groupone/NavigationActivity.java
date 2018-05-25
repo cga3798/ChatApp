@@ -172,7 +172,7 @@ public class NavigationActivity extends AppCompatActivity implements
                     MY_PERMISSIONS_LOCATIONS);
         }
 
-        MyIntentService.startServiceAlarm(this, false);
+//        MyIntentService.startServiceAlarm(this, false);
     }
 
     @Override
@@ -182,17 +182,19 @@ public class NavigationActivity extends AppCompatActivity implements
         SharedPreferences sharedPreferences =
                 getSharedPreferences(getString(R.string.keys_shared_prefs),
                         Context.MODE_PRIVATE);
-        if (sharedPreferences.getBoolean(getString(R.string.keys_sp_on), false)) {
+        //if (sharedPreferences.getBoolean(getString(R.string.keys_sp_on), false)) {
         //stop the service from the foreground
             MyIntentService.stopServiceAlarm(this);
+            MessageIntentService.stopServiceAlarm(this);
             Log.d("NavigationActivity", "onPause() - service stopped.");
 
             //restart but in the background
             MyIntentService.startServiceAlarm(this, false);
-            Log.d("NavigationActivity", "onPause() - service restarted, check notification.");
+            MessageIntentService.startServiceAlarm(this, false);
 
-        }
-//        MyIntentService.startServiceAlarm(this, false);
+        Log.d("NavigationActivity", "onPause() - service restarted, check notification.");
+
+       // }
     }
 
     @Override
@@ -204,18 +206,16 @@ public class NavigationActivity extends AppCompatActivity implements
                 getSharedPreferences(getString(R.string.keys_shared_prefs),
                         Context.MODE_PRIVATE);
         // Check to see if the service should aleardy be running
-        if (sharedPreferences.getBoolean(getString(R.string.keys_sp_on), false)) {
+        //if (sharedPreferences.getBoolean(getString(R.string.keys_sp_on), false)) {
+            Log.d("NavigationActivity", "starting service");
             //stop the service from the background
             MyIntentService.stopServiceAlarm(this);
-            //restart but in the foreground
-            MyIntentService.startServiceAlarm(this, false);
-        }
-        //if (sharedPreferences.getBoolean(getString(R.string.keys_sp_on), false)) {
-        //stop the service from the background
-        //MyIntentService.stopServiceAlarm(this);
+            MessageIntentService.stopServiceAlarm(this);
+
         //restart but in the foreground
-        MyIntentService.startServiceAlarm(this, true);
-        //}
+            MyIntentService.startServiceAlarm(this, true);
+            MessageIntentService.startServiceAlarm(this, true);
+       // }
     }
 
     @Override

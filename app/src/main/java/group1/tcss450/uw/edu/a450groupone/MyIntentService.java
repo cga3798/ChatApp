@@ -8,17 +8,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import group1.tcss450.uw.edu.a450groupone.utils.BadgeDrawerArrowDrawable;
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
 
@@ -45,11 +42,12 @@ public class MyIntentService extends IntentService {
 
     public MyIntentService() {
         super("MyIntentService");
+        Log.d(TAG, "creating service");
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
+//        count = 0;
         if (intent != null) {
             Log.d(TAG, "Performing the service");
             checkIfToPostNotification(intent.getBooleanExtra(getString(R.string.keys_is_foreground), false));
@@ -123,9 +121,10 @@ public class MyIntentService extends IntentService {
                 // store the state when app is in foreground
                 if (count == 0) {
                     initialState = length;
-                    Log.d(TAG, "initial state: " + initialState + ", requestSent.length: " + requestsSent);
-                    count++;
+//                    Log.d(TAG, "initial state: " + initialState + ", current: " + requestsSent.length());
                 }
+                count++;
+                Log.d(TAG, "count: " + count + ", initial state: " + initialState + ", current: " + requestsSent.length());
 
                 if (length == 0) {
                     Log.d(TAG, "length is 0");
@@ -170,8 +169,8 @@ public class MyIntentService extends IntentService {
     private void buildNotification() {
         // only build notification if something request in background was received
 
-        if (initialState != currentlState) {
-
+        if (initialState == currentlState && !userToDisplay.equals("empty")) {
+            initialState = currentlState;
 
             Log.d(TAG, "buildNotification() - " + userToDisplay);
             //IMPORT V4 not V7
