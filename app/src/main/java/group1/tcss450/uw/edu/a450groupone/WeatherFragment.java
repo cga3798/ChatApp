@@ -132,6 +132,11 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
                 // must be first time opening app
                 // use Tacoma as default
                 asyncTask.execute("47.25288", "-122.44429");
+                prefs.edit().putString(getString(R.string.keys_prefs_selected_city_lat),
+                                    "47.25288").apply();
+                prefs.edit().putString(getString(R.string.keys_prefs_selected_city_lon),
+                                    "-122.44429").apply();
+
             } else { // use last selected in prefs
                 asyncTask.execute(lat, lon);
             }

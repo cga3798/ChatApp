@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -202,7 +203,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                                 e.printStackTrace();
                             }
                             mListener.onOpenChat();
-                        }});
+                        }
+                    });
 
                     container.addView(button, params);
                     // textView to display chatrooms last message
@@ -422,6 +424,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
             if (lat.charAt(0) == '_') {
                 // use Tacoma as default
                 asyncTask.execute("47.25288", "-122.44429");
+                prefs.edit().putString(getString(R.string.keys_prefs_selected_city_lat),
+                        "47.25288").apply();
+                prefs.edit().putString(getString(R.string.keys_prefs_selected_city_lon),
+                        "-122.44429").apply();
             } else {
                 asyncTask.execute(lat, lon);
             }

@@ -3,6 +3,7 @@ package group1.tcss450.uw.edu.a450groupone;
 import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -20,6 +21,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -34,6 +37,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import es.dmoral.toasty.Toasty;
 import group1.tcss450.uw.edu.a450groupone.utils.BadgeDrawerArrowDrawable;
 
 /*
@@ -133,7 +137,8 @@ public class NavigationActivity extends AppCompatActivity implements
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
-            loadFragment(new FriendFragment(), getString(R.string.keys_fragment_friends));
+            loadFragment(new ConnectionTabsFragment(),
+                    getString(R.string.keys_fragment_connection_tab));
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
