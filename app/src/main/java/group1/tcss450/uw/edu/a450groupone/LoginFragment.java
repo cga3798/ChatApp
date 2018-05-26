@@ -2,16 +2,19 @@ package group1.tcss450.uw.edu.a450groupone;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +51,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         b.setOnClickListener(this);
         b = (Button) v.findViewById(R.id.LoginButtonRegister);
         b.setOnClickListener(this);
+
+        Button helpButton = (Button) v.findViewById(R.id.help_popup);
+        helpButton.setOnClickListener(this);
         return v;
     }
 
@@ -136,10 +142,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
                 case R.id.LoginButtonRegister:
                     mListener.onRegister();
 
+                case R.id.help_popup:
+                    mListener.onHelp();
                 default:
                     Log.wtf("", "Didn't expect to see me...");
             }
         }
+
+
+
+
+
     }
 
     /**
@@ -151,6 +164,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         // TODO: Update argument type and name
         void onLogin(Credentials creds);
         void onRegister();
+        void onHelp();
     }
 
 }

@@ -24,7 +24,8 @@ public class MainActivity extends AppCompatActivity implements
         LoginFragment.OnLoginFragmentInteractionListener,
         RegisterFragment.OnRegistrationCompleteListener,
         SuccessRegistrationFragment.OnOkVerifyEmailListener,
-        HomeFragment.OnHomeFragmentInteractionListener{
+        HomeFragment.OnHomeFragmentInteractionListener,
+        LoginHelpFragment.OnHelpFragmentInteractionListener{
 
     private Credentials mCredentials;
     public static Activity mainActivity;
@@ -161,6 +162,12 @@ public class MainActivity extends AppCompatActivity implements
     public void onRegister() {
         loadFragment(new RegisterFragment(),
                 getString(R.string.keys_fragment_register));
+    }
+
+    @Override
+    public void onHelp() {
+        loadFragment(new LoginHelpFragment(),
+                "help");
     }
 
     /**
@@ -301,4 +308,13 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    public void onPassRecover(String email) {
+
+    }
+
+    @Override
+    public void onUserRecover(String email) {
+
+    }
 }

@@ -36,6 +36,9 @@
     <string name="flist_button_add_friend">Add friend</string>
     <string name="flist_button_new_group">New group</string>
 
+    <string name="help_password_fragment_button">Recover Password</string>
+    <string name="help_user_fragment_button">Recover User Name</string>
+    <string name="login_help_fragment_button">Help</string>
     <string name="login_fragment_button">Login</string>
     <string name="register_fragment_button">Register</string>
     <string name="welcome_fragment">Welcome!</string>
@@ -78,5 +81,8 @@
     <string name="create_group">Create</string>
     <string name="leave_group">Delete Chat</string>
     <string name="view_members">View Group Members</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
