@@ -141,9 +141,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
                     break;
                 case R.id.LoginButtonRegister:
                     mListener.onRegister();
+                    break;
 
                 case R.id.help_popup:
                     mListener.onHelp();
+                    break;
                 default:
                     Log.wtf("", "Didn't expect to see me...");
             }
