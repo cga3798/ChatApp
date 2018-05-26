@@ -30,6 +30,25 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnCh
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        SharedPreferences theme = getSharedPreferences("themePrefs", MODE_PRIVATE);
+        int themeId = theme.getInt("themePrefs", 5);
+
+        switch (themeId) {
+            case 1:
+                setTheme(R.style.FirstTheme);
+                break;
+            case 2:
+                setTheme(R.style.SecondTheme);
+                break;
+            case 3:
+                setTheme(R.style.ThirdTheme);
+                break;
+            case -1:
+                setTheme(R.style.AppTheme);
+                break;
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat1);
         if(savedInstanceState == null) {

@@ -178,7 +178,6 @@ public class MyIntentService extends IntentService {
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(this)
                             .setContentTitle("Connection Request")
-//                            .setSmallIcon(R.drawable.ic_cloud_black_24dp)
                             .setSmallIcon(R.mipmap.chatapplogo)
                             .setContentTitle("New Request")
                             .setContentText(userToDisplay + " sent you a request.");

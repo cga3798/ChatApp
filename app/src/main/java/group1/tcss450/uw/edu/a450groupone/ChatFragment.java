@@ -2,6 +2,10 @@ package group1.tcss450.uw.edu.a450groupone;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -26,6 +30,8 @@ import org.json.JSONObject;
 import group1.tcss450.uw.edu.a450groupone.utils.ListenManager;
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,6 +49,7 @@ public class ChatFragment extends Fragment {
     private ListenManager mListenManager;
     private SharedPreferences prefs;
     private Toolbar mTopToolbar;
+    private int accentColor;
 
 
 
@@ -56,10 +63,14 @@ public class ChatFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_chat2, container, false);
 
+
+        SharedPreferences theme = getActivity().getSharedPreferences("themePrefs", MODE_PRIVATE);
+        int themeId = theme.getInt("themePrefs", 5);
+
         prefs =
                 getActivity().getSharedPreferences(
                         getString(R.string.keys_shared_prefs),
-                        Context.MODE_PRIVATE);
+                        MODE_PRIVATE);
         v.findViewById(R.id.chatSendButton).setOnClickListener(this::sendMessage);
 
         getActivity().getWindow().setSoftInputMode(
@@ -67,6 +78,35 @@ public class ChatFragment extends Fragment {
         Log.wtf("CHAT ROOM", "" + prefs.getInt("chatId", R.string.keys_prefs_chatId));
 
         mTopToolbar = (Toolbar) v.findViewById(R.id.toolbar_top);
+
+        switch (themeId) {
+            case 1:
+                mTopToolbar.setBackgroundColor(getActivity()
+                        .getColor(R.color.colorPrimaryTheme1));
+                accentColor = getActivity().getColor(R.color.colorAccentTheme1);
+                break;
+            case 2:
+                mTopToolbar.setBackgroundColor(getActivity()
+                        .getColor(R.color.colorPrimaryTheme2));
+                accentColor = getActivity().getColor(R.color.colorAccentTheme2);
+
+                break;
+            case 3:
+                mTopToolbar.setBackgroundColor(getActivity()
+                        .getColor(R.color.colorPrimaryTheme3));
+                accentColor = getActivity().getColor(R.color.colorAccentTheme3);
+
+                break;
+            case -1:
+                mTopToolbar.setBackgroundColor(getActivity()
+                        .getColor(R.color.colorPrimary));
+                accentColor = getActivity().getColor(R.color.colorAccent);
+
+                break;
+        }
+
+
+
         TextView mTitle = (TextView) mTopToolbar.findViewById(R.id.toolbar_title);
         mTitle.setText(String.valueOf(prefs.getString(getString(R.string.keys_prefs_chatName), "Chat Room")));
 
@@ -187,7 +227,7 @@ public class ChatFragment extends Fragment {
 
             LinearLayout chatContainer = (LinearLayout) getActivity().findViewById(R.id.chat_layout_to_hold_chat_messages);
             ScrollView scrollView = (ScrollView) getActivity().findViewById(R.id.scrollViewChat);
-            scrollView.fullScroll(View.FOCUS_DOWN);
+//            scrollView.fullScroll(View.FOCUS_DOWN);
             getActivity().runOnUiThread(() -> {
                 for (String msg : msgs) {
                     String msgUsername = msg.substring(0, msg.indexOf(":"));
@@ -213,6 +253,7 @@ public class ChatFragment extends Fragment {
 
             TextView tv = (TextView) v.findViewById(R.id.text_message_body);
             tv.setText(message);
+
         } else {
 
             v = LayoutInflater.from(getContext())

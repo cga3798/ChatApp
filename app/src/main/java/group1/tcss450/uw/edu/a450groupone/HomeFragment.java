@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,6 +38,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
+import group1.tcss450.uw.edu.a450groupone.utils.Theme;
 import group1.tcss450.uw.edu.a450groupone.utils.Weather;
 
 /**
@@ -99,7 +101,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
         // listener of current location button
         v.findViewById(R.id.homeCurrentLocationButton).setOnClickListener(this::setCurrentLocationWeather);
-
         setWeatherData(false);
 
         // call to populate users chat rooms
@@ -187,22 +188,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                     String chatName = parseChatName(name.getString("name"));
 
                     button.setText(chatName);
-                    button.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View view) {
-                            try {
-                                prefs.edit().putInt(
-                                        getString(R.string.keys_prefs_chatId),
-                                        name.getInt("chatid"))
-                                        .apply();
-                                prefs.edit().putString(
-                                        getString(R.string.keys_prefs_chatName),
-                                        chatName)
-                                        .apply();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            mListener.onOpenChat();
-                        }});
+                    button.setOnClickListener(view -> {
+                        try {
+                            prefs.edit().putInt(
+                                    getString(R.string.keys_prefs_chatId),
+                                    name.getInt("chatid"))
+                                    .apply();
+                            prefs.edit().putString(
+                                    getString(R.string.keys_prefs_chatName),
+                                    chatName)
+                                    .apply();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        mListener.onOpenChat();
+                    });
 
                     container.addView(button, params);
                     // textView to display chatrooms last message
