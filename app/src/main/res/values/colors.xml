@@ -28,6 +28,7 @@
     <color name="colorDarkPrimary">#212121</color>
     <color name="colorDarkAccent">#e74c3c</color>
     <color name="darkButton">#2196F3</color>
+    <color name="linkBlue">#0645AD</color>
 
 </resources>
 

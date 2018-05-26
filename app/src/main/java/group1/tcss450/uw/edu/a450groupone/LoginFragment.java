@@ -18,6 +18,8 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import group1.tcss450.uw.edu.a450groupone.model.Credentials;
 
 /**
@@ -52,10 +54,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         b = (Button) v.findViewById(R.id.LoginButtonRegister);
         b.setOnClickListener(this);
 
-        Button helpButton = (Button) v.findViewById(R.id.help_popup);
-        helpButton.setOnClickListener(this);
-
-
+//        Button helpButton = (Button) v.findViewById(R.id.help_popup);
+//        helpButton.setOnClickListener(this);
+        TextView tv = (TextView) v.findViewById(R.id.help_popup);
+        tv.setOnClickListener(this);
         return v;
     }
 
