@@ -29,20 +29,6 @@
     </android.support.v7.widget.Toolbar>
 
 
-    <!--<TextView-->
-    <!--android:id="@+id/chatNameOfChatRoomView"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginTop="84dp"-->
-    <!--android:text="text"-->
-    <!--android:textColor="@color/medium_grey"-->
-    <!--app:layout_constraintEnd_toEndOf="parent"-->
-    <!--app:layout_constraintHorizontal_bias="0.498"-->
-    <!--app:layout_constraintLeft_toLeftOf="parent"-->
-    <!--app:layout_constraintRight_toRightOf="parent"-->
-    <!--app:layout_constraintStart_toStartOf="parent"-->
-    <!--app:layout_constraintTop_toTopOf="parent" />-->
-
     <ImageButton
         android:id="@+id/chatSendButton"
         android:layout_width="45dp"
@@ -72,37 +58,6 @@
         app:layout_constraintEnd_toStartOf="@+id/chatSendButton"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!--<Button-->
-        <!--android:id="@+id/view_member_list_button"-->
-        <!--style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"-->
-        <!--android:layout_width="128dp"-->
-        <!--android:layout_height="40dp"-->
-        <!--android:layout_marginEnd="16dp"-->
-        <!--android:layout_marginRight="16dp"-->
-        <!--android:layout_marginTop="64dp"-->
-        <!--android:text="View Members"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintRight_toRightOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent" />-->
-
-    <!--<ScrollView-->
-        <!--android:id="@+id/scrollViewMembers"-->
-        <!--android:layout_width="110dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:clipToPadding="true"-->
-        <!--android:fillViewport="true"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/view_member_list_button">-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/chatRoomMembers"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:ems="10"-->
-            <!--android:inputType="textPersonName"-->
-            <!--android:visibility="gone" />-->
-    <!--</ScrollView>-->
 
     <ScrollView
         android:id="@+id/scrollViewChat"

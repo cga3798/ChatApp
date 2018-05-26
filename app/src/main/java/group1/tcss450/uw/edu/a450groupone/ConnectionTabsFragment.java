@@ -54,37 +54,6 @@ public class ConnectionTabsFragment extends Fragment {
         adapter.addFragment(new SearchNewFriendFragment(), "Search");
         adapter.addFragment(new ReceivedRequestsFragment(), "Received Invites");
         adapter.addFragment(new SentRequestsFragment(), "Sent Invites");
-//        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            FloatingActionButton fab = view.findViewById(R.id.fab);
-//
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//            }
-//            @Override
-//            public void onPageSelected(int position) {
-//                switch (position) {
-//                    case 0:
-//                        fab.hide();
-//                        break;
-//                    case 1:
-//                        fab.hide();
-//                        break;
-//                    case 3:
-//                        fab.hide();
-//                        break;
-//                    default:
-//                        fab.hide();
-//                        break;
-//                }
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//
-//            }
-//        });
-
         viewPager.setAdapter(adapter);
     }
 

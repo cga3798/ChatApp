@@ -54,6 +54,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
 
         Button helpButton = (Button) v.findViewById(R.id.help_popup);
         helpButton.setOnClickListener(this);
+
+
         return v;
     }
 

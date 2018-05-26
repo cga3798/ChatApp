@@ -34,7 +34,7 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
     private SearchView searchView;
     private String queryEntered;
     private boolean showInvite = true;
-    private String memberidA, fullname;
+    private String memberidA, fullname, emailA, firstA, lastA, usernaemA;
     public static ArrayList<String> connectionResultList, memberIds, fullnames;
 
     public SearchNewFriendFragment() {
@@ -49,8 +49,9 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
         SharedPreferences prefs =
                 this.getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),
                         Context.MODE_PRIVATE);
-        memberidA =  String.valueOf(prefs.getInt(getString(R.string.keys_prefs_id), -1));
 
+        //current user's info
+        memberidA =  String.valueOf(prefs.getInt(getString(R.string.keys_prefs_id), -1));
         searchView = (SearchView) v.findViewById(R.id.searchFriendSearchView);
         searchView.setActivated(true);
         searchView.setOnQueryTextListener(this);
