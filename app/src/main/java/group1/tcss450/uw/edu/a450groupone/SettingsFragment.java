@@ -76,9 +76,7 @@ public class SettingsFragment extends Fragment{
             View radioButton = radioGroup.findViewById(radioButtonID);
             int index = radioGroup.indexOfChild(radioButton);
 
-
             SharedPreferences.Editor themePrefs = getActivity().getSharedPreferences("themePrefs", MODE_PRIVATE).edit();
-
             if (index == 0) {
                 themePrefs.putInt("themePrefs", 1).apply();
             } else if (index == 1) {
@@ -90,9 +88,10 @@ public class SettingsFragment extends Fragment{
             }
 
             getActivity().recreate();
-            Log.e("radio group: ", "index checked: " + index );
 
         });
+
+        cancel.setOnClickListener(veiw -> getFragmentManager().popBackStack());
 
         return v;
     }
