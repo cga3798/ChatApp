@@ -261,6 +261,9 @@ public class ChatFragment extends Fragment {
 
             TextView tv = (TextView) v.findViewById(R.id.text_message_body);
             tv.setText(message);
+
+            tv = (TextView) v.findViewById(R.id.text_message_name);
+            tv.setText(msgUsername);
         }
         return v;
     }
