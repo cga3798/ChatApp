@@ -39,8 +39,7 @@ public class ChatOptionsFragment extends Fragment {
     private SharedPreferences prefs;
     private View v;
     private LayoutInflater inflater;
-    private int mMemberId;
-    int chatId;
+    private int mMemberId, chatId, numOfMembers;
 
 
     public ChatOptionsFragment() {
@@ -63,9 +62,7 @@ public class ChatOptionsFragment extends Fragment {
         chatId = prefs.getInt(getString(R.string.keys_prefs_chatId), 0);
 
         Button button = (Button) v.findViewById(R.id.chatOptionLeaveGroup);
-        button.setOnClickListener(view -> {
-                confirmDelete(chatId);
-        });
+        button.setOnClickListener(view -> confirmDelete(chatId));
 
         button = (Button) v.findViewById(R.id.chatOptionViewMembers);
         button.setOnClickListener(view -> {
@@ -122,6 +119,7 @@ public class ChatOptionsFragment extends Fragment {
                 }
             }
 
+            numOfMembers = members.size();
             Button button = (Button) v.findViewById(R.id.chatOptionLeaveGroup);
             button.setVisibility(View.GONE);
             LinearLayout linearLayout = (LinearLayout) v.findViewById(R.id.chatOptionLinearLayout);
@@ -209,6 +207,10 @@ public class ChatOptionsFragment extends Fragment {
      */
     private void handleErrorsInTask(String result) {
         Log.wtf("ASYNCT_TASK_ERROR", result);
+    }
+
+    public int getNumOfMembers() {
+        return numOfMembers;
     }
 
 }

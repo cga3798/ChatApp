@@ -45,29 +45,28 @@
         style="@android:style/Widget.Material.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="117dp"
+        android:layout_marginStart="98dp"
         android:elevation="0dp"
         android:text="@string/login_fragment_button"
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toTopOf="@+id/help_popup"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/LoginButtonRegister" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/LoginButtonRegister"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="118dp"
+        android:layout_marginEnd="106dp"
+        android:layout_marginStart="32dp"
         android:elevation="0dp"
         android:text="@string/register_fragment_button"
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toTopOf="@+id/help_popup"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/LoginButtonLogin" />
 
     <TextView
         android:id="@+id/textView2"
@@ -120,7 +119,7 @@
         android:id="@+id/help_popup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="144dp"
+        android:layout_marginBottom="136dp"
         android:text="Forgot Username or Password?"
         android:textColor="@color/linkBlue"
         app:layout_constraintBottom_toBottomOf="parent"

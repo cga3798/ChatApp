@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements
             case 3:
                 setTheme(R.style.ThirdTheme);
                 break;
-            case -1:
+            default:
                 setTheme(R.style.AppTheme);
                 break;
         }

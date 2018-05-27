@@ -41,6 +41,7 @@ public class MyIntentService extends IntentService {
     private int count = 0;
     private String userToDisplay = "empty";
     public boolean newRequest = false;
+    Intent intent;
     private SharedPreferences prefs;
     private int mMemberId;
     private int chatID2;
@@ -56,6 +57,7 @@ public class MyIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        this.intent = intent;
 //        count = 0;
         if (intent != null) {
             Log.d(TAG, "Performing the service");
@@ -183,7 +185,6 @@ public class MyIntentService extends IntentService {
         // only build notification if something request in background was received
 
         if (initialState == currentlState && !userToDisplay.equals("empty")) {
-
             Log.d(TAG, "buildNotification() - " + userToDisplay);
             //IMPORT V4 not V7
             NotificationCompat.Builder mBuilder =
@@ -219,6 +220,8 @@ public class MyIntentService extends IntentService {
                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             // mId allows you to update the notification later on.
             mNotificationManager.notify(1, mBuilder.build());
+
+            System.out.println("intent Received");
 
             Intent RTReturn = new Intent(NavigationActivity.RECEIVE_JSON);
             RTReturn.putExtra("json", "jsonString");

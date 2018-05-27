@@ -93,7 +93,7 @@ public class NavigationActivity extends AppCompatActivity implements
             case 3:
                 setTheme(R.style.ThirdTheme);
                 break;
-            case -1: //default theme
+            default: //default theme
                 setTheme(R.style.AppTheme);
                 break;
         }
@@ -186,7 +186,8 @@ public class NavigationActivity extends AppCompatActivity implements
                 break;
             case 4:
                 navHeader.setBackgroundColor(getColor(R.color.colorPrimaryTheme2));
-            case -1: //default theme
+                break;
+            default: //default theme
                 navHeader.setBackgroundColor(getColor(R.color.colorPrimary));
                 break;
         }
