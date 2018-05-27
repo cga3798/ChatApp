@@ -2,6 +2,7 @@ package group1.tcss450.uw.edu.a450groupone;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -43,6 +44,10 @@ public class MyIntentService extends IntentService {
     Intent intent;
     private SharedPreferences prefs;
     private int mMemberId;
+    private int chatID2;
+
+    String[] strArr = new String[2];
+
 
     public MyIntentService() {
         super("MyIntentService");
@@ -282,11 +287,12 @@ public class MyIntentService extends IntentService {
                 for (int i = 0; i < chatList.length(); i++) {
                     // do something with chatIDs
                     JSONObject currentChat = chatList.getJSONObject(i);
-                    Log.d(TAG, "\nchatid is -> = " + currentChat.getInt("chatid"));
                     //Log.d(TAG, "name are : " + name.toString());
-
+                    int chatID = currentChat.getInt("chatid");
+                    Log.d(TAG, "\nTesting for ID -> = " + chatID);
                     // get last message of the chatID
-                    getLastMessage(currentChat.getInt("chatid"));
+                    //getLastMessageSharedPref(chatID);
+                    getLastMessageFromServer(chatID);
 
 
                 }
@@ -296,7 +302,31 @@ public class MyIntentService extends IntentService {
         }
     }
 
-    private void getLastMessage(int chatID) throws JSONException {
+    /**
+     * Get the last message stored in shared prerances when the user was in the app.
+     * @param chatID
+     */
+    private void getLastMessageSharedPref(int chatID) {
+        String temp = prefs.getString(getString(R.string.keys_prefs_last_messages), "{}");
+        try {
+            JSONObject lastMessages = new JSONObject(temp);
+            Log.d(TAG, "shared pref last msg : " + lastMessages.toString());
+
+            String currentMsg = lastMessages.getString(String.valueOf(chatID));
+            Log.d(TAG, "current msg : " + currentMsg);
+            strArr[1] = currentMsg;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Gets the latest message of a chat from the server.
+     * @param chatID chatID to get the last message of
+     * @throws JSONException
+     */
+    private void getLastMessageFromServer(int chatID) throws JSONException {
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
@@ -305,30 +335,84 @@ public class MyIntentService extends IntentService {
 
         JSONObject body = new JSONObject();
 
-        Log.d(TAG, "ChatID in sharedprefs: " + R.string.keys_prefs_chatId);
+        Log.d(TAG, "ChatID in sharedprefs: " + getString(R.string.keys_prefs_chatId));
         // provide current chat id and a timestamp to get all messages
         //body.put("chatId", prefs.getInt("chatId", R.string.keys_prefs_chatId));
         body.put("chatId", chatID);
         body.put("after", "1970-01-01 00:00:00.000000");
 
+        chatID2 = chatID;
         new SendPostAsyncTask.Builder(uri.toString(), body)
-                .onPostExecute(this::populateChatText)
+                .onPostExecute(this::storeServerMsg)
                 //TODO: add onCancelled handler.
                 //.onCancelled(this::handleErrorsInTask)
                 .build().execute();
     }
 
-    private void populateChatText(String res) {
-        String text = "";
+    private void storeServerMsg(String res) {
         try {
             JSONObject response = new JSONObject(res);
             if (response.getBoolean("success")) {
                 JSONObject message = response.getJSONObject("messages");
-                Log.d(TAG, "Last message: " + message.getString("message"));
+                Log.d(TAG, "Last message: " + response.toString());
+                strArr[0] = message.getString("message");
+                getLastMessageSharedPref(response.getInt("chatid"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+
+        Log.d(TAG, "str[0] = " + strArr[0] + ",  str[1] = " + strArr[1]);
+        if (!strArr[0].equals(strArr[1])) {
+            Log.d(TAG, "NEW message");
+            buildMessageNotification();
+        } else {
+            Log.d(TAG, "No new message");
+        }
+    }
+
+    private void buildMessageNotification() {
+        Log.d(TAG, "builMessagedNotification() - ");
+        //IMPORT V4 not V7
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.mipmap.chatapplogo)
+                        .setContentTitle("New message")
+                        .setContentText(strArr[0])
+                        .setPriority(Notification.PRIORITY_MAX);
+
+        // Creates an Intent for the Activity
+        Intent notifyIntent =
+                new Intent(this, NavigationActivity.class);
+        notifyIntent.putExtra("messageFragment", "HomeFragment");
+
+        // Sets the Activity to start in a new, empty task
+        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        // Creates the PendingIntent
+        PendingIntent notifyPendingIntent =
+                PendingIntent.getActivity(
+                        this,
+                        0,
+                        notifyIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+
+        // Puts the PendingIntent into the notification builder
+        mBuilder.setContentIntent(notifyPendingIntent);
+        mBuilder.setAutoCancel(true);
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // mId allows you to update the notification later on.
+        mNotificationManager.notify(1, mBuilder.build());
+
+        Intent RTReturn = new Intent(NavigationActivity.RECEIVE_JSON);
+        RTReturn.putExtra("json", "jsonString");
+        LocalBroadcastManager.getInstance(this).sendBroadcast(RTReturn);
+
     }
 
     public boolean isThereNewRequest() {
