@@ -12,6 +12,7 @@
     <string name="keys_prefs_chatName">chatName</string>
     <string name="keys_prefs_contacts">contacts</string>
     <string name="keys_prefs_contacts_list">contactsList</string>
+    <string name="keys_prefs_last_messages">lastMessages</string>
 
     <string name="keys_friend_id">friendId</string>
     <string name="keys_friend_full_name">friendFullName</string>
