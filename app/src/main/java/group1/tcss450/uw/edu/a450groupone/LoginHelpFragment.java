@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import group1.tcss450.uw.edu.a450groupone.model.Credentials;
@@ -24,7 +25,10 @@ public class LoginHelpFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login_help, container, false);
+        View v = inflater.inflate(R.layout.fragment_login_help, container, false);
+        Button b = (Button) v.findViewById(R.id.help_username_button);
+        b.setOnClickListener(this);
+        return v;
     }
 
 
