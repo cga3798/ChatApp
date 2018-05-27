@@ -71,7 +71,7 @@ public class NavigationActivity extends AppCompatActivity implements
     private static final int MY_PERMISSIONS_LOCATIONS = 814;
     private LocationRequest mLocationRequest;
     private Location mCurrentLocation;
-    private MyIntentService myIntentService;
+    private MessageIntentService messaageIntentService;
     private HomeFragment homeFragment;
     ActionBarDrawerToggle toggle;
     BadgeDrawerArrowDrawable badgeDrawable;
@@ -218,6 +218,7 @@ public class NavigationActivity extends AppCompatActivity implements
                     MY_PERMISSIONS_LOCATIONS);
         }
 
+        messaageIntentService = new MessageIntentService();
 //        MyIntentService.startServiceAlarm(this, false);
     }
 
@@ -231,7 +232,7 @@ public class NavigationActivity extends AppCompatActivity implements
         //if (sharedPreferences.getBoolean(getString(R.string.keys_sp_on), false)) {
         //stop the service from the foreground
             MyIntentService.stopServiceAlarm(this);
-            MessageIntentService.stopServiceAlarm(this);
+        MessageIntentService.stopServiceAlarm(this);
             Log.d("NavigationActivity", "onPause() - service stopped.");
 
             //restart but in the background
@@ -256,11 +257,11 @@ public class NavigationActivity extends AppCompatActivity implements
             Log.d("NavigationActivity", "starting service");
             //stop the service from the background
             MyIntentService.stopServiceAlarm(this);
-            MessageIntentService.stopServiceAlarm(this);
+        MessageIntentService.stopServiceAlarm(this);
 
         //restart but in the foreground
             MyIntentService.startServiceAlarm(this, true);
-            MessageIntentService.startServiceAlarm(this, true);
+        MessageIntentService.startServiceAlarm(this, true);
        // }
     }
 
