@@ -154,7 +154,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
      */
     private void populateChats(String res) {
         LinearLayout buttonContainer = (LinearLayout) getActivity().findViewById(R.id.HomeLinearLayoutButtonContainer);
-
+        Log.d("homeFragment", "result is : " + res);
         if (!prefs.contains(getString(R.string.keys_prefs_username))) {
             throw new IllegalStateException("No username in prefs!");
         }

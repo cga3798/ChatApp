@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.View;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,10 +40,13 @@ public class MyIntentService extends IntentService {
     private int count = 0;
     private String userToDisplay = "empty";
     public boolean newRequest = false;
+    private SharedPreferences prefs;
+    private int mMemberId;
 
     public MyIntentService() {
         super("MyIntentService");
         Log.d(TAG, "creating service");
+
     }
 
     @Override
@@ -51,7 +55,11 @@ public class MyIntentService extends IntentService {
         if (intent != null) {
             Log.d(TAG, "Performing the service");
             checkIfToPostNotification(intent.getBooleanExtra(getString(R.string.keys_is_foreground), false));
+            getChats();
         }
+        prefs = getSharedPreferences(
+                getString(R.string.keys_shared_prefs),
+                Context.MODE_PRIVATE);
     }
 
 
@@ -208,7 +216,6 @@ public class MyIntentService extends IntentService {
             // mId allows you to update the notification later on.
             mNotificationManager.notify(1, mBuilder.build());
 
-            System.out.println("intent Received");
             Intent RTReturn = new Intent(NavigationActivity.RECEIVE_JSON);
             RTReturn.putExtra("json", "jsonString");
             LocalBroadcastManager.getInstance(this).sendBroadcast(RTReturn);
@@ -216,6 +223,109 @@ public class MyIntentService extends IntentService {
         } else {
             Log.d(TAG, "buildNotification() - nothing new");
 
+        }
+    }
+
+
+    /**
+     * method to get all chatrooms for user and start building chatroom buttons
+     *
+     * author: Casey Anderson
+     */
+    private void getChats() {
+        Log.d(TAG, "inside getChats");
+        prefs = getSharedPreferences(
+                getString(R.string.keys_shared_prefs),
+                Context.MODE_PRIVATE);
+
+        if (!prefs.contains(getString(R.string.keys_prefs_username))) {
+            throw new IllegalStateException("No username in prefs!");
+        }
+
+        mMemberId = prefs.getInt(getString(R.string.keys_prefs_id), 0);
+        Uri retrieve = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_get_chatMembers))
+                .build();
+
+        JSONObject body = new JSONObject();
+
+        // provide current user id
+        try {
+            body.put("memberId", mMemberId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new SendPostAsyncTask.Builder(retrieve.toString(), body)
+                .onPostExecute(this::getChatIds)
+                //TODO: add onCancelled handler.
+//                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
+    }
+
+    private void getChatIds(String res) {
+        Log.d(TAG, "result is : " + res);
+        if (!prefs.contains(getString(R.string.keys_prefs_username))) {
+            throw new IllegalStateException("No username in prefs!");
+        }
+
+        try {
+            JSONObject response = new JSONObject(res);
+            if (response.getBoolean("success")) {
+                JSONArray chatList = response.getJSONArray("name");
+                Log.d(TAG, "chatID are : " + chatList.toString());
+
+                for (int i = 0; i < chatList.length(); i++) {
+                    // do something with chatIDs
+                    JSONObject currentChat = chatList.getJSONObject(i);
+                    Log.d(TAG, "\nchatid is -> = " + currentChat.getInt("chatid"));
+                    //Log.d(TAG, "name are : " + name.toString());
+
+                    // get last message of the chatID
+                    getLastMessage(currentChat.getInt("chatid"));
+
+
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getLastMessage(int chatID) throws JSONException {
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_get_last_message))
+                .build();
+
+        JSONObject body = new JSONObject();
+
+        Log.d(TAG, "ChatID in sharedprefs: " + R.string.keys_prefs_chatId);
+        // provide current chat id and a timestamp to get all messages
+        //body.put("chatId", prefs.getInt("chatId", R.string.keys_prefs_chatId));
+        body.put("chatId", chatID);
+        body.put("after", "1970-01-01 00:00:00.000000");
+
+        new SendPostAsyncTask.Builder(uri.toString(), body)
+                .onPostExecute(this::populateChatText)
+                //TODO: add onCancelled handler.
+                //.onCancelled(this::handleErrorsInTask)
+                .build().execute();
+    }
+
+    private void populateChatText(String res) {
+        String text = "";
+        try {
+            JSONObject response = new JSONObject(res);
+            if (response.getBoolean("success")) {
+                JSONObject message = response.getJSONObject("messages");
+                Log.d(TAG, "Last message: " + message.getString("message"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
