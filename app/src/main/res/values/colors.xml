@@ -11,28 +11,26 @@
     <color name="colorPrimary">#3498db</color>
     <color name="colorAccent">#e74c3c</color>
 
-    <color name="colorPrimaryDarkTheme2">#2c3e50</color>
-    <color name="colorPrimaryTheme2">#34495e</color>
-    <color name="colorAccentTheme2">#7f8c8d</color>
+    <color name="colorPrimaryDarkTheme1">#4b2e83</color>
+    <color name="colorPrimaryTheme1">#673AB7</color>
+    <color name="colorAccentTheme1">#b7a57a</color>
 
 
-    <color name="colorPrimaryDarkTheme3">#FE7F2D</color>
-    <color name="colorPrimaryTheme3">#FCCA46</color>
-    <color name="colorAccentTheme3">#A1C181</color>
+    <color name="colorPrimaryDarkTheme2">#388E3C</color>
+    <color name="colorPrimaryTheme2">#4CAF50</color>
+    <color name="colorAccentTheme2">#CDDC39</color>
 
-    <color name="colorPrimaryDarkTheme4">#8A4F7D</color>
-    <color name="colorPrimaryTheme4">#887880</color>
-    <color name="colorAccentTheme4">#88A096</color>
+    <color name="colorPrimaryDarkTheme3">#455A64</color>
+    <color name="colorPrimaryTheme3">#607D8B</color>
+    <color name="colorAccentTheme3">#00BCD4</color>
+
+    <color name="colorDarkPrimaryDark">#000000</color>
+    <color name="colorDarkPrimary">#212121</color>
+    <color name="colorDarkAccent">#e74c3c</color>
+    <color name="darkButton">#2196F3</color>
+    <color name="linkBlue">#4169E1</color>
 
 </resources>
-
-    <!--<color name="colorPrimaryDark">#054a91</color>-->
-    <!--<color name="colorPrimary">#3E7CB1</color>-->
-    <!--<color name="colorAccent">#81A4CD</color>-->
-
-    <!--<color name="colorPrimaryDarkTheme2">#3F7CAC</color>-->
-    <!--<color name="colorPrimaryTheme2">#95AFBA</color>-->
-    <!--<color name="colorAccentTheme2">#BDC4A7</color>-->
 
 
 

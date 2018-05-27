@@ -15,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ import android.widget.Toast;
 import com.google.android.gms.location.LocationServices;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.TimeZone;
 
 import es.dmoral.toasty.Toasty;
@@ -38,6 +40,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
+import group1.tcss450.uw.edu.a450groupone.utils.Theme;
 import group1.tcss450.uw.edu.a450groupone.utils.Weather;
 
 /**
@@ -56,6 +59,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     private TextView cityTv, tempTv, weatherDescTv, weatherIcon;
 
     private SharedPreferences prefs;
+
+    private HashMap<Integer, View> lastMessagesDict;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -76,6 +81,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         prefs = getActivity().getSharedPreferences(
                 getString(R.string.keys_shared_prefs),
                 Context.MODE_PRIVATE);
+
+        lastMessagesDict = new HashMap<>();
 
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
@@ -100,7 +107,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
         // listener of current location button
         v.findViewById(R.id.homeCurrentLocationButton).setOnClickListener(this::setCurrentLocationWeather);
-
         setWeatherData(false);
 
         // call to populate users chat rooms
@@ -188,28 +194,29 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                     String chatName = parseChatName(name.getString("name"));
 
                     button.setText(chatName);
-                    button.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View view) {
-                            try {
-                                prefs.edit().putInt(
-                                        getString(R.string.keys_prefs_chatId),
-                                        name.getInt("chatid"))
-                                        .apply();
-                                prefs.edit().putString(
-                                        getString(R.string.keys_prefs_chatName),
-                                        chatName)
-                                        .apply();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            mListener.onOpenChat();
+
+                    button.setOnClickListener(view -> {
+                        try {
+                            prefs.edit().putInt(
+                                    getString(R.string.keys_prefs_chatId),
+                                    name.getInt("chatid"))
+                                    .apply();
+                            prefs.edit().putString(
+                                    getString(R.string.keys_prefs_chatName),
+                                    chatName)
+                                    .apply();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
+                        mListener.onOpenChat();
                     });
 
                     container.addView(button, params);
                     // textView to display chatrooms last message
                     TextView textView = new TextView(this.getActivity());
-                    textView.setId(R.id.chat_text_button_on);
+                    //textView.setId(R.id.chat_text_button_on);
+                    lastMessagesDict.put(name.getInt("chatid"), textView);
+
                     // method to get messages for textView
                     try {
                         getLastMessage(textView);
@@ -221,6 +228,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                     container.addView(textView);
                     // adding layout to container
                     buttonContainer.addView(container, params);
+
                 }
             }
         } catch (JSONException e) {
@@ -275,22 +283,47 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
     private void populateChatText(String res) {
         String text = "";
+        JSONObject response;
         try {
-            JSONObject response = new JSONObject(res);
+            response = new JSONObject(res);
             if (response.getBoolean("success")) {
                 JSONObject message = response.getJSONObject("messages");
                 text = message.getString("message");
             }
+
+            TextView textView = (TextView) lastMessagesDict.get(response.getInt("chatid"));
+            //textView.setId(R.id.chat_text_button_off);
+
+            // turns off prior id
+            textView.setText(text);
+
+            // save last message for each chat id for notification use
+            saveLastMessageInSharedPrefs(response.getInt("chatid"), text);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         // set id for text view
-        TextView textView = (TextView) getActivity().findViewById(R.id.chat_text_button_on);
-        textView.setId(R.id.chat_text_button_off);
+        //TextView textView = (TextView) getActivity().findViewById(R.id.chat_text_button_on);
 
-        // turns off prior id
-        textView.setText(text);
+    }
+
+    private void saveLastMessageInSharedPrefs(int chatid, String message) {
+        try {
+            JSONObject lastMessages = new JSONObject(prefs.getString(
+                            getString(R.string.keys_prefs_last_messages), "{}"));
+
+            // add message to json object
+            lastMessages.put(String.valueOf(chatid), message);
+
+            // save back in prefs
+            prefs.edit().putString(getString(R.string.keys_prefs_last_messages),
+                            lastMessages.toString()).apply();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /*

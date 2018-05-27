@@ -1,15 +1,12 @@
 package group1.tcss450.uw.edu.a450groupone;
 
 import android.app.Activity;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,13 +21,32 @@ public class MainActivity extends AppCompatActivity implements
         LoginFragment.OnLoginFragmentInteractionListener,
         RegisterFragment.OnRegistrationCompleteListener,
         SuccessRegistrationFragment.OnOkVerifyEmailListener,
-        HomeFragment.OnHomeFragmentInteractionListener{
+        HomeFragment.OnHomeFragmentInteractionListener,
+        LoginHelpFragment.OnHelpFragmentInteractionListener{
 
     private Credentials mCredentials;
     public static Activity mainActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences theme = getSharedPreferences("themePrefs", MODE_PRIVATE);
+        int themeId = theme.getInt("themePrefs", 5);
+
+        switch (themeId) {
+            case 1:
+                setTheme(R.style.FirstTheme);
+                break;
+            case 2:
+                setTheme(R.style.SecondTheme);
+                break;
+            case 3:
+                setTheme(R.style.ThirdTheme);
+                break;
+            case -1:
+                setTheme(R.style.AppTheme);
+                break;
+        }
+
         mainActivity = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -49,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
     }
+
 
     /**
      * Sends post request to web service to register user.
@@ -161,6 +178,12 @@ public class MainActivity extends AppCompatActivity implements
     public void onRegister() {
         loadFragment(new RegisterFragment(),
                 getString(R.string.keys_fragment_register));
+    }
+
+    @Override
+    public void onHelp() {
+        loadFragment(new LoginHelpFragment(),
+                "help");
     }
 
     /**
@@ -301,4 +324,14 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    public void onPassRecover(String email) {
+
+    }
+
+    @Override
+    public void onUserRecover(String email) {
+
+    }
 }
+

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +18,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -77,6 +79,25 @@ public class NavigationActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        SharedPreferences theme = getSharedPreferences("themePrefs", MODE_PRIVATE);
+        int themeId = theme.getInt("themePrefs", 5);
+
+        switch (themeId) {
+            case 1:
+                setTheme(R.style.FirstTheme);
+                break;
+            case 2:
+                setTheme(R.style.SecondTheme);
+                break;
+            case 3:
+                setTheme(R.style.ThirdTheme);
+                break;
+            case -1: //default theme
+                setTheme(R.style.AppTheme);
+                break;
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
         MainActivity.mainActivity.finish();
@@ -115,7 +136,7 @@ public class NavigationActivity extends AppCompatActivity implements
                     Log.d("NavigationActivity", "load friend fragment");
                     // Here we can decide what do to -- perhaps load other parameters from the intent extras such as IDs, etc
                     if (friendFragment.equals("FriendFragment")) {
-                        loadFragment(new ReceivedRequestsFragment(), getString(R.string.keys_fragment_received));
+                        loadFragment(new ConnectionTabsFragment(), getString(R.string.keys_fragment_connection_tab));
                     }
                 }
                 else {
@@ -152,10 +173,29 @@ public class NavigationActivity extends AppCompatActivity implements
         navigationView.setNavigationItemSelectedListener(this);
 
         View navHeader = navigationView.getHeaderView(0);
+
+        switch (themeId) {
+            case 1:
+                navHeader.setBackgroundColor(getColor(R.color.colorPrimaryTheme1));
+                break;
+            case 2:
+                navHeader.setBackgroundColor(getColor(R.color.colorPrimaryTheme2));
+                break;
+            case 3:
+                navHeader.setBackgroundColor(getColor(R.color.colorPrimaryTheme3));
+                break;
+            case 4:
+                navHeader.setBackgroundColor(getColor(R.color.colorPrimaryTheme2));
+            case -1: //default theme
+                navHeader.setBackgroundColor(getColor(R.color.colorPrimary));
+                break;
+        }
+
         // set current user info in nav header
         SharedPreferences prefs = getSharedPreferences(
                 getString(R.string.keys_shared_prefs),
                 Context.MODE_PRIVATE);
+
         TextView tv = (TextView) navHeader.findViewById(R.id.navHeaderFullName);
         tv.setText(prefs.getString(getString(R.string.keys_prefs_first_name), "")
                 .concat(" ")
@@ -295,8 +335,11 @@ public class NavigationActivity extends AppCompatActivity implements
                     false)
                     .apply();
             //the way to close an app programmaticaly
+
             Intent intent = new Intent(NavigationActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
