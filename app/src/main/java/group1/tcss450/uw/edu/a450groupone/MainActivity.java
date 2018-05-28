@@ -173,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements
         try {
             JSONObject resultsJSON = new JSONObject(result);
             boolean success = resultsJSON.getBoolean("success");
+            Log.wtf("success", "" + success);
             if (success) {
                 //Registration was successful. Switch to the SuccessRegistrationFragment.
                 getSupportFragmentManager().beginTransaction()
