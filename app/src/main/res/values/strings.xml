@@ -14,7 +14,7 @@
     <string name="registration_complete">Registration is complete!</string>
     <string name="please_check_email">Please check your email.</string>
     <string name="email_sent_verify">An email has been sent to you to verify and complete registration.</string>
-
+    <string name="recovery_email_password_sent">An email has been sent to you containing your password.</string>
     <string name="recovery_email_username_sent">An email has been sent to you containing your username.</string>
     <string name="se_first_name">Please enter first name</string>
     <string name="se_last_name">Please enter last name</string>
@@ -36,7 +36,7 @@
     <string name="flist_button_add_friend">Add friend</string>
     <string name="flist_button_new_group">New group</string>
 
-
+    <string name="recover_password_email_sent">Password Sent!</string>
     <string name="recover_username_email_sent">Username Sent!</string>
     <string name="help_password_fragment_button">Recover Password</string>
     <string name="help_user_fragment_button">Recover User Name</string>

@@ -142,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements
                 getString(R.string.keys_fragment_login));
     }
 
+    @Override
     public void onUserRecover(String email) {
         Uri uri = new Uri.Builder()
                 .scheme("https")
@@ -178,6 +179,60 @@ public class MainActivity extends AppCompatActivity implements
                 //Registration was successful. Switch to the SuccessRegistrationFragment.
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragmentContainer, new RecoverUsernameSuccess())
+                        .commit();
+            } else {
+                String err = resultsJSON.getJSONObject("error").getString("detail");
+                LoginFragment frag =
+                        (LoginFragment) getSupportFragmentManager()
+                                .findFragmentByTag(getString(R.string.keys_fragment_login));
+
+            }
+        } catch (JSONException e) {
+            //It appears that the web service didn’t return a JSON formatted String
+            //or it didn’t have what we expected in it.
+            Log.e("JSON_PARSE_ERROR", result
+                    + System.lineSeparator()
+                    + e.getMessage());
+        }
+    }
+
+    @Override
+    public void onPassRecover(String email) {
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_Recover_help))
+                .appendPath(getString(R.string.ep_Recover_password))
+                .build();
+        //build the JSONObject
+        Log.wtf("url", uri.toString());
+        JSONObject msg = new JSONObject();
+
+        try {
+            msg.put("email", email);
+        } catch (JSONException e) {
+            Log.e("RecoverPassword", "Error creating JSON: " + e.getMessage());
+        }
+
+        //instantiate and execute the AsyncTask.
+        //Feel free to add a handler for onPreExecution so that a progress bar
+        //is displayed or maybe disable buttons. You would need a method in
+        //LoginFragment to perform this.
+        new SendPostAsyncTask.Builder(uri.toString(), msg)
+                .onPostExecute(this::handleRecoverPasswordOnPost)
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
+    }
+
+    private void handleRecoverPasswordOnPost(String result) {
+        try {
+            JSONObject resultsJSON = new JSONObject(result);
+            boolean success = resultsJSON.getBoolean("success");
+            Log.wtf("success", "" + success);
+            if (success) {
+                //Registration was successful. Switch to the SuccessRegistrationFragment.
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainer, new RecoverPasswordFragment())
                         .commit();
             } else {
                 String err = resultsJSON.getJSONObject("error").getString("detail");
@@ -375,11 +430,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void NewWeather() {
-
-    }
-
-    @Override
-    public void onPassRecover(String email) {
 
     }
 
