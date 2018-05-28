@@ -28,6 +28,8 @@ public class LoginHelpFragment extends Fragment implements View.OnClickListener{
         View v = inflater.inflate(R.layout.fragment_login_help, container, false);
         Button b = (Button) v.findViewById(R.id.help_username_button);
         b.setOnClickListener(this);
+        b = (Button) v.findViewById(R.id.help_password_button);
+        b.setOnClickListener(this);
         return v;
     }
 
