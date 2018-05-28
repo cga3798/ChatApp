@@ -9,10 +9,14 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -30,6 +34,8 @@ import java.util.ArrayList;
 import es.dmoral.toasty.Toasty;
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,12 +46,12 @@ public class ChatOptionsFragment extends Fragment {
     private View v;
     private LayoutInflater inflater;
     private int mMemberId, chatId, numOfMembers;
-
+    private Toolbar mTopToolbar;
+    private int accentColor;
 
     public ChatOptionsFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,7 +79,61 @@ public class ChatOptionsFragment extends Fragment {
             }
         });
 
+        SharedPreferences theme = getActivity().getSharedPreferences("themePrefs", MODE_PRIVATE);
+        int themeId = theme.getInt("themePrefs", 5);
+
+        mTopToolbar = (Toolbar) v.findViewById(R.id.toolbar_top);
+        switch (themeId) {
+            case 1:
+                mTopToolbar.setBackgroundColor(getActivity()
+                        .getColor(R.color.colorPrimaryTheme1));
+                accentColor = getActivity().getColor(R.color.colorAccentTheme1);
+                break;
+            case 2:
+                mTopToolbar.setBackgroundColor(getActivity()
+                        .getColor(R.color.colorPrimaryTheme2));
+                accentColor = getActivity().getColor(R.color.colorAccentTheme2);
+
+                break;
+            case 3:
+                mTopToolbar.setBackgroundColor(getActivity()
+                        .getColor(R.color.colorPrimaryTheme3));
+                accentColor = getActivity().getColor(R.color.colorAccentTheme3);
+
+                break;
+            default:
+                mTopToolbar.setBackgroundColor(getActivity()
+                        .getColor(R.color.colorPrimary));
+                accentColor = getActivity().getColor(R.color.colorAccent);
+
+                break;
+        }
+
+        TextView mTitle = (TextView) mTopToolbar.findViewById(R.id.toolbar_title);
+        mTitle.setText(String.valueOf(prefs.getString(getString(R.string.keys_prefs_chatName), "Chat Room")));
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setSupportActionBar(mTopToolbar);
+        activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        setHasOptionsMenu(true);
+
         return v;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                FragmentManager fm = getFragmentManager();
+                fm.popBackStack();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
         /**
@@ -82,8 +142,6 @@ public class ChatOptionsFragment extends Fragment {
      * author: Casey Anderson
      */
     private void getMembers ( View v ) throws JSONException {
-
-
         if (!prefs.contains(getString(R.string.keys_prefs_chatId))) {
             throw new IllegalStateException("No chatId in prefs!");
         }
@@ -145,8 +203,8 @@ public class ChatOptionsFragment extends Fragment {
 
 
     /*
-* Prompts user for confirmation to delete the chat.
- */
+    * Prompts user for confirmation to delete the chat.
+    */
     private void confirmDelete(int chatid) {
         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
             switch (which){

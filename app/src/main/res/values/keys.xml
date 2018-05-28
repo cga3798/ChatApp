@@ -68,6 +68,8 @@
     <string name="keys_theme_prefs">changeTheme</string>
     <string name="keys_chat_members">chatMembers</string>
     <string name="keys_num_of_chat_members">numOfChatMembers</string>
+    <string name="keys_delete_friend_chat_info">deleteFriendChatInfo</string>
+    <string name="keys_chat_name">chatName</string>
 
 
 

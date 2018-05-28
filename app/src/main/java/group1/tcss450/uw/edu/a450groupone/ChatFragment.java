@@ -97,7 +97,7 @@ public class ChatFragment extends Fragment {
                 accentColor = getActivity().getColor(R.color.colorAccentTheme3);
 
                 break;
-            case -1:
+            default:
                 mTopToolbar.setBackgroundColor(getActivity()
                         .getColor(R.color.colorPrimary));
                 accentColor = getActivity().getColor(R.color.colorAccent);
