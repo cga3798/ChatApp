@@ -203,7 +203,7 @@ public class MyIntentService extends IntentService {
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this)
                                 .setContentTitle("Connection Request")
-                                .setSmallIcon(R.mipmap.chatapplogo)
+                                .setSmallIcon(R.mipmap.chat_app_log_behance)
                                 .setContentTitle("New Request")
                                 .setContentText(userToDisplay + " sent you a request.");
 
@@ -387,7 +387,7 @@ public class MyIntentService extends IntentService {
         //IMPORT V4 not V7
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.chatapplogo)
+                        .setSmallIcon(R.mipmap.chat_app_log_behance)
                         .setContentTitle("New message")
                         .setContentText(strArr[0])
                         .setPriority(Notification.PRIORITY_MAX);
@@ -422,7 +422,6 @@ public class MyIntentService extends IntentService {
         RTReturn = new Intent(NavigationActivity.RECEIVE_JSON);
         RTReturn.putExtra("json", "new message");
         LocalBroadcastManager.getInstance(this).sendBroadcast(RTReturn);
-
     }
 
     public boolean isThereNewRequest() {

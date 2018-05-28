@@ -39,7 +39,7 @@
     <string name="recover_password_email_sent">Password Sent!</string>
     <string name="recover_username_email_sent">Username Sent!</string>
     <string name="help_password_fragment_button">Recover Password</string>
-    <string name="help_user_fragment_button">Recover User Name</string>
+    <string name="help_user_fragment_button">Recover Username</string>
     <string name="login_help_fragment_button">Help</string>
     <string name="login_fragment_button">Login</string>
     <string name="register_fragment_button">Register</string>

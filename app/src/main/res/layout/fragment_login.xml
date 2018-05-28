@@ -109,10 +109,10 @@
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="189dp"
+        android:layout_height="146dp"
         android:layout_marginTop="34dp"
-        android:src="@drawable/chatapplogo"
+        android:src="@mipmap/chat_app_log_behance"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
