@@ -23,7 +23,8 @@ public class MainActivity extends AppCompatActivity implements
         SuccessRegistrationFragment.OnOkVerifyEmailListener,
         HomeFragment.OnHomeFragmentInteractionListener,
         LoginHelpFragment.OnHelpFragmentInteractionListener,
-        RecoverUsernameSuccess.OnOkVerifyEmailListener{
+        RecoverUsernameSuccess.OnOkVerifyEmailListener,
+        RecoverPasswordFragment.OnOkVerifyEmailListener{
 
     private Credentials mCredentials;
     public static Activity mainActivity;
