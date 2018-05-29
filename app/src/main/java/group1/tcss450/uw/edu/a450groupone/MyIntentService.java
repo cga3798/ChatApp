@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.view.View;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,7 +45,8 @@ public class MyIntentService extends IntentService {
     private int mMemberId;
     private int chatID2;
 
-    String[] strArr = new String[2];
+    //String[] strArr = new String[2];
+    String[] strArr = {"", ""};
 
 
     public MyIntentService() {
@@ -62,7 +62,7 @@ public class MyIntentService extends IntentService {
         if (intent != null) {
             Log.d(TAG, "Performing the service");
             checkIfToPostNotification(intent.getBooleanExtra(getString(R.string.keys_is_foreground), false));
-            getChats();
+            checkMessagesService();
         }
         prefs = getSharedPreferences(
                 getString(R.string.keys_shared_prefs),
@@ -70,7 +70,10 @@ public class MyIntentService extends IntentService {
     }
 
 
-    // creates the AlarmManager instance to start service.
+    /**
+     * Creates the AlarmManager instance to start service.
+     * @param context the context
+     */
     public static void startServiceAlarm(Context context, boolean isInForeground) {
         Intent i = new Intent(context, MyIntentService.class);
         i.putExtra(context.getString(R.string.keys_is_foreground), isInForeground);
@@ -85,7 +88,10 @@ public class MyIntentService extends IntentService {
                 , POLL_INTERVAL, pendingIntent);
     }
 
-    // creates the AlarmManager instance to stop service.
+    /**
+     * Creates the AlarmManager instance to stop service.
+     * @param context the context
+     */
     public static void stopServiceAlarm(Context context) {
         Intent i = new Intent(context, MyIntentService.class);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, i, 0);
@@ -121,6 +127,10 @@ public class MyIntentService extends IntentService {
         return true;
     }
 
+    /**
+     * Handle what happens when result has been received from web service.
+     * @param result result in JSON
+     */
     private void handleReceivedInviteOnPost(String result) {
         try {
             JSONObject response = new JSONObject(result);
@@ -165,10 +175,16 @@ public class MyIntentService extends IntentService {
         }
 
         // this needs to be here because we need to wait until we've received user data
-        buildNotification();
+        buildConnectionNotification();
 
     }
 
+    /**
+     * Converts string to a JSON Object.
+     * @param memberidA member A id.
+     * @param memberidB member B id.
+     * @return the JSON Object.
+     */
     private JSONObject asJSONObject(String memberidA, String memberidB) {
         //build the JSONObject
         JSONObject msg = new JSONObject();
@@ -181,7 +197,10 @@ public class MyIntentService extends IntentService {
         return msg;
     }
 
-    private void buildNotification() {
+    /**
+     * Builds the connection request notification.
+     */
+    private void buildConnectionNotification() {
         // only build notification if something request in background was received
 
         if (initialState == currentlState && !userToDisplay.equals("empty")) {
@@ -235,11 +254,11 @@ public class MyIntentService extends IntentService {
 
 
     /**
-     * method to get all chatrooms for user and start building chatroom buttons
+     * Checks the messages web service.
      *
      * author: Casey Anderson
      */
-    private void getChats() {
+    private void checkMessagesService() {
         Log.d(TAG, "inside getChats");
         prefs = getSharedPreferences(
                 getString(R.string.keys_shared_prefs),
@@ -272,6 +291,11 @@ public class MyIntentService extends IntentService {
                 .build().execute();
     }
 
+
+    /**
+     * Get
+     * @param res
+     */
     private void getChatIds(String res) {
         Log.d(TAG, "result is : " + res);
         if (!prefs.contains(getString(R.string.keys_prefs_username))) {
@@ -349,6 +373,10 @@ public class MyIntentService extends IntentService {
                 .build().execute();
     }
 
+    /**
+     * Saves the result from the server.
+     * @param res the result in JSON
+     */
     private void storeServerMsg(String res) {
         try {
             JSONObject response = new JSONObject(res);
@@ -364,7 +392,7 @@ public class MyIntentService extends IntentService {
 
 
         Log.d(TAG, "str[0] = " + strArr[0] + ",  str[1] = " + strArr[1]);
-        if (!strArr[0].equals(strArr[1])) {
+        if (!strArr[0].equals(strArr[1]) && !strArr.equals("")) {
             Log.d(TAG, "NEW message");
             buildMessageNotification();
         } else {
@@ -372,6 +400,9 @@ public class MyIntentService extends IntentService {
         }
     }
 
+    /**
+     * Builds notification for messages.
+     */
     private void buildMessageNotification() {
         Log.d(TAG, "builMessagedNotification() - ");
         //IMPORT V4 not V7
@@ -415,7 +446,4 @@ public class MyIntentService extends IntentService {
 
     }
 
-    public boolean isThereNewRequest() {
-        return newRequest;
-    }
 }
