@@ -5,12 +5,16 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -55,6 +59,11 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
         searchView = (SearchView) v.findViewById(R.id.searchFriendSearchView);
         searchView.setActivated(true);
         searchView.setOnQueryTextListener(this);
+
+        FloatingActionButton floatingbutton = (FloatingActionButton) v.findViewById(R.id.friendsearchButtonEmail);
+        floatingbutton.setOnClickListener(view -> {
+            onSendEmail();
+        });
 
 
         return v;
@@ -122,7 +131,7 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
 
                 if (length < 1) {
                     showInvite = false;
-                    connectionResultList.add("\nNo results found for \'" + queryEntered + " \' ");
+                    connectionResultList.add("\nNo results found for \'" + queryEntered + " \' \nClick here to send email invite.");
 
                 } else {
                     showInvite = true;
@@ -169,6 +178,9 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
     public void onClickOnSearchResult(int position) {
         if (showInvite) {
             onSearchResults(memberIds.get(position), fullnames.get(position));
+        } else {
+            onSendEmail();
+            Log.e("EMPTY_SEARCH_RESULTS","Send email invite");
         }
     }
 
@@ -265,5 +277,80 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
             Log.wtf("QUERY ", "Error creating JSON: " + e.getMessage());
         }
         return msg;
+    }
+
+    private void onSendEmail() {
+        //listener for user's click
+        final EditText input = new EditText(getContext());
+        input.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        input.setHint("Enter an email");
+        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+
+                    Log.d("CANCEL: ", "clicked");
+                    searchView.setQuery("", false);
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+
+                    Log.d("Send: ", "clicked");
+                    String temp = input.getText().toString();
+                    if(temp != null && temp.compareTo("") != 0 && android.util.Patterns.EMAIL_ADDRESS.matcher(temp).matches()){
+                        sendEmail(input.getText().toString());
+                    } else {
+                        Toasty.normal(getActivity(),"Invalid email",
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+                    break;
+            }
+        };
+
+
+        LinearLayout.LayoutParams dialogLayout= new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(dialogLayout);
+
+        // display an alert dialog to confirm deleting a connection.
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Enter an email to invite a new user:" )
+                .setView(input)
+                .setPositiveButton("Cancel", dialogClickListener)
+                .setNegativeButton("Send", dialogClickListener)
+                .show();
+    }
+
+    private void sendEmail(String email) {
+        //try json
+        try {
+            Uri uri = new Uri.Builder()
+                    .scheme("https")
+                    .appendPath(getString(R.string.ep_base_url))
+                    .appendPath(getString(R.string.ep_email_invite))
+                    .build();
+
+            JSONObject emailJSON = new JSONObject();
+            emailJSON.put("email", email);
+
+            new SendPostAsyncTask.Builder(uri.toString(), emailJSON)
+                    .onPostExecute(this::handleEmail)
+                    //TODO: add onCancelled handler.
+                    .onCancelled(this::handleEmail)
+                    .build().execute();
+        } catch (JSONException e){
+
+        }
+    }
+
+    private void handleEmail(String text){
+        try {
+            JSONObject response = new JSONObject(text);
+            Toasty.normal(getActivity(),response.getString("message"),
+                    Toast.LENGTH_SHORT).show();
+        } catch(JSONException e) {
+
+        }
     }
 }
