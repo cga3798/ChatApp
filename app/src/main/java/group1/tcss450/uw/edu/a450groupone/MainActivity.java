@@ -23,8 +23,8 @@ public class MainActivity extends AppCompatActivity implements
         SuccessRegistrationFragment.OnOkVerifyEmailListener,
         HomeFragment.OnHomeFragmentInteractionListener,
         LoginHelpFragment.OnHelpFragmentInteractionListener,
-        RecoverUsernameSuccess.OnOkVerifyEmailListener,
-        RecoverPasswordFragment.OnOkVerifyEmailListener{
+        RecoverUsernameSuccess.OnOkUserEmailListener,
+        RecoverPasswordFragment.OnOkPasswordEmailListener{
 
     private Credentials mCredentials;
     public static Activity mainActivity;
@@ -434,5 +434,16 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    public void clickOkChangePassword() {
+        loadFragment(new LoginFragment(),
+                getString(R.string.keys_fragment_login));
+    }
+
+    @Override
+    public void clickOkUser() {
+        loadFragment(new LoginFragment(),
+                getString(R.string.keys_fragment_login));
+    }
 }
 

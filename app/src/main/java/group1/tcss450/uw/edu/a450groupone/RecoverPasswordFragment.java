@@ -15,7 +15,7 @@ import android.widget.Button;
  */
 public class RecoverPasswordFragment extends Fragment {
 
-    private OnOkVerifyEmailListener mListener;
+    private OnOkPasswordEmailListener mListener;
     public RecoverPasswordFragment() {
         // Required empty public constructor
     }
@@ -28,7 +28,7 @@ public class RecoverPasswordFragment extends Fragment {
         View v =  inflater.inflate(R.layout.fragment_recover_password, container, false);
 
         v.findViewById(R.id.tempChat1).setOnClickListener(view ->
-                mListener.clickOkVerifyRegistration());
+                mListener.clickOkChangePassword());
         return v;
 
     }
@@ -36,8 +36,8 @@ public class RecoverPasswordFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof RecoverUsernameSuccess.OnOkVerifyEmailListener) {
-            mListener = (RecoverPasswordFragment.OnOkVerifyEmailListener) context;
+        if (context instanceof RecoverPasswordFragment.OnOkPasswordEmailListener) {
+            mListener = (RecoverPasswordFragment.OnOkPasswordEmailListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -50,8 +50,8 @@ public class RecoverPasswordFragment extends Fragment {
         mListener = null;
     }
 
-    public interface OnOkVerifyEmailListener {
-        void clickOkVerifyRegistration();
+    public interface OnOkPasswordEmailListener {
+        void clickOkChangePassword();
     }
 
 }

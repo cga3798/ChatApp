@@ -15,7 +15,7 @@ import android.widget.Button;
  */
 public class RecoverUsernameSuccess extends Fragment {
 
-    private OnOkVerifyEmailListener mListener;
+    private OnOkUserEmailListener mListener;
 
     public RecoverUsernameSuccess() {
         // Required empty public constructor
@@ -28,7 +28,7 @@ public class RecoverUsernameSuccess extends Fragment {
         View v =  inflater.inflate(R.layout.fragment_recover_username_success, container, false);
 
         v.findViewById(R.id.tempChat1).setOnClickListener(view ->
-                mListener.clickOkVerifyRegistration());
+                mListener.clickOkUser());
         return v;
 
     }
@@ -36,8 +36,8 @@ public class RecoverUsernameSuccess extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnOkVerifyEmailListener) {
-            mListener = (OnOkVerifyEmailListener) context;
+        if (context instanceof OnOkUserEmailListener) {
+            mListener = (OnOkUserEmailListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -50,8 +50,8 @@ public class RecoverUsernameSuccess extends Fragment {
         mListener = null;
     }
 
-    public interface OnOkVerifyEmailListener {
-        void clickOkVerifyRegistration();
+    public interface OnOkUserEmailListener {
+        void clickOkUser();
     }
 
 }
