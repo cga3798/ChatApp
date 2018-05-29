@@ -9,6 +9,9 @@
     <string name="ep_weather_current">current</string>
     <string name="ep_weather_daily">dailyHourly</string>
     <string name="ep_weather_zip">zip</string>
+    <string name="ep_Recover_help">help</string>
+    <string name="ep_Recover_username">getUsername</string>
+    <string name="ep_Recover_password">getPassword</string>
 
     <string name="ep_get_chatMembers">getChatMembers</string>
     <string name="ep_get_chatMembers_list">getChatMembersList</string>
@@ -21,6 +24,7 @@
     <string name="ep_invites_sent">invitesent</string>
     <string name="ep_invites_received">invitereceived</string>
     <string name="ep_connections_ops">connectionops</string>
+    <string name="ep_email_invite">emailinvite</string>
 
     <string name="ep_send_message">sendMessages</string>
     <string name="ep_get_message">getMessages</string>

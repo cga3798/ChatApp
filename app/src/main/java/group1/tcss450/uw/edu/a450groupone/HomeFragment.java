@@ -29,7 +29,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.LocationServices;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TimeZone;
 
@@ -160,6 +162,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
      */
     private void populateChats(String res) {
         LinearLayout buttonContainer = (LinearLayout) getActivity().findViewById(R.id.HomeLinearLayoutButtonContainer);
+        ArrayList<Integer> chatIds = new ArrayList<>();
+        ArrayList<String> chatnames = new ArrayList<>();
         Log.d("homeFragment", "result is : " + res);
         if (!prefs.contains(getString(R.string.keys_prefs_username))) {
             throw new IllegalStateException("No username in prefs!");
@@ -167,6 +171,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
         try {
             JSONObject response = new JSONObject(res);
+
             if (response.getBoolean("success")) {
                 JSONArray chatList = response.getJSONArray("name");
                 for (int i = 0; i < chatList.length(); i++) {
@@ -190,11 +195,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                         e.printStackTrace();
                     }
 
+//                    Log.e("chat name: ", name.getString("name"));
+//                    Log.e("chat id: ", "" + name.getInt("chatid"));
+//                    Log.e("current memebrid: ", "" + mMemberId);
+                    chatIds.add(name.getInt("chatid"));
+                    chatnames.add(name.getString("name"));
+
                     // parse name string here...
                     String chatName = parseChatName(name.getString("name"));
-
                     button.setText(chatName);
-
                     button.setOnClickListener(view -> {
                         try {
                             prefs.edit().putInt(
@@ -230,6 +239,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                     buttonContainer.addView(container, params);
 
                 }
+
+                JSONArray chatidJSONArray = new JSONArray(chatIds);
+                JSONArray chatNamesJSONArray = new JSONArray(chatnames);
+                SharedPreferences deleteChatInfoPrefs = getActivity().getSharedPreferences(
+                                    getString(R.string.keys_delete_friend_chat_info),
+                                    Context.MODE_PRIVATE);
+
+                deleteChatInfoPrefs.edit().putString(getString(R.string.keys_json_chat_id), chatidJSONArray.toString())
+                            .apply();
+                deleteChatInfoPrefs.edit().putString(getString(R.string.keys_chat_name), chatNamesJSONArray.toString())
+                            .apply();
+
             }
         } catch (JSONException e) {
             e.printStackTrace();

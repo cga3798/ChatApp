@@ -532,11 +532,19 @@ public class NavigationActivity extends AppCompatActivity implements
         public void onReceive(Context context, Intent intent) {
 
             if(intent.getAction().equals(RECEIVE_JSON)) {
-                String serviceJsonString = intent.getStringExtra("json");
                 Log.e("onReceive: ", "new notification");
-                badgeDrawable = new BadgeDrawerArrowDrawable(getSupportActionBar().getThemedContext());
-                toggle.setDrawerArrowDrawable(badgeDrawable);
-                navigationView.getMenu().getItem(1).setActionView(R.layout.menu_dot);
+                String serviceJsonString = intent.getStringExtra("json");
+                if (serviceJsonString.equals("new request")) {
+                    Log.e("service JSON string: ", "new request");
+                    badgeDrawable = new BadgeDrawerArrowDrawable(getSupportActionBar().getThemedContext());
+                    toggle.setDrawerArrowDrawable(badgeDrawable);
+                    navigationView.getMenu().getItem(1).setActionView(R.layout.menu_dot);
+                } else if (serviceJsonString.equals("new message")) {
+                    Log.e("service JSON string: ", "new message");
+
+
+                }
+
             }
             //toggle.setHomeAsUpIndicator(R.drawable.ic_menu_hamburger);
         }

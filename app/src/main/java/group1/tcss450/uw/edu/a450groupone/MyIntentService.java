@@ -47,6 +47,8 @@ public class MyIntentService extends IntentService {
 
     //String[] strArr = new String[2];
     String[] strArr = {"", ""};
+    private boolean inForeground = false;
+    private Intent RTReturn;
 
 
     public MyIntentService() {
@@ -103,7 +105,8 @@ public class MyIntentService extends IntentService {
 
     private boolean checkIfToPostNotification(boolean isInForeground) {
         // app in background, check webservice
-        if (!isInForeground) {
+//        if (!isInForeground) {
+        inForeground = isInForeground;
             Log.d(TAG, "checkIfToPostNotification() - in background");
 
             SharedPreferences prefs =
@@ -121,9 +124,9 @@ public class MyIntentService extends IntentService {
             new SendPostAsyncTask.Builder(uri.toString(), msg)
                     .onPostExecute(this::handleReceivedInviteOnPost)
                     .build().execute();
-        } else { // don't need to do anything because app is in foreground
-            Log.d(TAG, "checkIfToPostNotification() - in foreground");
-        }
+//        } else { // don't need to do anything because app is in foreground
+//            Log.d(TAG, "checkIfToPostNotification() - in foreground");
+//        }
         return true;
     }
 
@@ -205,46 +208,54 @@ public class MyIntentService extends IntentService {
 
         if (initialState == currentlState && !userToDisplay.equals("empty")) {
             Log.d(TAG, "buildNotification() - " + userToDisplay);
-            //IMPORT V4 not V7
-            NotificationCompat.Builder mBuilder =
-                    new NotificationCompat.Builder(this)
-                            .setContentTitle("Connection Request")
-                            .setSmallIcon(R.mipmap.chatapplogo)
-                            .setContentTitle("New Request")
-                            .setContentText(userToDisplay + " sent you a request.");
+            //IMPORT V4 not V
+            if (inForeground) {
 
-            // Creates an Intent for the Activity
-            Intent notifyIntent =
-                    new Intent(this, NavigationActivity.class);
-            notifyIntent.putExtra("friendFragment", "FriendFragment");
+                Log.e("inForeground: ", "true");
+                RTReturn = new Intent(NavigationActivity.RECEIVE_JSON);
+                RTReturn.putExtra("json", "new request");
+                LocalBroadcastManager.getInstance(this).sendBroadcast(RTReturn);
 
-            // Sets the Activity to start in a new, empty task
-            notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-            // Creates the PendingIntent
-            PendingIntent notifyPendingIntent =
-                    PendingIntent.getActivity(
-                            this,
-                            0,
-                            notifyIntent,
-                            PendingIntent.FLAG_UPDATE_CURRENT
-                    );
+            } else {
+                Log.e("inForeground: ", "false");
 
-            // Puts the PendingIntent into the notification builder
-            mBuilder.setContentIntent(notifyPendingIntent);
-            mBuilder.setAutoCancel(true);
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(this)
+                                .setContentTitle("Connection Request")
+                                .setSmallIcon(R.mipmap.chat_app_log_behance)
+                                .setContentTitle("New Request")
+                                .setContentText(userToDisplay + " sent you a request.");
 
-            NotificationManager mNotificationManager =
-                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            // mId allows you to update the notification later on.
-            mNotificationManager.notify(1, mBuilder.build());
+                // Creates an Intent for the Activity
+                Intent notifyIntent =
+                        new Intent(this, NavigationActivity.class);
+                notifyIntent.putExtra("friendFragment", "FriendFragment");
 
-            System.out.println("intent Received");
+                // Sets the Activity to start in a new, empty task
+                notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-            Intent RTReturn = new Intent(NavigationActivity.RECEIVE_JSON);
-            RTReturn.putExtra("json", "jsonString");
-            LocalBroadcastManager.getInstance(this).sendBroadcast(RTReturn);
+                // Creates the PendingIntent
+                PendingIntent notifyPendingIntent =
+                        PendingIntent.getActivity(
+                                this,
+                                0,
+                                notifyIntent,
+                                PendingIntent.FLAG_UPDATE_CURRENT
+                        );
+
+                // Puts the PendingIntent into the notification builder
+                mBuilder.setContentIntent(notifyPendingIntent);
+                mBuilder.setAutoCancel(true);
+
+                NotificationManager mNotificationManager =
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                // mId allows you to update the notification later on.
+                mNotificationManager.notify(1, mBuilder.build());
+
+                System.out.println("intent Received");
+            }
 
         } else {
             Log.d(TAG, "buildNotification() - nothing new");
@@ -408,7 +419,7 @@ public class MyIntentService extends IntentService {
         //IMPORT V4 not V7
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.chatapplogo)
+                        .setSmallIcon(R.mipmap.chat_app_log_behance)
                         .setContentTitle("New message")
                         .setContentText(strArr[0])
                         .setPriority(Notification.PRIORITY_MAX);
@@ -440,10 +451,9 @@ public class MyIntentService extends IntentService {
         // mId allows you to update the notification later on.
         mNotificationManager.notify(1, mBuilder.build());
 
-        Intent RTReturn = new Intent(NavigationActivity.RECEIVE_JSON);
-        RTReturn.putExtra("json", "jsonString");
+        RTReturn = new Intent(NavigationActivity.RECEIVE_JSON);
+        RTReturn.putExtra("json", "new message");
         LocalBroadcastManager.getInstance(this).sendBroadcast(RTReturn);
-
     }
 
 }

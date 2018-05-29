@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -39,6 +38,9 @@ public class FriendFragment extends Fragment {
     private OnFriendFragmentInteractionListener mListener;
     private String fullname;
     private LinearLayout contactsListContainer;
+    private SharedPreferences prefs;
+    private int mMemberId;
+    JSONArray jsonArrayChatids, jsonArrayChatNames;
 
     public FriendFragment() {
         // Required empty public constructor
@@ -70,6 +72,27 @@ public class FriendFragment extends Fragment {
             transaction.commit();
         });
 
+        prefs = getActivity().getSharedPreferences(
+                getString(R.string.keys_shared_prefs),
+                Context.MODE_PRIVATE);
+
+        mMemberId = prefs.getInt(getString(R.string.keys_prefs_id), 0);
+
+        SharedPreferences deleteChatInfoPrefs = getActivity().getSharedPreferences(
+                getString(R.string.keys_delete_friend_chat_info),
+                Context.MODE_PRIVATE);
+
+        String chatidPrefs = deleteChatInfoPrefs.getString(getString(R.string.keys_json_chat_id), "empty");
+        String chatNamesPrefs = deleteChatInfoPrefs.getString(getString(R.string.keys_chat_name), "empty");
+
+        try {
+            jsonArrayChatids = new JSONArray(chatidPrefs);
+            jsonArrayChatNames = new JSONArray(chatNamesPrefs);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        parseDeleteChat("kamal2");
         return v;
     }
 
@@ -127,7 +150,6 @@ public class FriendFragment extends Fragment {
                         .apply();
 
                 int length = friendsList.length();
-
 
                 if (length == 0) {
                     contactsListContainer.addView(
@@ -224,6 +246,8 @@ public class FriendFragment extends Fragment {
             switch (which){
                 case DialogInterface.BUTTON_POSITIVE:
                     Log.d("YES: ", "clicked");
+                    // delete messages first
+                    parseDeleteChat(username_b);
                     deleteFriend(username_b);
                     break;
 
@@ -233,13 +257,64 @@ public class FriendFragment extends Fragment {
                     break;
             }
         };
-
         // display an alert dialog to confirm deleting a connection.
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("Are you sure you want to delete your friend?" )
                 .setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
     }
+
+    private void parseDeleteChat(String username_b) {
+        Log.e("current memberid: ", "" + mMemberId);
+
+        for (int i = 0; i < jsonArrayChatids.length(); i++) {
+            try {
+                String chatname = jsonArrayChatNames.getString(i).toString();
+                int chatId = Integer.parseInt(jsonArrayChatids.getString(i).toString());
+                if (chatname.contains(username_b)) {
+                    deleteChat(chatId);
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    /*
+     * Sends the delete chat json to the server.
+     */
+    private void deleteChat(int chatid){
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_delete_chat))
+                .build();
+
+        JSONObject msg = new JSONObject();
+
+        try {
+            msg.put("chatid", chatid);
+            msg.put("memberid", mMemberId);
+        } catch (JSONException e) {
+            Log.e("DELETECHAT", "Error creating JSON: " + e.getMessage());
+        }
+
+        new SendPostAsyncTask.Builder(uri.toString(), msg)
+                .onPostExecute(this::handleDeleteChatOnPost)
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
+    }
+
+    /*
+    *   Reloads home and displays a confirmation that chat was deleted.
+     */
+    private void handleDeleteChatOnPost(String result) {
+        Log.d("handleDeleteChatOnPost ", "success");
+    }
+
+
 
     /**
      * Sends a request to the server to delete a connection.
