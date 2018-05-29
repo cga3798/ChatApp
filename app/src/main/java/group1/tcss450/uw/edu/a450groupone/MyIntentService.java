@@ -210,13 +210,10 @@ public class MyIntentService extends IntentService {
             Log.d(TAG, "buildNotification() - " + userToDisplay);
             //IMPORT V4 not V
             if (inForeground) {
-
                 Log.e("inForeground: ", "true");
                 RTReturn = new Intent(NavigationActivity.RECEIVE_JSON);
                 RTReturn.putExtra("json", "new request");
                 LocalBroadcastManager.getInstance(this).sendBroadcast(RTReturn);
-
-
             } else {
                 Log.e("inForeground: ", "false");
 
@@ -389,12 +386,15 @@ public class MyIntentService extends IntentService {
      * @param res the result in JSON
      */
     private void storeServerMsg(String res) {
+        String notificationUser = String.valueOf(prefs.getString(getString(R.string.keys_prefs_username), ""));
+
         try {
             JSONObject response = new JSONObject(res);
             if (response.getBoolean("success")) {
                 JSONObject message = response.getJSONObject("messages");
                 Log.d(TAG, "Last message: " + response.toString());
                 strArr[0] = message.getString("message");
+                notificationUser = message.getString("username");
                 getLastMessageSharedPref(response.getInt("chatid"));
             }
         } catch (JSONException e) {
@@ -403,7 +403,11 @@ public class MyIntentService extends IntentService {
 
 
         Log.d(TAG, "str[0] = " + strArr[0] + ",  str[1] = " + strArr[1]);
-        if (!strArr[0].equals(strArr[1]) && !strArr.equals("")) {
+        String currentUsername = String.valueOf(prefs.getString(getString(R.string.keys_prefs_username), ""));
+
+        boolean receivingUser = currentUsername.equals(notificationUser) ? false : true;
+
+        if (!strArr[0].equals(strArr[1]) && receivingUser) {
             Log.d(TAG, "NEW message");
             buildMessageNotification();
         } else {
@@ -415,45 +419,51 @@ public class MyIntentService extends IntentService {
      * Builds notification for messages.
      */
     private void buildMessageNotification() {
-        Log.d(TAG, "builMessagedNotification() - ");
-        //IMPORT V4 not V7
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.chat_app_log_behance)
-                        .setContentTitle("New message")
-                        .setContentText(strArr[0])
-                        .setPriority(Notification.PRIORITY_MAX);
+        Log.d(TAG, "Username : " + String.valueOf(prefs.getString(getString(R.string.keys_prefs_username), "")));
+        // foregroun
+        if (inForeground) {
+            RTReturn = new Intent(NavigationActivity.RECEIVE_JSON);
+            RTReturn.putExtra("json", "new message");
+            LocalBroadcastManager.getInstance(this).sendBroadcast(RTReturn);
+        } else {
+            Log.d(TAG, "builMessagedNotification() - ");
+            //IMPORT V4 not V7
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.mipmap.chat_app_log_behance)
+                            .setContentTitle("New message")
+                            .setContentText(strArr[0])
+                            .setPriority(Notification.PRIORITY_MAX);
 
-        // Creates an Intent for the Activity
-        Intent notifyIntent =
-                new Intent(this, NavigationActivity.class);
-        notifyIntent.putExtra("messageFragment", "HomeFragment");
+            // Creates an Intent for the Activity
+            Intent notifyIntent =
+                    new Intent(this, NavigationActivity.class);
+            notifyIntent.putExtra("messageFragment", "HomeFragment");
 
-        // Sets the Activity to start in a new, empty task
-        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            // Sets the Activity to start in a new, empty task
+            notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        // Creates the PendingIntent
-        PendingIntent notifyPendingIntent =
-                PendingIntent.getActivity(
-                        this,
-                        0,
-                        notifyIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
+            // Creates the PendingIntent
+            PendingIntent notifyPendingIntent =
+                    PendingIntent.getActivity(
+                            this,
+                            0,
+                            notifyIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                    );
 
-        // Puts the PendingIntent into the notification builder
-        mBuilder.setContentIntent(notifyPendingIntent);
-        mBuilder.setAutoCancel(true);
+            // Puts the PendingIntent into the notification builder
+            mBuilder.setContentIntent(notifyPendingIntent);
+            mBuilder.setAutoCancel(true);
 
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        // mId allows you to update the notification later on.
-        mNotificationManager.notify(1, mBuilder.build());
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            // mId allows you to update the notification later on.
+            mNotificationManager.notify(1, mBuilder.build());
 
-        RTReturn = new Intent(NavigationActivity.RECEIVE_JSON);
-        RTReturn.putExtra("json", "new message");
-        LocalBroadcastManager.getInstance(this).sendBroadcast(RTReturn);
+        }
+        // end of foreground
     }
 
 }
