@@ -256,11 +256,20 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                             imageView2.setLayoutParams(paramsLL);
                             container.addView(imageView2);
                             container.addView(imageView);
+                            container.addView(button, params);
+                            container.addView(textView);
+
                         } else {
                             button.setText(chatName);
+                            container.addView(button, params);
+                            container.addView(textView);
                         }
                         readArgs = true;
                         getArguments().clear();
+                    } else {
+                        button.setText(chatName);
+                        container.addView(button, params);
+                        container.addView(textView);
                     }
 
                     button.setOnClickListener(view -> {
@@ -288,8 +297,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
                     // adding layout to container
 
-                    container.addView(button, params);
-                    container.addView(textView);
+
                     buttonContainer.addView(container, params);
                 }
 
