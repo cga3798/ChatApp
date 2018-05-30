@@ -50,7 +50,6 @@ public class MyIntentService extends IntentService {
     private boolean inForeground = false;
     private Intent RTReturn;
 
-
     public MyIntentService() {
         super("MyIntentService");
         Log.d(TAG, "creating service");
@@ -104,6 +103,7 @@ public class MyIntentService extends IntentService {
     }
 
     private boolean checkIfToPostNotification(boolean isInForeground) {
+
         // app in background, check webservice
 //        if (!isInForeground) {
         inForeground = isInForeground;
@@ -204,6 +204,8 @@ public class MyIntentService extends IntentService {
      * Builds the connection request notification.
      */
     private void buildConnectionNotification() {
+        boolean loggedInChecked = prefs.getBoolean(getString(R.string.keys_prefs_stay_logged_in), false);
+
         // only build notification if something request in background was received
 
         if (initialState == currentlState && !userToDisplay.equals("empty")) {
@@ -214,7 +216,7 @@ public class MyIntentService extends IntentService {
                 RTReturn = new Intent(NavigationActivity.RECEIVE_JSON);
                 RTReturn.putExtra("json", "new request");
                 LocalBroadcastManager.getInstance(this).sendBroadcast(RTReturn);
-            } else {
+            } else if (loggedInChecked) {
                 Log.e("inForeground: ", "false");
 
                 NotificationCompat.Builder mBuilder =
@@ -386,7 +388,8 @@ public class MyIntentService extends IntentService {
      * @param res the result in JSON
      */
     private void storeServerMsg(String res) {
-        String notificationUser = String.valueOf(prefs.getString(getString(R.string.keys_prefs_username), ""));
+        String receivingUsername = String.valueOf(prefs.getString(getString(R.string.keys_prefs_username), ""));
+        String currentLoggedUsername = String.valueOf(prefs.getString(getString(R.string.keys_prefs_username), ""));
 
         try {
             JSONObject response = new JSONObject(res);
@@ -394,7 +397,7 @@ public class MyIntentService extends IntentService {
                 JSONObject message = response.getJSONObject("messages");
                 Log.d(TAG, "Last message: " + response.toString());
                 strArr[0] = message.getString("message");
-                notificationUser = message.getString("username");
+                receivingUsername = message.getString("username");
                 getLastMessageSharedPref(response.getInt("chatid"));
             }
         } catch (JSONException e) {
@@ -403,9 +406,8 @@ public class MyIntentService extends IntentService {
 
 
         Log.d(TAG, "str[0] = " + strArr[0] + ",  str[1] = " + strArr[1]);
-        String currentUsername = String.valueOf(prefs.getString(getString(R.string.keys_prefs_username), ""));
 
-        boolean receivingUser = currentUsername.equals(notificationUser) ? false : true;
+        boolean receivingUser = !currentLoggedUsername.equals(receivingUsername);
 
         if (!strArr[0].equals(strArr[1]) && receivingUser) {
             Log.d(TAG, "NEW message");
@@ -419,13 +421,15 @@ public class MyIntentService extends IntentService {
      * Builds notification for messages.
      */
     private void buildMessageNotification() {
+        boolean loggedInChecked = prefs.getBoolean(getString(R.string.keys_prefs_stay_logged_in), false);
+
         Log.d(TAG, "Username : " + String.valueOf(prefs.getString(getString(R.string.keys_prefs_username), "")));
-        // foregroun
+        // foreground
         if (inForeground) {
             RTReturn = new Intent(NavigationActivity.RECEIVE_JSON);
             RTReturn.putExtra("json", "new message");
             LocalBroadcastManager.getInstance(this).sendBroadcast(RTReturn);
-        } else {
+        } else if (loggedInChecked) { //only send message when logged in is checked in background
             Log.d(TAG, "builMessagedNotification() - ");
             //IMPORT V4 not V7
             NotificationCompat.Builder mBuilder =
