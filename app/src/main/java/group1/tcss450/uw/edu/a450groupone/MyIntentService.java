@@ -43,7 +43,7 @@ public class MyIntentService extends IntentService {
     public boolean newRequest = false;
     Intent intent;
     private SharedPreferences prefs;
-    private int mMemberId;
+    private int mMemberId, currentChatId;
     private int chatID2;
     private boolean inForeground = false;
     String[] strArr = new String[2];
@@ -203,7 +203,7 @@ public class MyIntentService extends IntentService {
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this)
                                 .setContentTitle("Connection Request")
-                                .setSmallIcon(R.mipmap.chat_app_log_behance)
+                                .setSmallIcon(R.mipmap.logomakr_chat_dual)
                                 .setContentTitle("New Request")
                                 .setContentText(userToDisplay + " sent you a request.");
 
@@ -363,6 +363,7 @@ public class MyIntentService extends IntentService {
         try {
             JSONObject response = new JSONObject(res);
             if (response.getBoolean("success")) {
+                currentChatId = response.getInt("chatid");
                 JSONObject message = response.getJSONObject("messages");
                 Log.d(TAG, "Last message: " + response.toString());
                 strArr[0] = message.getString("message");
@@ -371,7 +372,6 @@ public class MyIntentService extends IntentService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         Log.d(TAG, "str[0] = " + strArr[0] + ",  str[1] = " + strArr[1]);
         if (!strArr[0].equals(strArr[1])) {
@@ -383,11 +383,12 @@ public class MyIntentService extends IntentService {
     }
 
     private void buildMessageNotification() {
-        Log.d(TAG, "builMessagedNotification() - ");
+        Log.d(TAG, "builMessagedNotification() - " + userToDisplay);
+
         //IMPORT V4 not V7
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.chat_app_log_behance)
+                        .setSmallIcon(R.mipmap.logomakr_chat_dual)
                         .setContentTitle("New message")
                         .setContentText(strArr[0])
                         .setPriority(Notification.PRIORITY_MAX);
@@ -414,14 +415,16 @@ public class MyIntentService extends IntentService {
         mBuilder.setContentIntent(notifyPendingIntent);
         mBuilder.setAutoCancel(true);
 
+        RTReturn = new Intent(NavigationActivity.RECEIVE_JSON);
+        RTReturn.putExtra("json", "new message");
+        RTReturn.putExtra("chatid", currentChatId);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(RTReturn);
+
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // mId allows you to update the notification later on.
         mNotificationManager.notify(1, mBuilder.build());
 
-        RTReturn = new Intent(NavigationActivity.RECEIVE_JSON);
-        RTReturn.putExtra("json", "new message");
-        LocalBroadcastManager.getInstance(this).sendBroadcast(RTReturn);
     }
 
     public boolean isThereNewRequest() {
