@@ -195,10 +195,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                     Button button = new Button(this.getActivity(), null, android.R.attr.buttonBarButtonStyle);
                     ImageView imageView = new ImageView(getActivity());
                     ImageView imageView2 = new ImageView(getActivity());
+                    // textView to display chatrooms last message
+                    TextView textView = new TextView(this.getActivity());
                     imageView.setImageResource(R.drawable.small_circle);
                     imageView2.setImageResource(R.drawable.small_circle_clear);
                     imageView2.setVisibility(View.GONE);
                     imageView.setVisibility(View.GONE);
+
                     JSONObject name = chatList.getJSONObject(i);
                     try {
                         prefs.edit().putInt(
@@ -213,17 +216,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
                     // parse name string here...
                     String chatName = parseChatName(name.getString("name"));
-                    // textView to display chatrooms last message
-                    TextView textView = new TextView(this.getActivity());
-                    //textView.setId(R.id.chat_text_button_on);
-                    lastMessagesDict.put(name.getInt("chatid"), textView);
 
                     // method to get messages for textView
+                    lastMessagesDict.put(name.getInt("chatid"), textView);
+
                     try {
                         getLastMessage(textView);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+
                     ColorStateList oldColors =  textView.getTextColors(); //save original colors
                     ColorStateList oldColorbutton =   button.getTextColors(); //save original colors
 
@@ -234,6 +236,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                     if (readArgs  == false) {
                         Bundle bundle = getArguments();
                         int chatid = bundle.getInt("newchatid");
+
                         Log.e("Home Fragmenet: ", "readArgs = false");
                         Log.e("name.getIntchatid: ", name.getInt("chatid") + "");
                         Log.e("chatid from bundle: " , chatid + "");
@@ -253,24 +256,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                             imageView2.setLayoutParams(paramsLL);
                             container.addView(imageView2);
                             container.addView(imageView);
-                            container.addView(button, params);
-                            container.addView(textView);
-
                         } else {
                             button.setText(chatName);
-                            container.addView(button, params);
-                            container.addView(textView);
                         }
                         readArgs = true;
                         getArguments().clear();
-
-                    } else {
-                        button.setText(chatName);
-                        container.addView(button, params);
-                        container.addView(textView);
                     }
-
-
 
                     button.setOnClickListener(view -> {
                         try {
@@ -289,12 +280,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                         button.setTextColor(oldColorbutton);
                         textView.setTextColor(oldColors);
                         imageView.setVisibility(View.GONE);
+                        imageView2.setVisibility(View.GONE);
                         setHamburgerIconNoDot();
 
                     });
 
 
                     // adding layout to container
+
+                    container.addView(button, params);
+                    container.addView(textView);
                     buttonContainer.addView(container, params);
                 }
 
