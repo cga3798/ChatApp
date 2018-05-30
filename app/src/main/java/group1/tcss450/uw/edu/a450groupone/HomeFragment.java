@@ -22,6 +22,7 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -193,7 +194,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                     // button for chatrooms
                     Button button = new Button(this.getActivity(), null, android.R.attr.buttonBarButtonStyle);
                     ImageView imageView = new ImageView(getActivity());
+                    ImageView imageView2 = new ImageView(getActivity());
                     imageView.setImageResource(R.drawable.small_circle);
+                    imageView2.setImageResource(R.drawable.small_circle_clear);
+                    imageView2.setVisibility(View.GONE);
                     imageView.setVisibility(View.GONE);
                     JSONObject name = chatList.getJSONObject(i);
                     try {
@@ -223,6 +227,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                     ColorStateList oldColors =  textView.getTextColors(); //save original colors
                     ColorStateList oldColorbutton =   button.getTextColors(); //save original colors
 
+                    LinearLayout.LayoutParams paramsLL = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.FILL_PARENT);
+                    params.weight = 1.0f;
+                    params.gravity = Gravity.TOP;
+
                     if (readArgs  == false) {
                         Bundle bundle = getArguments();
                         int chatid = bundle.getInt("newchatid");
@@ -234,10 +242,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                             button.setText(spanString);
 
                             imageView.setVisibility(View.VISIBLE);
+                            imageView2.setVisibility(View.VISIBLE);
+
+                            imageView.setLayoutParams(paramsLL);
                             textView.setTextColor(Color.BLACK);
+                            imageView2.setLayoutParams(paramsLL);
+                            container.addView(imageView2);
+                            container.addView(imageView);
                             container.addView(button, params);
                             container.addView(textView);
-                            container.addView(imageView);
 
                         } else {
                             button.setText(chatName);
