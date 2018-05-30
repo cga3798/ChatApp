@@ -35,9 +35,6 @@ public class MyIntentService extends IntentService {
 
     private static final String TAG = "MyIntentService";
 
-    private int initialState = 0;
-    private int currentlState = 0;
-    private int count = 0;
     private String userToDisplay = "empty";
     public boolean newRequest = false;
     Intent intent;
@@ -124,9 +121,7 @@ public class MyIntentService extends IntentService {
             new SendPostAsyncTask.Builder(uri.toString(), msg)
                     .onPostExecute(this::handleReceivedInviteOnPost)
                     .build().execute();
-//        } else { // don't need to do anything because app is in foreground
-//            Log.d(TAG, "checkIfToPostNotification() - in foreground");
-//        }
+
         return true;
     }
 
@@ -135,6 +130,7 @@ public class MyIntentService extends IntentService {
      * @param result result in JSON
      */
     private void handleReceivedInviteOnPost(String result) {
+
         try {
             JSONObject response = new JSONObject(result);
             Boolean success = response.getBoolean("success");
@@ -143,30 +139,12 @@ public class MyIntentService extends IntentService {
                 JSONArray requestsSent = response.getJSONArray("received");
                 int length = requestsSent.length();
 
-                // update current state (how many request there are now vs. initially)
-                currentlState = length;
-
-                // store the state when app is in foreground
-                if (count == 0) {
-                    initialState = length;
-//                    Log.d(TAG, "initial state: " + initialState + ", current: " + requestsSent.length());
-                }
-                count++;
-                Log.d(TAG, "count: " + count + ", initial state: " + initialState + ", current: " + requestsSent.length());
-
                 if (length == 0) {
                     Log.d(TAG, "length is 0");
 
                 } else {
                     JSONObject request2 = requestsSent.getJSONObject(requestsSent.length() - 1);
-
                     userToDisplay = request2.getString("username");
-
-//                    for (int i = 0; i < requestsSent.length(); i++) {
-//                        JSONObject request = requestsSent.getJSONObject(i);
-//                        Log.d(TAG,  " user is: " + userToDisplay);
-//                        userToDisplay = request.getString("username");
-//                    }
                 }
 
             } else {
@@ -205,10 +183,17 @@ public class MyIntentService extends IntentService {
      */
     private void buildConnectionNotification() {
         boolean loggedInChecked = prefs.getBoolean(getString(R.string.keys_prefs_stay_logged_in), false);
+        String lastuser = prefs.getString(getString(R.string.keys_last_request), "empty");
+        Log.d(TAG, "lastuser: " + lastuser + "\n usertodisplay: " + userToDisplay);
 
-        // only build notification if something request in background was received
+        // only build notification if new request in background was received
+        if (!userToDisplay.equals(lastuser) && !userToDisplay.equals("empty")) {
 
-        if (initialState == currentlState && !userToDisplay.equals("empty")) {
+            // update the last user
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(getString(R.string.keys_last_request), userToDisplay);
+            editor.apply();
+
             Log.d(TAG, "buildNotification() - " + userToDisplay);
             //IMPORT V4 not V
             if (inForeground) {
@@ -216,7 +201,8 @@ public class MyIntentService extends IntentService {
                 RTReturn = new Intent(NavigationActivity.RECEIVE_JSON);
                 RTReturn.putExtra("json", "new request");
                 LocalBroadcastManager.getInstance(this).sendBroadcast(RTReturn);
-            } else if (loggedInChecked) {
+            }
+            else if (loggedInChecked) { // did user check stay logged in? send notification in background
                 Log.e("inForeground: ", "false");
 
                 NotificationCompat.Builder mBuilder =
@@ -257,7 +243,7 @@ public class MyIntentService extends IntentService {
             }
 
         } else {
-            Log.d(TAG, "buildNotification() - nothing new");
+            Log.d(TAG, "buildConnectionNotification() - nothing new");
 
         }
     }
@@ -303,7 +289,7 @@ public class MyIntentService extends IntentService {
 
 
     /**
-     * Get
+     * Get list of chats for the user logged in.
      * @param res
      */
     private void getChatIds(String res) {
@@ -327,7 +313,6 @@ public class MyIntentService extends IntentService {
                     // get last message of the chatID
                     //getLastMessageSharedPref(chatID);
                     getLastMessageFromServer(chatID);
-
 
                 }
             }
