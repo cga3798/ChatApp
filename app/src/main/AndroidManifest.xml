@@ -9,9 +9,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/chat_app_log_behance"
+        android:icon="@mipmap/logomakr_chat_dual"
         android:label="@string/App_name_fragment"
-        android:roundIcon="@mipmap/chat_app_log_behance"
+        android:roundIcon="@mipmap/logomakr_chat_dual"
         android:supportsRtl="true"
         tools:replace="android:label"
         android:theme="@style/AppTheme">

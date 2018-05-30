@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationManager;
@@ -17,13 +19,18 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,14 +62,11 @@ import group1.tcss450.uw.edu.a450groupone.utils.Weather;
 public class HomeFragment extends Fragment implements View.OnClickListener{
 
     private int mMemberId;
-
     private OnHomeFragmentInteractionListener mListener;
-
     private TextView cityTv, tempTv, weatherDescTv, weatherIcon;
-
     private SharedPreferences prefs;
-
     private HashMap<Integer, View> lastMessagesDict;
+    private boolean readArgs = true;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -79,6 +83,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
 
         View v = inflater.inflate(R.layout.fragment_home, container, false);
+
+        if (getArguments() != null) {
+            readArgs = false;
+        }
 
         prefs = getActivity().getSharedPreferences(
                 getString(R.string.keys_shared_prefs),
@@ -185,6 +193,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
                     // button for chatrooms
                     Button button = new Button(this.getActivity(), null, android.R.attr.buttonBarButtonStyle);
+                    ImageView imageView = new ImageView(getActivity());
+                    ImageView imageView2 = new ImageView(getActivity());
+                    imageView.setImageResource(R.drawable.small_circle);
+                    imageView2.setImageResource(R.drawable.small_circle_clear);
+                    imageView2.setVisibility(View.GONE);
+                    imageView.setVisibility(View.GONE);
                     JSONObject name = chatList.getJSONObject(i);
                     try {
                         prefs.edit().putInt(
@@ -194,16 +208,63 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-//                    Log.e("chat name: ", name.getString("name"));
-//                    Log.e("chat id: ", "" + name.getInt("chatid"));
-//                    Log.e("current memebrid: ", "" + mMemberId);
                     chatIds.add(name.getInt("chatid"));
                     chatnames.add(name.getString("name"));
 
                     // parse name string here...
                     String chatName = parseChatName(name.getString("name"));
-                    button.setText(chatName);
+                    // textView to display chatrooms last message
+                    TextView textView = new TextView(this.getActivity());
+                    //textView.setId(R.id.chat_text_button_on);
+                    lastMessagesDict.put(name.getInt("chatid"), textView);
+
+                    // method to get messages for textView
+                    try {
+                        getLastMessage(textView);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    ColorStateList oldColors =  textView.getTextColors(); //save original colors
+                    ColorStateList oldColorbutton =   button.getTextColors(); //save original colors
+
+                    LinearLayout.LayoutParams paramsLL = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.FILL_PARENT);
+                    params.weight = 1.0f;
+                    params.gravity = Gravity.TOP;
+
+                    if (readArgs  == false) {
+                        Bundle bundle = getArguments();
+                        int chatid = bundle.getInt("newchatid");
+
+                        if ( name.getInt("chatid") == chatid) {
+                            SpannableString spanString = new SpannableString(chatName);
+                            spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
+                            button.setTextColor(Color.BLACK);
+                            button.setText(spanString);
+
+                            imageView.setVisibility(View.VISIBLE);
+                            imageView2.setVisibility(View.VISIBLE);
+
+                            imageView.setLayoutParams(paramsLL);
+                            textView.setTextColor(Color.BLACK);
+                            imageView2.setLayoutParams(paramsLL);
+                            container.addView(imageView2);
+                            container.addView(imageView);
+                            container.addView(button, params);
+                            container.addView(textView);
+
+                        } else {
+                            button.setText(chatName);
+                            container.addView(button, params);
+                            container.addView(textView);
+                        }
+                        readArgs = true;
+                        getArguments().clear();
+                    } else {
+                        button.setText(chatName);
+                        container.addView(button, params);
+                        container.addView(textView);
+                    }
+
                     button.setOnClickListener(view -> {
                         try {
                             prefs.edit().putInt(
@@ -218,26 +279,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                             e.printStackTrace();
                         }
                         mListener.onOpenChat();
+                        button.setTextColor(oldColorbutton);
+                        textView.setTextColor(oldColors);
+                        imageView.setVisibility(View.GONE);
+                        setHamburgerIconNoDot();
+
                     });
-
-                    container.addView(button, params);
-                    // textView to display chatrooms last message
-                    TextView textView = new TextView(this.getActivity());
-                    //textView.setId(R.id.chat_text_button_on);
-                    lastMessagesDict.put(name.getInt("chatid"), textView);
-
-                    // method to get messages for textView
-                    try {
-                        getLastMessage(textView);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    // adding textView to layout
-                    container.addView(textView);
                     // adding layout to container
                     buttonContainer.addView(container, params);
-
                 }
 
                 JSONArray chatidJSONArray = new JSONArray(chatIds);
@@ -532,6 +581,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                     Log.wtf("", "Didn't expect to see me...");
             }
         }
+    }
+
+    private void setHamburgerIconNoDot() {
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_hamburger);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        NavigationActivity navigationActivity = (NavigationActivity) getActivity();
+        navigationActivity.navigationView.getMenu().getItem(0).setActionView(R.layout.menu_item_no_dot);
     }
 
     /**

@@ -76,6 +76,7 @@ public class NavigationActivity extends AppCompatActivity implements
     ActionBarDrawerToggle toggle;
     BadgeDrawerArrowDrawable badgeDrawable;
     NavigationView navigationView;
+    int newMsgChatId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -541,10 +542,24 @@ public class NavigationActivity extends AppCompatActivity implements
                     navigationView.getMenu().getItem(1).setActionView(R.layout.menu_dot);
                 } else if (serviceJsonString.equals("new message")) {
                     Log.e("service JSON string: ", "new message");
+                    newMsgChatId = intent.getIntExtra("chatid", 0);
+                    Log.e("service chatid string breceiver: ", "" + newMsgChatId);
 
+                    badgeDrawable = new BadgeDrawerArrowDrawable(getSupportActionBar().getThemedContext());
+                    toggle.setDrawerArrowDrawable(badgeDrawable);
+                    navigationView.getMenu().getItem(0).setActionView(R.layout.menu_dot);
+
+                    HomeFragment hm = new HomeFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("newchatid", newMsgChatId);
+                    hm.setArguments(bundle);
+                    FragmentTransaction transaction = getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.navigationFragmentContainer, hm, getString(R.string.keys_fragment_home))
+                            .addToBackStack(getString(R.string.keys_fragment_home));
+                    transaction.commitAllowingStateLoss();
 
                 }
-
             }
             //toggle.setHomeAsUpIndicator(R.drawable.ic_menu_hamburger);
         }

@@ -39,7 +39,7 @@ public class MyIntentService extends IntentService {
     public boolean newRequest = false;
     Intent intent;
     private SharedPreferences prefs;
-    private int mMemberId;
+    private int mMemberId, currentChatId;
     private int chatID2;
 
     //String[] strArr = new String[2];
@@ -208,7 +208,7 @@ public class MyIntentService extends IntentService {
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this)
                                 .setContentTitle("Connection Request")
-                                .setSmallIcon(R.mipmap.chat_app_log_behance)
+                                .setSmallIcon(R.mipmap.logomakr_chat_dual)
                                 .setContentTitle("New Request")
                                 .setContentText(userToDisplay + " sent you a request.");
 
@@ -379,6 +379,7 @@ public class MyIntentService extends IntentService {
         try {
             JSONObject response = new JSONObject(res);
             if (response.getBoolean("success")) {
+                currentChatId = response.getInt("chatid");
                 JSONObject message = response.getJSONObject("messages");
                 Log.d(TAG, "Last message: " + response.toString());
                 strArr[0] = message.getString("message");
@@ -388,7 +389,6 @@ public class MyIntentService extends IntentService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         Log.d(TAG, "str[0] = " + strArr[0] + ",  str[1] = " + strArr[1]);
 
