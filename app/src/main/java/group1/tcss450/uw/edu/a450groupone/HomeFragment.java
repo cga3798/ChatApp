@@ -234,11 +234,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                     if (readArgs  == false) {
                         Bundle bundle = getArguments();
                         int chatid = bundle.getInt("newchatid");
+                        Log.e("Home Fragmenet: ", "readArgs = false");
+                        Log.e("name.getIntchatid: ", name.getInt("chatid") + "");
+                        Log.e("chatid from bundle: " , chatid + "");
 
                         if ( name.getInt("chatid") == chatid) {
+                            Log.e("readArgs = false", "chatid == chtid");
                             SpannableString spanString = new SpannableString(chatName);
                             spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
-                            button.setTextColor(Color.BLACK);
+//                            button.setTextColor(Color.BLACK);
                             button.setText(spanString);
 
                             imageView.setVisibility(View.VISIBLE);
@@ -259,11 +263,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                         }
                         readArgs = true;
                         getArguments().clear();
+
                     } else {
                         button.setText(chatName);
                         container.addView(button, params);
                         container.addView(textView);
                     }
+
+
 
                     button.setOnClickListener(view -> {
                         try {
@@ -285,6 +292,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                         setHamburgerIconNoDot();
 
                     });
+
+
                     // adding layout to container
                     buttonContainer.addView(container, params);
                 }
@@ -292,13 +301,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 JSONArray chatidJSONArray = new JSONArray(chatIds);
                 JSONArray chatNamesJSONArray = new JSONArray(chatnames);
                 SharedPreferences deleteChatInfoPrefs = getActivity().getSharedPreferences(
-                                    getString(R.string.keys_delete_friend_chat_info),
-                                    Context.MODE_PRIVATE);
+                        getString(R.string.keys_delete_friend_chat_info),
+                        Context.MODE_PRIVATE);
 
                 deleteChatInfoPrefs.edit().putString(getString(R.string.keys_json_chat_id), chatidJSONArray.toString())
-                            .apply();
+                        .apply();
                 deleteChatInfoPrefs.edit().putString(getString(R.string.keys_chat_name), chatNamesJSONArray.toString())
-                            .apply();
+                        .apply();
 
             }
         } catch (JSONException e) {
@@ -355,6 +364,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         String text = "";
         JSONObject response;
         try {
+
+
             response = new JSONObject(res);
             if (response.getBoolean("success")) {
                 JSONObject message = response.getJSONObject("messages");
@@ -370,6 +381,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
             // save last message for each chat id for notification use
             saveLastMessageInSharedPrefs(response.getInt("chatid"), text);
 
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -382,14 +394,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     private void saveLastMessageInSharedPrefs(int chatid, String message) {
         try {
             JSONObject lastMessages = new JSONObject(prefs.getString(
-                            getString(R.string.keys_prefs_last_messages), "{}"));
+                    getString(R.string.keys_prefs_last_messages), "{}"));
 
             // add message to json object
             lastMessages.put(String.valueOf(chatid), message);
 
             // save back in prefs
             prefs.edit().putString(getString(R.string.keys_prefs_last_messages),
-                            lastMessages.toString()).apply();
+                    lastMessages.toString()).apply();
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -516,9 +528,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                         String.valueOf(currentLocation.getLongitude()));
 
                 prefs.edit().putString(getString(R.string.keys_prefs_selected_city_lat),
-                                String.valueOf(currentLocation.getLatitude())).apply();
+                        String.valueOf(currentLocation.getLatitude())).apply();
                 prefs.edit().putString(getString(R.string.keys_prefs_selected_city_lon),
-                                String.valueOf(currentLocation.getLongitude())).apply();
+                        String.valueOf(currentLocation.getLongitude())).apply();
 
             }
 

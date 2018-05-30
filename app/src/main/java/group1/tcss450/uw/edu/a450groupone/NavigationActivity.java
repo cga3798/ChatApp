@@ -545,13 +545,14 @@ public class NavigationActivity extends AppCompatActivity implements
                     newMsgChatId = intent.getIntExtra("chatid", 0);
                     Log.e("service chatid string breceiver: ", "" + newMsgChatId);
 
-                    badgeDrawable = new BadgeDrawerArrowDrawable(getSupportActionBar().getThemedContext());
-                    toggle.setDrawerArrowDrawable(badgeDrawable);
+//                    badgeDrawable = new BadgeDrawerArrowDrawable(getSupportActionBar().getThemedContext());
+//                    toggle.setDrawerArrowDrawable(badgeDrawable);
                     navigationView.getMenu().getItem(0).setActionView(R.layout.menu_dot);
 
                     HomeFragment hm = new HomeFragment();
                     Bundle bundle = new Bundle();
                     bundle.putInt("newchatid", newMsgChatId);
+                    Log.e("Navigation Activity: ", newMsgChatId + "");
                     hm.setArguments(bundle);
                     FragmentTransaction transaction = getSupportFragmentManager()
                             .beginTransaction()

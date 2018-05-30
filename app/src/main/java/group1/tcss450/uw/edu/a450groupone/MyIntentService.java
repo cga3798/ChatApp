@@ -411,9 +411,12 @@ public class MyIntentService extends IntentService {
         Log.d(TAG, "Username : " + String.valueOf(prefs.getString(getString(R.string.keys_prefs_username), "")));
         // foreground
         if (inForeground) {
+
             RTReturn = new Intent(NavigationActivity.RECEIVE_JSON);
             RTReturn.putExtra("json", "new message");
+            RTReturn.putExtra("chatid", currentChatId);
             LocalBroadcastManager.getInstance(this).sendBroadcast(RTReturn);
+
         } else if (loggedInChecked) { //only send message when logged in is checked in background
             Log.d(TAG, "builMessagedNotification() - ");
             //IMPORT V4 not V7
