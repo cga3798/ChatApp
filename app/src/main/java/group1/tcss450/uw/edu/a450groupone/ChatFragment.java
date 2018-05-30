@@ -145,11 +145,12 @@ public class ChatFragment extends Fragment {
             // Commit the transaction
             transaction.commit();
             return true;
-        } else if (id == R.id.place_holder) {
-            Log.d("Place Holder: ", "clicked");
-
-            return true;
         }
+//        else if (id == R.id.place_holder) {
+//            Log.d("Place Holder: ", "clicked");
+//
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
