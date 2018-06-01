@@ -48,6 +48,7 @@ public class Weather {
     public static final String K_DAY_OF_WEEK = "dayOfWeek";
     public static final String K_LAT = "latitude";
     public static final String K_LON = "longitude";
+    public static final String K_FOUND = "citynotfound";
 
     public static final String GMT_PACIFIC = "GMT-7";
 
@@ -94,7 +95,7 @@ public class Weather {
             try {
                 if (source == R.id.fragmentHome) {
 
-                    Log.d("SHOW url____", "more trash");
+
                     weatherBundle.setCurrentWeather(getCurrentWeatherJSON(params[0], params[1]));
                 } else if (source == R.id.fragmentWeather) {
                     weatherBundle.setCurrentWeather(getCurrentWeatherJSON(params[0], params[1]));
@@ -146,8 +147,29 @@ public class Weather {
             JSONObject simpleWeatherJSON = weatherBundle.getCurrentWeather();
             JSONObject hourlyDailyWeatherJSON = weatherBundle.getHourlyDailyWeather();
 
-            parseCurrentWeatherJSON(simpleWeatherJSON, b);
-            parseHourlyDailyWeatherJSON(hourlyDailyWeatherJSON, b);
+
+               // Log.e("SEEJSON", simpleWeatherJSON.toString());// debug
+
+            boolean good = true;
+            try {
+                if (simpleWeatherJSON != null) {
+                    String name = simpleWeatherJSON.getJSONObject("data").getString("name");
+                    if (name.isEmpty()) good = false;
+                } else {
+                    good = false;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            if (good){
+                parseCurrentWeatherJSON(simpleWeatherJSON, b);
+                parseHourlyDailyWeatherJSON(hourlyDailyWeatherJSON, b);
+                b.putBoolean(Weather.K_FOUND, true);
+            } else {
+                // we couldnt find city data
+                b.putBoolean(Weather.K_FOUND, false);
+            }
 
         }
 
@@ -359,7 +381,7 @@ public class Weather {
     }
 
     private static void parseCurrentWeatherJSON(JSONObject res, Bundle b) {
-        Log.d("SHOWcurrentJSON", res.toString());
+        //Log.d("SHOWcurrentJSON", res.toString());
         try {
             if (res != null) {
                 JSONObject simpleWeatherJSON = res.getJSONObject("data");
@@ -423,7 +445,7 @@ public class Weather {
 
 
     private static void parseHourlyDailyWeatherJSON(JSONObject res, Bundle b) {
-//        Log.d("SHOWdailyJSON", res.toString());
+        //Log.d("SHOWdailyJSON", res.toString());
         try {
             if (res != null) {
                 JSONObject json = res.getJSONObject("data");
@@ -438,7 +460,7 @@ public class Weather {
 
     private static void loadHomeFragmentData(JSONObject res, Bundle b) {
         try {
-            Log.d("SHOWcurrentJSON", res.toString());
+            //Log.d("SHOWcurrentJSON", res.toString());
             if (res != null) {
 
                 JSONObject json = res.getJSONObject("data");

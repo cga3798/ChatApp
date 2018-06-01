@@ -99,11 +99,11 @@ public class MapFragment extends Fragment implements GoogleMap.OnMapClickListene
                 if (currentLocation != null) {
                     mapLatLng = new LatLng(currentLocation.getLatitude(),
                             currentLocation.getLongitude());
-                    Log.i("MAP_CURRENT_LOCATION", currentLocation.toString());
+                    //Log.i("MAP_CURRENT_LOCATION", currentLocation.toString());
                 } else {
                     mapLatLng = new LatLng(Double.valueOf(lat), Double.valueOf(lon));
                 }
-
+                setCoordsInPrefs(mapLatLng);
                 // For dropping a marker at a point on the Map
                 if (mapLatLng != null) { // location was obtained
                     mapMarker = googleMap.addMarker(new MarkerOptions().position(mapLatLng).title("Show weather of this location"));//.snippet("Marker Description"));

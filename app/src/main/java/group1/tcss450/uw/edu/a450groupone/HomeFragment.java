@@ -167,7 +167,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         LinearLayout buttonContainer = (LinearLayout) getActivity().findViewById(R.id.HomeLinearLayoutButtonContainer);
         ArrayList<Integer> chatIds = new ArrayList<>();
         ArrayList<String> chatnames = new ArrayList<>();
-        Log.d("homeFragment", "result is : " + res);
+        //Log.d("homeFragment", "result is : " + res);
         if (!prefs.contains(getString(R.string.keys_prefs_username))) {
             throw new IllegalStateException("No username in prefs!");
         }
@@ -232,9 +232,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                         Bundle bundle = getArguments();
                         int chatid = bundle.getInt("newchatid");
 
-                        Log.e("Home Fragmenet: ", "readArgs = false");
-                        Log.e("name.getIntchatid: ", name.getInt("chatid") + "");
-                        Log.e("chatid from bundle: " , chatid + "");
+//                        Log.e("Home Fragmenet: ", "readArgs = false");
+//                        Log.e("name.getIntchatid: ", name.getInt("chatid") + "");
+//                        Log.e("chatid from bundle: " , chatid + "");
 
                         if ( name.getInt("chatid") == chatid) {
                             Log.e("readArgs = false", "chatid == chtid");
@@ -411,7 +411,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
      * Displays the delete button next to chats.
      */
     private boolean onDeleteChat(View v, String name, int chatid) {
-        Log.d("onDeleteChat: ", name);
+        //Log.d("onDeleteChat: ", name);
         ImageButton im = (ImageButton) v.findViewById(R.id.chatImageButtonDelete);
         im.setVisibility(View.VISIBLE);
         im.setOnClickListener(view -> confirmDelete(chatid));

@@ -148,8 +148,13 @@ public class WeatherFragment extends Fragment implements View.OnClickListener {
             public void processFinish(Bundle args) {
                 data = args;
                 // TODO: save city in prefs
-                saveCity();
-                setWeatherData(fragmentView);
+                if (data.getBoolean(Weather.K_FOUND)) {
+                    saveCity();
+                    setWeatherData(fragmentView);
+                } else {
+                    TextView tv = (TextView) fragmentView.findViewById(R.id.weatherCityTextview);
+                    tv.setText("Data not found! \n Try searching again!");
+                }
             }
         });
         SharedPreferences prefs = getActivity().getSharedPreferences(
