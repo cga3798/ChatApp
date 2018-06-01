@@ -62,7 +62,11 @@ public class NewGroupFragment extends Fragment {
         return v;
     }
 
-
+    /**
+     * display the list of your friends
+     *
+     * @param contacts a string with all the current user's contacts.
+     */
     private void displayContacts(String contacts) {
         contactsListView = new ArrayList<>();
 
@@ -84,6 +88,11 @@ public class NewGroupFragment extends Fragment {
         }
     }
 
+    /**
+     * Creates the group. If there are more than one member selected a dialog
+     * asking for group name. If there are no members selected, a toast will appear
+     * with a warning.
+     */
     private void onCreateGroup() {
         groupIds = new ArrayList<>();
         for (int i = 0; i < contactsList.length(); i++) {
@@ -109,12 +118,18 @@ public class NewGroupFragment extends Fragment {
                 Context.MODE_PRIVATE).getInt(getString(R.string.keys_prefs_id), 0));
     }
 
+    /**
+     * Handles the cancel button group.
+     */
     private void onCancelCreateGroup() {
         getFragmentManager().popBackStack();
     }
 
-    protected void showInputDialog() {
 
+    /**
+     * The dialog to ask for group chat name.
+     */
+    protected void showInputDialog() {
         // get prompts.xml view
         View promptView = inflater.inflate(R.layout.input_dialog, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
@@ -136,6 +151,9 @@ public class NewGroupFragment extends Fragment {
 
     }
 
+    /**
+     * Start a chat activity with all the members that were selected.
+     */
     private void createNewGroupChat() {
         Log.e("GroupMmeberID: ", "" + groupMemberIds); //JSONArray
         Log.e("GroupName: ", groupName); //String

@@ -423,7 +423,7 @@ public class Weather {
 
 
     private static void parseHourlyDailyWeatherJSON(JSONObject res, Bundle b) {
-        Log.d("SHOWdailyJSON", res.toString());
+//        Log.d("SHOWdailyJSON", res.toString());
         try {
             if (res != null) {
                 JSONObject json = res.getJSONObject("data");

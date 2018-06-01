@@ -45,12 +45,16 @@ public class SentRequestsFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_sent_requests, container, false);
         sentInvites();
-
         return v;
     }
 
 
+    /**
+     * Make a call to the server to get all the invites that were sent.
+     */
     private void sentInvites() {
+        // current user's member id is needed to send the request
+        // to the server.
         SharedPreferences prefs =
                 this.getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),
                         Context.MODE_PRIVATE);
@@ -70,6 +74,10 @@ public class SentRequestsFragment extends Fragment {
                 .build().execute();
     }
 
+    /**
+     * Handle the response we get back from the server.
+     * @param result string response from the seerver.
+     */
     private void handleSentInviteOnPost(String result) {
         sentInvitesContainer = (LinearLayout) getActivity().findViewById(R.id.sentRequestLinearLayout);
 
@@ -86,6 +94,7 @@ public class SentRequestsFragment extends Fragment {
                 } else {
                     for (int i = 0; i < requestsSent.length(); i++) {
                         JSONObject request = requestsSent.getJSONObject(i);
+                        // add the views to the linear layout for the fragment.
                         sentInvitesContainer.addView(
                                 getSentView(request.getString("username"),
                                         request.getString("firstname")
@@ -100,7 +109,13 @@ public class SentRequestsFragment extends Fragment {
 
     }
 
-
+    /**
+     * Create the container for each invite sent.
+     * @param nickname username of invite receiver.
+     * @param fullName full name of the receiver of the invite.
+     * @param length length of the list of sent invites
+     * @return a view with the about data.
+     */
     private View getSentView(String nickname, String fullName, int length) {
         View v;
 
@@ -128,6 +143,12 @@ public class SentRequestsFragment extends Fragment {
     }
 
 
+    /**
+     * Method to handle when the invite sender chooses to cancel the request.
+     * Send a request to the server to cancel invite.
+     * @param view currnet view.
+     * @param username_b the username of the receiver of the invite.
+     */
     private void onCancelInvite(View view, String username_b) {
 
         Uri uri = new Uri.Builder()
@@ -145,11 +166,12 @@ public class SentRequestsFragment extends Fragment {
 
     }
 
-
+    /**
+     * Handles the resonse from the server by updating the UI and removing
+     * the sent invite from the list.
+     * @param result string containing the response from the server.
+     */
     private void handleCancelOnPost(String result) {
-//        FragmentTransaction ft = getFragmentManager().beginTransaction();
-//        ft.detach(SentRequestsFragment.this).attach(SentRequestsFragment.this).commit();
-
         try {
             JSONObject response = new JSONObject(result);
             String username = response.getString("names");
@@ -177,10 +199,21 @@ public class SentRequestsFragment extends Fragment {
         }
     }
 
+    /**
+     * Hnadle any errors from the request sent.
+     * @param result the cause of the error.
+     */
     private void handleErrorsInTask(String result) {
         Log.e("ASYNCT_TASK_ERROR", result);
     }
 
+    /**
+     * Create JSONObject for sending an invite.
+     *
+     * @param memberidA sender of the invite
+     * @param memberidB receiver of the invite
+     * @return a JSONObject with the member ids.
+     */
     private JSONObject asJSONObject(String memberidA, String memberidB) {
         //build the JSONObject
         JSONObject msg = new JSONObject();
@@ -193,6 +226,13 @@ public class SentRequestsFragment extends Fragment {
         return msg;
     }
 
+    /**
+     * Create a JSONObject to send with the request to cancel a sent invite.
+     * @param memberidA id of invite sended.
+     * @param username_b username of the receiver of the invite.
+     * @param op operation we wish to perform
+     * @return a JSONObject with the above data.
+     */
     private JSONObject asJSONObject(String memberidA, String username_b, String op) {
         //build the JSONObject
         JSONObject msg = new JSONObject();

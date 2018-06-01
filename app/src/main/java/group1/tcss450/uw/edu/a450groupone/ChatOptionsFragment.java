@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,16 +21,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-
-import es.dmoral.toasty.Toasty;
 import group1.tcss450.uw.edu.a450groupone.utils.SendPostAsyncTask;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -79,9 +72,10 @@ public class ChatOptionsFragment extends Fragment {
             }
         });
 
+
+        // Handles the theme change in toolbar of the chat option fragment.
         SharedPreferences theme = getActivity().getSharedPreferences("themePrefs", MODE_PRIVATE);
         int themeId = theme.getInt("themePrefs", 5);
-
         mTopToolbar = (Toolbar) v.findViewById(R.id.toolbar_top);
         switch (themeId) {
             case 1:
@@ -136,7 +130,7 @@ public class ChatOptionsFragment extends Fragment {
         }
     }
 
-        /**
+    /**
      * method to get all members that are in chatroom
      *
      * author: Casey Anderson
@@ -164,6 +158,10 @@ public class ChatOptionsFragment extends Fragment {
                 .build().execute();
     }
 
+     /**
+      * Add the members of the chat to the list
+      * @param res the names of all the members in the chat.
+      * */
     private void populateMembers(String res) {
         ArrayList<String> members = new ArrayList<>();
         try {
@@ -202,9 +200,9 @@ public class ChatOptionsFragment extends Fragment {
     }
 
 
-    /*
-    * Prompts user for confirmation to delete the chat.
-    */
+    /**
+     * Prompts user for confirmation to delete the chat.
+     */
     private void confirmDelete(int chatid) {
         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
             switch (which){
@@ -226,8 +224,9 @@ public class ChatOptionsFragment extends Fragment {
                 .setNegativeButton("No", dialogClickListener).show();
     }
 
-    /*
-     * Sends the delete chat json to the server.
+    /**
+     * Sends a request to delete the chat to the server.
+     * @param chatid the chat id of the chat we're deleting.
      */
     private void deleteChat(int chatid){
         Uri uri = new Uri.Builder()
@@ -244,15 +243,14 @@ public class ChatOptionsFragment extends Fragment {
         } catch (JSONException e) {
             Log.e("DELETECHAT", "Error creating JSON: " + e.getMessage());
         }
-
         new SendPostAsyncTask.Builder(uri.toString(), msg)
                 .onPostExecute(this::handleDeleteOnPost)
                 .onCancelled(this::handleErrorsInTask)
                 .build().execute();
     }
 
-    /*
-    *   Reloads home and displays a confirmation that chat was deleted.
+    /**
+     * Reloads home and displays a confirmation that chat was deleted.
      */
     private void handleDeleteOnPost(String result) {
         Intent intent = new Intent(getActivity(), NavigationActivity.class);

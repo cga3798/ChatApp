@@ -51,12 +51,9 @@ public class ChatFragment extends Fragment {
     private Toolbar mTopToolbar;
     private int accentColor;
 
-
-
     public ChatFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,8 +74,8 @@ public class ChatFragment extends Fragment {
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         Log.wtf("CHAT ROOM", "" + prefs.getInt("chatId", R.string.keys_prefs_chatId));
 
+        // Handles the theme color for the toolbar.
         mTopToolbar = (Toolbar) v.findViewById(R.id.toolbar_top);
-
         switch (themeId) {
             case 1:
                 mTopToolbar.setBackgroundColor(getActivity()
@@ -89,19 +86,16 @@ public class ChatFragment extends Fragment {
                 mTopToolbar.setBackgroundColor(getActivity()
                         .getColor(R.color.colorPrimaryTheme2));
                 accentColor = getActivity().getColor(R.color.colorAccentTheme2);
-
                 break;
             case 3:
                 mTopToolbar.setBackgroundColor(getActivity()
                         .getColor(R.color.colorPrimaryTheme3));
                 accentColor = getActivity().getColor(R.color.colorAccentTheme3);
-
                 break;
             default:
                 mTopToolbar.setBackgroundColor(getActivity()
                         .getColor(R.color.colorPrimary));
                 accentColor = getActivity().getColor(R.color.colorAccent);
-
                 break;
         }
 
@@ -132,7 +126,6 @@ public class ChatFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == android.R.id.home) {
             getActivity().finish();
             return true;
@@ -146,11 +139,6 @@ public class ChatFragment extends Fragment {
             transaction.commit();
             return true;
         }
-//        else if (id == R.id.place_holder) {
-//            Log.d("Place Holder: ", "clicked");
-//
-//            return true;
-//        }
 
         return super.onOptionsItemSelected(item);
     }

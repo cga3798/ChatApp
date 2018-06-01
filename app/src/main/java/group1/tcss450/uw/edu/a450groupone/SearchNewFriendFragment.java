@@ -208,16 +208,19 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
                 .build().execute();
     }
 
-
+    /**
+     * Handle and parse the result from the server.
+     *
+     * @param result the response from server as string.
+     */
     private void handleInviteOnPost(String result) {
         Log.d("invite result", result);
 
         Map<Integer, String> messages = new HashMap<Integer, String>();
         messages.put(1, "An invitation to " + fullname + " has been sent!");
-        //TODO: Go to new chat with friend when 2.
         messages.put(2, "You and " + fullname + " are already friends. Please check your friend list");
         messages.put(3, fullname + " has already sent you an invitation. Please check your invitations");
-        messages.put(4, "You cannot add yourself as a friend"); // TODO: change this so you don't appear in search.
+        messages.put(4, "You cannot add yourself as a friend");
         messages.put(5, "You have already sent an invitation to " + fullname + ".");
 
         try {
@@ -243,13 +246,16 @@ public class SearchNewFriendFragment extends Fragment implements SearchView.OnQu
         }
     }
 
-
+    /**
+     * Create the JSONObject for the query that the user enters.
+     * @param query the query user enters
+     * @return a JSONObject with query entered.
+     */
     private JSONObject asJSONObject(String query) {
         //build the JSONObject
         JSONObject msg = new JSONObject();
 
         query = query.trim();
-        //TODO: DON'T SEND CURRENT USER INFO. CAN'T SEE SELF IN RESULT.
         try {
             if (query.contains("@") ) {
                 msg.put("email", query);

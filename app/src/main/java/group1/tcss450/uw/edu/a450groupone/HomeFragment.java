@@ -257,7 +257,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                             container.addView(imageView2);
                             container.addView(imageView);
                             container.addView(button, params);
-                            container.addView(textView);
 
                         } else {
                             button.setText(chatName);
@@ -267,7 +266,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                         readArgs = true;
                         getArguments().clear();
                     } else {
-                        button.setText(chatName);
+
                         container.addView(button, params);
                         container.addView(textView);
                     }
