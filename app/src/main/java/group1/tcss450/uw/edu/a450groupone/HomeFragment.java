@@ -163,11 +163,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 .build().execute();
     }
 
-    /**
-     * method to create chat room list from users available chatrooms
-     *
-     * author: Casey Anderson
-     */
     private void populateChats(String res) {
         LinearLayout buttonContainer = (LinearLayout) getActivity().findViewById(R.id.HomeLinearLayoutButtonContainer);
         ArrayList<Integer> chatIds = new ArrayList<>();
@@ -257,6 +252,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                             container.addView(imageView2);
                             container.addView(imageView);
                             container.addView(button, params);
+                            container.addView(textView);
 
                         } else {
                             button.setText(chatName);
@@ -266,7 +262,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                         readArgs = true;
                         getArguments().clear();
                     } else {
-
+                        button.setText(chatName);
                         container.addView(button, params);
                         container.addView(textView);
                     }
@@ -316,6 +312,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
             e.printStackTrace();
         }
     }
+
 
     /**
      * Parses chat name from composed response chatname.
